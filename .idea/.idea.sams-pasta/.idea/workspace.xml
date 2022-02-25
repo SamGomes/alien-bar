@@ -10,13 +10,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/Editor/ReplaceGameObjects.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
+            <state relative-caret-position="550">
               <caret line="29" column="40" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="40" />
+              <folding>
+                <marker date="1645804334870" expanded="false" signature="12:77" ph="..." />
+                <marker date="1645804334870" expanded="true" signature="82:172" ph="/* CopyComponents - by Michael L. Croswell for Colorado Game Coders, LLC ... */" />
+                <marker date="1645804334870" expanded="true" signature="233:1216" ph="{...}" />
+                <marker date="1645804334870" expanded="true" signature="455:581" ph="{...}" />
+                <marker date="1645804334870" expanded="true" signature="617:1210" ph="{...}" />
+                <marker date="1645804334870" expanded="true" signature="640:734" ph="/* Transform[] Replaces; ... */" />
+                <marker date="1645804334870" expanded="true" signature="790:1194" ph="{...}" />
+              </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -25,7 +39,8 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Editor/ReplaceGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Editor/ReplaceGameObjects.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -44,7 +59,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1920" />
+    <option name="x" value="299" />
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -127,7 +142,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
+    <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
@@ -189,10 +204,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Editor/ReplaceGameObjects.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
+        <state relative-caret-position="550">
           <caret line="29" column="40" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="40" />
+          <folding>
+            <marker date="1645804334870" expanded="false" signature="12:77" ph="..." />
+            <marker date="1645804334870" expanded="true" signature="82:172" ph="/* CopyComponents - by Michael L. Croswell for Colorado Game Coders, LLC ... */" />
+            <marker date="1645804334870" expanded="true" signature="233:1216" ph="{...}" />
+            <marker date="1645804334870" expanded="true" signature="455:581" ph="{...}" />
+            <marker date="1645804334870" expanded="true" signature="617:1210" ph="{...}" />
+            <marker date="1645804334870" expanded="true" signature="640:734" ph="/* Transform[] Replaces; ... */" />
+            <marker date="1645804334870" expanded="true" signature="790:1194" ph="{...}" />
+          </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
