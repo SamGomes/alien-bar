@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public GameObject _cuttingTable;
+
     public GameObject _juiceFoodProcessorObj;
-    public GameObject _knife;
+    public GameObject _knifeObj;
     public GameObject _burner1Obj;
     public GameObject _burner2Obj;
     public GameObject _burner3Obj;
@@ -20,27 +22,38 @@ public class GameManager : MonoBehaviour
     public GameObject _applePrefab;
     
     private FoodProcessor _juiceFoodProcessor;
+    private FoodProcessor _knife;
+    
     private Ingredient _orange;
+    private Ingredient _lemon;
+    private Ingredient _apple;
     
     // Start is called before the first frame update
     void Start()
     {
         _juiceFoodProcessor = new FoodProcessor(_juiceFoodProcessorObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.DRINK},
+            new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr> {IngredientAttr.DRINK},
             10);
-        _knife = new FoodProcessor(_juiceFoodProcessorObj,
+        _knife = new FoodProcessor(_knifeObj,
+            new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
-            10);
-        _orange = new Ingredient(new List<GameObject> {_orangePrefab},
-            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.WHOLE},
-            ,"orange",2)
+            1);
+        
+        _orange = new Ingredient(_cuttingTable, new List<GameObject> {_orangePrefab},
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
+            "orange", 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _knife.SETIngredientInProcess(_orange);
+            _knife.TurnOn();
+        }
     }
 }
