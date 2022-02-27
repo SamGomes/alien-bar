@@ -68,6 +68,7 @@ public class Ingredient
     private string _name;
     private int _timeToProcess;
 
+    private Camera _cam;
     
     // public List<GameObject> StateObjects => _stateObjects;
     public List<GameObject> GETStateObjects()
@@ -112,14 +113,15 @@ public class Ingredient
         string name, int timeToProcess)
     {
         _stateObjects = stateObjects;
-
+        _cam = cam;
+        
         //only instantiate if it is not a template
         if (!isTemplate)
         {
             Debug.Log(spawnPos);
             _gameObject = Object.Instantiate(_stateObjects[0], spawnPos, Quaternion.identity);
             _gameObject.AddComponent<IngredientObjectEvents>();
-            _gameObject.GetComponent<IngredientObjectEvents>().cam = cam;
+            _gameObject.GetComponent<IngredientObjectEvents>().cam = _cam;
             _gameObject.GetComponent<IngredientObjectEvents>().logic = this;
         }
         else
@@ -141,7 +143,10 @@ public class Ingredient
         Object.Destroy(_gameObject);
         _gameObject = Object.Instantiate(_stateObjects[1], 
             _gameObject.transform.position, 
-            Quaternion.identity);;
+            Quaternion.identity);
+        _gameObject.AddComponent<IngredientObjectEvents>();
+        _gameObject.GetComponent<IngredientObjectEvents>().cam = _cam;
+        _gameObject.GetComponent<IngredientObjectEvents>().logic = this;
     }
 
     public List<IngredientAttr> GETAttributes()

@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     public GameObject _coffeeMachineObj;
     public GameObject _freezerObj;
 
-    public GameObject _orangePrefab;
+    public List<GameObject> _orangePrefabs;
     public GameObject _lemonPrefab;
     public GameObject _applePrefab;
     
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
         orangeBowlSpawner.cuttingTable = _cuttingTable;
         orangeBowlSpawner.cam = _cam;
         orangeBowlSpawner.template  = new Ingredient(true, 
-            _cam,new Vector3(), _cuttingTable, new List<GameObject> {_orangePrefab, _lemonPrefab},
+            _cam,new Vector3(), _cuttingTable, new List<GameObject> {_orangePrefabs[0], _orangePrefabs[1]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
             "orange", 0);
         

@@ -3,9 +3,20 @@
   <component name="ChangeListManager">
     <list default="true" id="91e77f15-0bfa-45e0-862d-d4ad90d9b2b7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.sams-pasta/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.sams-pasta/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Orange.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Fruits/Orange.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Apple.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Apple.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Apple.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Apple.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Lemon.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Lemon.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Lemon.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Lemon.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Orange.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Orange.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Orange.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Orange.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Models/Knife/Knife.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Knife/Knife.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/FoodProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/FoodProcessor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Ingredient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Ingredient.cs" afterDir="false" />
     </list>
@@ -23,8 +34,8 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/Ingredient.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/FoodProcessor.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/Ingredient.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
     </changedPaths>
   </component>
@@ -109,7 +120,7 @@
       <option name="presentableId" value="Default" />
       <updated>1645803213096</updated>
       <workItem from="1645803219437" duration="1400000" />
-      <workItem from="1645828468722" duration="21787000" />
+      <workItem from="1645828468722" duration="22831000" />
     </task>
     <servers />
   </component>
@@ -183,17 +194,17 @@
           <option name="timeStamp" value="1" />
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Assets/Scripts/Ingredient.cs</url>
-          <line>137</line>
-          <properties documentPath="G:\sams-pasta\sams-pasta\Assets\Scripts\Ingredient.cs" initialLine="137" containingFunctionPresentation="method 'Process'">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/FoodProcessor.cs</url>
+          <line>90</line>
+          <properties documentPath="G:\sams-pasta\sams-pasta\Assets\Scripts\FoodProcessor.cs" initialLine="90" containingFunctionPresentation="method 'TurnOn'">
             <startOffsets>
-              <option value="3300" />
+              <option value="2593" />
             </startOffsets>
             <endOffsets>
-              <option value="3356" />
+              <option value="2621" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="15" />
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
