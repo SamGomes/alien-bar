@@ -10,6 +10,7 @@ using Object = UnityEngine.Object;
 
 public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 {
+    public Ingredient logic;
     public bool isBeingHeld;
     public Camera cam;
 
@@ -102,9 +103,9 @@ public class Ingredient
     }
 
         
-    public GameObject GETPrefab()
+    public GameObject GETGameObject()
     {
-        return _stateObjects[0];
+        return _gameObject;
     }
 
     public Ingredient(bool isTemplate, Camera cam, Vector3 spawnPos, GameObject table, List<GameObject> stateObjects, List<IngredientAttr> attributes, 
@@ -112,12 +113,18 @@ public class Ingredient
     {
         _stateObjects = stateObjects;
 
+        //only instantiate if it is not a template
         if (!isTemplate)
         {
             Debug.Log(spawnPos);
             _gameObject = Object.Instantiate(_stateObjects[0], spawnPos, Quaternion.identity);
             _gameObject.AddComponent<IngredientObjectEvents>();
             _gameObject.GetComponent<IngredientObjectEvents>().cam = cam;
+            _gameObject.GetComponent<IngredientObjectEvents>().logic = this;
+        }
+        else
+        {
+            _gameObject = _stateObjects[0];
         }
 
         _attributes = attributes;
@@ -130,6 +137,11 @@ public class Ingredient
         yield return new WaitForSeconds(_timeToProcess + machineDelay);
         _attributes = _attributes.Except(inputtedAttr).ToList();
         _attributes.AddRange(outputtedAttr);
+        
+        Object.Destroy(_gameObject);
+        _gameObject = Object.Instantiate(_stateObjects[1], 
+            _gameObject.transform.position, 
+            Quaternion.identity);;
     }
 
     public List<IngredientAttr> GETAttributes()

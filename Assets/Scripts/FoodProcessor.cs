@@ -5,19 +5,46 @@ using UnityEngine.EventSystems;
 public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public FoodProcessor logic;
+    private bool _isOn;
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         //Use this to tell when the user right-clicks on the Button
         if (pointerEventData.button == PointerEventData.InputButton.Right)
         {
+            Debug.Log("Processor Turned On!");
             logic.TurnOn();
         }
 
         //Use this to tell when the user left-clicks on the Button
         if (pointerEventData.button == PointerEventData.InputButton.Left)
         {
-            logic.TurnOff();
+            _isOn = !_isOn;
+            
+            if (_isOn)
+            {
+                Debug.Log("Processor Turned On!");
+                logic.TurnOn();
+            }else{
+                Debug.Log("Processor Turned Off!");
+                logic.TurnOff();
+            }
         }
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Entered processor");
+        var ingEvents = other.GetComponent<IngredientObjectEvents>();
+        if (ingEvents != null)
+        {
+            Ingredient otherIng = ingEvents.logic;
+            logic.SETIngredientInProcess(otherIng);
+        }
+        
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        logic.SETIngredientInProcess(null);
     }
 }
     

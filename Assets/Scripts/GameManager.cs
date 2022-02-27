@@ -25,7 +25,7 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
                      false,
                      cam, 
                      new Vector3( hit.point.x, 
-                        hit.point.y + template.GETPrefab().transform.position.y, 
+                        hit.point.y + template.GETGameObject().transform.position.y, 
                         hit.point.z),
                      cuttingTable,
                      template.GETStateObjects(),
@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.DRINK},
-            10);
+            1);
         _knife = new FoodProcessor(_knifeObj,
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
@@ -85,7 +85,7 @@ public class GameManager : MonoBehaviour
         orangeBowlSpawner.cuttingTable = _cuttingTable;
         orangeBowlSpawner.cam = _cam;
         orangeBowlSpawner.template  = new Ingredient(true, 
-            _cam,new Vector3(), _cuttingTable, new List<GameObject> {_orangePrefab},
+            _cam,new Vector3(), _cuttingTable, new List<GameObject> {_orangePrefab, _lemonPrefab},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
             "orange", 0);
         
@@ -107,5 +107,9 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
             "apple", 0);
     }
-    
+
+    // public void Update()
+    // {
+    //     _applesSpawner.transform.Translate(new Vector3());
+    // }
 }

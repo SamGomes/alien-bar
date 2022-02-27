@@ -3,18 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="91e77f15-0bfa-45e0-862d-d4ad90d9b2b7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.sams-pasta/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.sams-pasta/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Bowl/bowl.blend" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Bowl/bowl.blend" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Bowl/bowl.blend1" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Bowl/bowl.blend1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Apple.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Fruits/Apple.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Lemon.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Fruits/Lemon.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Models/Fruits/Orange.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Models/Fruits/Orange.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/FoodProcessor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/FoodProcessor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Ingredient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Ingredient.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +23,8 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
-      <option value="$PROJECT_DIR$/Assets/Scripts/FoodProcessor.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/Ingredient.cs" />
+      <option value="$PROJECT_DIR$/Assets/Scripts/FoodProcessor.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
     </changedPaths>
   </component>
@@ -93,10 +86,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="19524">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="2824">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="19524" />
+      <option name="pid" value="2824" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -116,7 +109,7 @@
       <option name="presentableId" value="Default" />
       <updated>1645803213096</updated>
       <workItem from="1645803219437" duration="1400000" />
-      <workItem from="1645828468722" duration="18681000" />
+      <workItem from="1645828468722" duration="21787000" />
     </task>
     <servers />
   </component>
@@ -189,6 +182,19 @@
           <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
           <option name="timeStamp" value="1" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/Ingredient.cs</url>
+          <line>137</line>
+          <properties documentPath="G:\sams-pasta\sams-pasta\Assets\Scripts\Ingredient.cs" initialLine="137" containingFunctionPresentation="method 'Process'">
+            <startOffsets>
+              <option value="3300" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3356" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

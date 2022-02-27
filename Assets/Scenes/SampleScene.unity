@@ -1010,6 +1010,8 @@ MonoBehaviour:
   _lemonPrefab: {fileID: 6201398769453202390, guid: 1467d4665a39101378bf689fbbfa3962, type: 3}
   _applePrefab: {fileID: 6201398769453202390, guid: 03b9e94bfff9f78cd91f3cf5857a4c30, type: 3}
   _orangeSpawner: {fileID: 1321679429}
+  _lemonsSpawner: {fileID: 1618875882}
+  _applesSpawner: {fileID: 354055675}
 --- !u!4 &499675865
 Transform:
   m_ObjectHideFlags: 0
@@ -2341,7 +2343,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511456713}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -3864,6 +3866,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 8399c102dd65f7787bad1c30c167d1e1, type: 2}
+    - target: {fileID: 6350012512591781917, guid: afe9f6ce4fcb8368b918cc7277157612, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8926959432825902602, guid: afe9f6ce4fcb8368b918cc7277157612, type: 3}
       propertyPath: m_Name
       value: FruitBlender
