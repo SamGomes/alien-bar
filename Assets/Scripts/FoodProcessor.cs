@@ -1,89 +1,94 @@
 ﻿using System.Collections.Generic;
-using IngredientStuff;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace FoodProcessorStuff
+public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
 {
-    
-    public class ObjectEvents : MonoBehaviour, IPointerClickHandler
+    public FoodProcessor logic;
+    public void OnPointerClick(PointerEventData pointerEventData)
     {
-        public void OnPointerClick(PointerEventData eventData)
+        //Use this to tell when the user right-clicks on the Button
+        if (pointerEventData.button == PointerEventData.InputButton.Right)
         {
-            Debug.Log("Clicked: " + eventData.pointerCurrentRaycast.gameObject.name);
+            logic.TurnOn();
+        }
+
+        //Use this to tell when the user left-clicks on the Button
+        if (pointerEventData.button == PointerEventData.InputButton.Left)
+        {
+            logic.TurnOff();
         }
     }
+}
     
-    enum ProcessUnitState{
-        OFF = 0,
-        ON = 1
-    }
-    public class FoodProcessor
+enum ProcessUnitState{
+    OFF = 0,
+    ON = 1
+}
+public class FoodProcessor
+{
+    private GameObject _gameObject;
+    private List<IngredientAttr> _acceptedAttrs;
+    private List<IngredientAttr> _inputAttrs;
+    private List<IngredientAttr> _outputAttrs;
+    private Ingredient _ingredientInProcess;
+    private ProcessUnitState _isOn;
+
+    private int _processingDelay;
+
+    public FoodProcessor(GameObject gameObject, 
+        List<IngredientAttr> acceptedAttrs, 
+        List<IngredientAttr> inputAttrs, 
+        List<IngredientAttr> outputAttrs, 
+        int processingDelay)
     {
-        private GameObject _gameObject;
-        private List<IngredientAttr> _acceptedAttrs;
-        private List<IngredientAttr> _inputAttrs;
-        private List<IngredientAttr> _outputAttrs;
-        private Ingredient _ingredientInProcess;
-        private ProcessUnitState _isOn;
-
-        private int _processingDelay;
-
-        public FoodProcessor(GameObject gameObject, 
-            List<IngredientAttr> acceptedAttrs, 
-            List<IngredientAttr> inputAttrs, 
-            List<IngredientAttr> outputAttrs, 
-            int processingDelay)
-        {
-            _gameObject = gameObject;
-            _gameObject.AddComponent<ObjectEvents>();
+        _gameObject = gameObject;
+        _gameObject.AddComponent<FoodProcessorObjectEvents>();
+        _gameObject.GetComponent<FoodProcessorObjectEvents>().logic = this;
             
-            _processingDelay = processingDelay;
-            _acceptedAttrs = acceptedAttrs;
-            _inputAttrs = inputAttrs;
-            _outputAttrs = outputAttrs;
+        _processingDelay = processingDelay;
+        _acceptedAttrs = acceptedAttrs;
+        _inputAttrs = inputAttrs;
+        _outputAttrs = outputAttrs;
             
-            _ingredientInProcess = null;
-        }
+        _ingredientInProcess = null;
+    }
 
-        public void SETIngredientInProcess(Ingredient ingredientInProcess)
-        {
-            _ingredientInProcess = ingredientInProcess;
-        }
+    public void SETIngredientInProcess(Ingredient ingredientInProcess)
+    {
+        _ingredientInProcess = ingredientInProcess;
+    }
         
-        public void TurnOn()
+    public void TurnOn()
+    {
+        _isOn = ProcessUnitState.ON;
+        if (_ingredientInProcess == null)
         {
-            _isOn = ProcessUnitState.ON;
-            if (_ingredientInProcess == null)
-            {
-                return;
-            }
+            return;
+        }
             
-            bool isCurrIngrAccepted = true;
-            foreach (var attr in _acceptedAttrs)
+        bool isCurrIngrAccepted = true;
+        foreach (var attr in _acceptedAttrs)
+        {
+            if (!_ingredientInProcess.GETAttributes().Contains(attr))
             {
-                if (!_ingredientInProcess.GETAttributes().Contains(attr))
-                {
-                    isCurrIngrAccepted = false;
-                    break;
-                }
-            }
-            
-            if (isCurrIngrAccepted)
-            {
-                _gameObject.GetComponent<MonoBehaviour>()
-                    .StartCoroutine(
-                        _ingredientInProcess.Process(_processingDelay,
-                            _inputAttrs,_outputAttrs)
-                        );
+                isCurrIngrAccepted = false;
+                break;
             }
         }
-
-        public void TurnOff()
+            
+        if (isCurrIngrAccepted)
         {
-            _isOn = ProcessUnitState.OFF;
+            _gameObject.GetComponent<MonoBehaviour>()
+                .StartCoroutine(
+                    _ingredientInProcess.Process(_processingDelay,
+                        _inputAttrs,_outputAttrs)
+                );
         }
+    }
 
-
+    public void TurnOff()
+    {
+        _isOn = ProcessUnitState.OFF;
     }
 }

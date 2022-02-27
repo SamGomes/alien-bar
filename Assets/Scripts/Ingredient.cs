@@ -3,57 +3,137 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using Object = UnityEngine.Object;
 
-namespace IngredientStuff
+public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 {
-    public enum IngredientAttr
+    public bool isBeingHeld;
+    public Camera cam;
+
+    public void Start()
     {
-        WHOLE,
-        CUT,
-        COLD,
-        HOT,
-        DRINKABLE,
-        FRUIT,
-        OIL,
-        DRINK
+        isBeingHeld = true;
     }
 
-    public class Ingredient
+    public void OnPointerClick(PointerEventData pointerEventData)
     {
-        private List<GameObject> _stateObjects;
-        private GameObject _gameObject;
-        private List<IngredientAttr> _attributes;
-        private string _name;
-        private int _timeToProcess;
-
-        public Ingredient(GameObject table, List<GameObject> stateObjects, List<IngredientAttr> attributes, 
-            string name, int timeToProcess)
+        //Use this to tell when the user right-clicks on the Button
+        if (pointerEventData.button == PointerEventData.InputButton.Left)
         {
-            _stateObjects = stateObjects;
-            _gameObject = Object.Instantiate(_stateObjects[0]);
-            _gameObject.transform.position = table.transform.position;
-            
-            _attributes = attributes;
-            _name = name;
-            _timeToProcess = timeToProcess;
+            isBeingHeld = !isBeingHeld;
         }
+    }
 
-        public GameObject getPrefab()
-        {
-            return _stateObjects[0];
-        }
+    public void FixedUpdate()
+    {
         
-        public IEnumerator Process(int machineDelay, List<IngredientAttr> inputtedAttr, List<IngredientAttr> outputtedAttr)
+        if (isBeingHeld)
         {
-            yield return new WaitForSeconds(_timeToProcess + machineDelay);
-            _attributes = _attributes.Except(inputtedAttr).ToList();
-            _attributes.AddRange(outputtedAttr);
+            Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                transform.position = new Vector3(hit.point.x,
+                    transform.position.y,
+                    hit.point.z);
+            }
+        }
+    }
+}
+
+
+
+public enum IngredientAttr
+{
+    WHOLE,
+    CUT,
+    COLD,
+    HOT,
+    DRINKABLE,
+    FRUIT,
+    OIL,
+    DRINK
+}
+
+public class Ingredient
+{
+    private List<GameObject> _stateObjects;
+    private GameObject _gameObject;
+    private List<IngredientAttr> _attributes;
+    private string _name;
+    private int _timeToProcess;
+
+    
+    // public List<GameObject> StateObjects => _stateObjects;
+    public List<GameObject> GETStateObjects()
+    {
+        return _stateObjects;
+    }
+
+    public List<IngredientAttr> Attributes
+    {
+        get => _attributes;
+        set => _attributes = value;
+    }
+
+    // public string Name
+    // {
+    //     get => _name;
+    //     set => _name = value;
+    // }
+    public string GETName()
+    {
+        return _name;
+    }
+
+
+    // public int TimeToProcess
+    // {
+    //     get => _timeToProcess;
+    //     set => _timeToProcess = value;
+    // }
+    public int GETTimeToProcess()
+    {
+        return _timeToProcess;
+    }
+
+        
+    public GameObject GETPrefab()
+    {
+        return _stateObjects[0];
+    }
+
+    public Ingredient(bool isTemplate, Camera cam, Vector3 spawnPos, GameObject table, List<GameObject> stateObjects, List<IngredientAttr> attributes, 
+        string name, int timeToProcess)
+    {
+        _stateObjects = stateObjects;
+
+        if (!isTemplate)
+        {
+            Debug.Log(spawnPos);
+            _gameObject = Object.Instantiate(_stateObjects[0], spawnPos, Quaternion.identity);
+            _gameObject.AddComponent<IngredientObjectEvents>();
+            _gameObject.GetComponent<IngredientObjectEvents>().cam = cam;
         }
 
-        public List<IngredientAttr> GETAttributes()
-        {
-            return _attributes;
-        }
+        _attributes = attributes;
+        _name = name;
+        _timeToProcess = timeToProcess;
+    }
+        
+    public IEnumerator Process(int machineDelay, List<IngredientAttr> inputtedAttr, List<IngredientAttr> outputtedAttr)
+    {
+        yield return new WaitForSeconds(_timeToProcess + machineDelay);
+        _attributes = _attributes.Except(inputtedAttr).ToList();
+        _attributes.AddRange(outputtedAttr);
+    }
+
+    public List<IngredientAttr> GETAttributes()
+    {
+        return _attributes;
     }
 }
