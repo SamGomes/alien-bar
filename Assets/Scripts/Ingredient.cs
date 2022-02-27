@@ -50,11 +50,15 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 
 public enum IngredientAttr
 {
+    UTENSIL,
+    CUP,
+    PLATE,
+    TOOL,
+    
     WHOLE,
     CUT,
     COLD,
     HOT,
-    DRINKABLE,
     FRUIT,
     OIL,
     DRINK
@@ -67,6 +71,8 @@ public class Ingredient
     private List<IngredientAttr> _attributes;
     private string _name;
     private int _timeToProcess;
+    
+    private int _currIngState;
 
     private Camera _cam;
     
@@ -112,6 +118,8 @@ public class Ingredient
     public Ingredient(bool isTemplate, Camera cam, Vector3 spawnPos, GameObject table, List<GameObject> stateObjects, List<IngredientAttr> attributes, 
         string name, int timeToProcess)
     {
+        _currIngState = 0;
+        
         _stateObjects = stateObjects;
         _cam = cam;
         
@@ -141,7 +149,7 @@ public class Ingredient
         _attributes.AddRange(outputtedAttr);
         
         Object.Destroy(_gameObject);
-        _gameObject = Object.Instantiate(_stateObjects[1], 
+        _gameObject = Object.Instantiate(_stateObjects[_currIngState++], 
             _gameObject.transform.position, 
             Quaternion.identity);
         _gameObject.AddComponent<IngredientObjectEvents>();

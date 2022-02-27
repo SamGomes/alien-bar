@@ -38,7 +38,14 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
         if (ingEvents != null)
         {
             Ingredient otherIng = ingEvents.logic;
-            logic.SETIngredientInProcess(otherIng);
+            if (otherIng.GETAttributes().Contains(IngredientAttr.UTENSIL))
+            {
+                logic.ADDUtensil(otherIng);
+            }
+            else
+            {
+                logic.SETIngredientInProcess(otherIng);
+            }
         }
         
     }
@@ -59,6 +66,10 @@ public class FoodProcessor
     private List<IngredientAttr> _inputAttrs;
     private List<IngredientAttr> _outputAttrs;
     private Ingredient _ingredientInProcess;
+    
+    private List<IngredientAttr> _requiredUtensilAttrs;
+    private List<IngredientAttr> _addedUtensilAttrs;
+    
     private ProcessUnitState _isOn;
 
     private int _processingDelay;
@@ -67,6 +78,7 @@ public class FoodProcessor
         List<IngredientAttr> acceptedAttrs, 
         List<IngredientAttr> inputAttrs, 
         List<IngredientAttr> outputAttrs, 
+        List<IngredientAttr> requiredUtensilAttrs,
         int processingDelay)
     {
         _gameObject = gameObject;
@@ -79,17 +91,40 @@ public class FoodProcessor
         _outputAttrs = outputAttrs;
             
         _ingredientInProcess = null;
+        
+        _addedUtensilAttrs = new List<IngredientAttr>();
+        _requiredUtensilAttrs = requiredUtensilAttrs;
     }
 
     public void SETIngredientInProcess(Ingredient ingredientInProcess)
     {
         _ingredientInProcess = ingredientInProcess;
     }
+    
+    public void ADDUtensil(Ingredient utensilToAdd)
+    {
+        _addedUtensilAttrs.AddRange(utensilToAdd.GETAttributes());
+        Object.Destroy(utensilToAdd.GETGameObject());
+    }
         
     public void TurnOn()
     {
         _isOn = ProcessUnitState.ON;
-        if (_ingredientInProcess == null)
+
+        bool hasUtensils = true;
+        if (_requiredUtensilAttrs.Count > 0 && _addedUtensilAttrs.Count > 0)
+        {
+            foreach (var utensil in _addedUtensilAttrs)
+            {
+                if (!_requiredUtensilAttrs.Contains(utensil))
+                {
+                    hasUtensils = false;
+                    break;
+                }
+            }
+        }
+
+        if (_ingredientInProcess == null || !hasUtensils)
         {
             return;
         }

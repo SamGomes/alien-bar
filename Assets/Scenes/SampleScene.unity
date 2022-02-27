@@ -1011,9 +1011,11 @@ MonoBehaviour:
   - {fileID: 6201398769453202390, guid: a666b7120abe64b45a4048e4f28548b2, type: 3}
   _lemonPrefab: {fileID: 6201398769453202390, guid: 1467d4665a39101378bf689fbbfa3962, type: 3}
   _applePrefab: {fileID: 6201398769453202390, guid: 03b9e94bfff9f78cd91f3cf5857a4c30, type: 3}
+  _cupPrefab: {fileID: 466110140552608390, guid: 1a693ac2605bb6604a2e38902465170f, type: 3}
   _orangeSpawner: {fileID: 1321679429}
   _lemonsSpawner: {fileID: 1618875882}
   _applesSpawner: {fileID: 354055675}
+  _cupsSpawner: {fileID: 838391756}
 --- !u!4 &499675865
 Transform:
   m_ObjectHideFlags: 0

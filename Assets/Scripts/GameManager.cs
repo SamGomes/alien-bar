@@ -57,55 +57,75 @@ public class GameManager : MonoBehaviour
     public GameObject _lemonPrefab;
     public GameObject _applePrefab;
     
+    public GameObject _cupPrefab;
+    
     private FoodProcessor _juiceFoodProcessor;
     private FoodProcessor _knife;
     
     public GameObject _orangeSpawner;
     public GameObject _lemonsSpawner;
     public GameObject _applesSpawner;
+    
+    
+    public GameObject _cupsSpawner;
 
+
+    void InitSpawner(GameObject spawnerObj, Ingredient template)
+    {
+        spawnerObj.AddComponent<IngredientSpawner>();
+        var spawner = spawnerObj.GetComponent<IngredientSpawner>();
+        spawner.cuttingTable = _cuttingTable;
+        spawner.cam = _cam;
+        spawner.template = template;
+    }
+    
     
     
     // Start is called before the first frame update
     void Start()
     {
         _juiceFoodProcessor = new FoodProcessor(_juiceFoodProcessorObj,
+            new List<IngredientAttr> {IngredientAttr.UTENSIL,IngredientAttr.CUP},
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.DRINK},
             1);
         _knife = new FoodProcessor(_knifeObj,
+            new List<IngredientAttr>(),
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
             1);
 
-        _orangeSpawner.AddComponent<IngredientSpawner>();
-        var orangeBowlSpawner = _orangeSpawner.GetComponent<IngredientSpawner>();
-        orangeBowlSpawner.cuttingTable = _cuttingTable;
-        orangeBowlSpawner.cam = _cam;
-        orangeBowlSpawner.template  = new Ingredient(true, 
+        InitSpawner(_orangeSpawner,
+        new Ingredient(true, 
             _cam,new Vector3(), _cuttingTable, new List<GameObject> {_orangePrefabs[0], _orangePrefabs[1]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
-            "orange", 0);
+            "orange", 0)
+        );
         
-        _lemonsSpawner.AddComponent<IngredientSpawner>();
-        var lemonsBowlSpawner = _lemonsSpawner.GetComponent<IngredientSpawner>();
-        lemonsBowlSpawner.cuttingTable = _cuttingTable;
-        lemonsBowlSpawner.cam = _cam;
-        lemonsBowlSpawner.template  = new Ingredient(true, 
-            _cam,new Vector3(), _cuttingTable, new List<GameObject> {_lemonPrefab},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
-            "lemon", 0);
+        InitSpawner(_lemonsSpawner,
+            new Ingredient(true, 
+                _cam,new Vector3(), _cuttingTable, new List<GameObject> {_lemonPrefab},
+                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
+                "lemon", 0)
+        );
+
+        InitSpawner(_applesSpawner,
+            new Ingredient(true, 
+                _cam,new Vector3(), _cuttingTable, new List<GameObject> {_applePrefab},
+                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
+                "apple", 0)
+        );
+
+        InitSpawner(_cupsSpawner,
+            new Ingredient(true, 
+                _cam,new Vector3(), _cuttingTable, new List<GameObject> {_cupPrefab},
+                new List<IngredientAttr> {IngredientAttr.UTENSIL, IngredientAttr.CUP},
+                "cup", 0)
+        );
         
-        _applesSpawner.AddComponent<IngredientSpawner>();
-        var applesBowlSpawner = _applesSpawner.GetComponent<IngredientSpawner>();
-        applesBowlSpawner.cuttingTable = _cuttingTable;
-        applesBowlSpawner.cam = _cam;
-        applesBowlSpawner.template  = new Ingredient(true, 
-            _cam,new Vector3(), _cuttingTable, new List<GameObject> {_applePrefab},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
-            "apple", 0);
+        
     }
 
     // public void Update()
