@@ -39,7 +39,7 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
             if (Physics.Raycast(ray, out hit))
             {
                 transform.position = new Vector3(hit.point.x,
-                    transform.position.y,
+                    10,
                     hit.point.z);
             }
         }
@@ -50,7 +50,6 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 
 public enum IngredientAttr
 {
-    UTENSIL,
     CUP,
     PLATE,
     TOOL,
@@ -66,6 +65,7 @@ public enum IngredientAttr
 
 public class Ingredient
 {
+    private bool _isUtensil;
     private List<GameObject> _stateObjects;
     private GameObject _gameObject;
     private List<IngredientAttr> _attributes;
@@ -115,31 +115,34 @@ public class Ingredient
         return _gameObject;
     }
 
-    public Ingredient(bool isTemplate, Camera cam, Vector3 spawnPos, GameObject table, List<GameObject> stateObjects, List<IngredientAttr> attributes, 
+    public Ingredient(bool isTemplate, bool isUtensil, Camera cam, Vector3 spawnPos, GameObject table, List<GameObject> stateObjects, List<IngredientAttr> attributes, 
         string name, int timeToProcess)
     {
+        _isUtensil = isUtensil;
+        
         _currIngState = 0;
         
         _stateObjects = stateObjects;
         _cam = cam;
+        
+        _attributes = attributes;
+        _name = name;
+        _timeToProcess = timeToProcess;
         
         //only instantiate if it is not a template
         if (!isTemplate)
         {
             Debug.Log(spawnPos);
             _gameObject = Object.Instantiate(_stateObjects[0], spawnPos, Quaternion.identity);
-            _gameObject.AddComponent<IngredientObjectEvents>();
-            _gameObject.GetComponent<IngredientObjectEvents>().cam = _cam;
-            _gameObject.GetComponent<IngredientObjectEvents>().logic = this;
+            var events = _gameObject.AddComponent<IngredientObjectEvents>();
+            events.cam = _cam;
+            events.logic = this;
         }
         else
         {
             _gameObject = _stateObjects[0];
         }
 
-        _attributes = attributes;
-        _name = name;
-        _timeToProcess = timeToProcess;
     }
         
     public IEnumerator Process(int machineDelay, List<IngredientAttr> inputtedAttr, List<IngredientAttr> outputtedAttr)
@@ -149,16 +152,21 @@ public class Ingredient
         _attributes.AddRange(outputtedAttr);
         
         Object.Destroy(_gameObject);
-        _gameObject = Object.Instantiate(_stateObjects[_currIngState++], 
+        _gameObject = Object.Instantiate(_stateObjects[++_currIngState], 
             _gameObject.transform.position, 
             Quaternion.identity);
-        _gameObject.AddComponent<IngredientObjectEvents>();
-        _gameObject.GetComponent<IngredientObjectEvents>().cam = _cam;
-        _gameObject.GetComponent<IngredientObjectEvents>().logic = this;
+        var events = _gameObject.AddComponent<IngredientObjectEvents>();
+        events.cam = _cam;
+        events.logic = this;
     }
 
     public List<IngredientAttr> GETAttributes()
     {
         return _attributes;
+    }
+    
+    public bool IsUtensil()
+    {
+        return _isUtensil;
     }
 }

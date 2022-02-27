@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.PlayerLoop;
 
 public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
 {
@@ -38,7 +39,7 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
         if (ingEvents != null)
         {
             Ingredient otherIng = ingEvents.logic;
-            if (otherIng.GETAttributes().Contains(IngredientAttr.UTENSIL))
+            if (otherIng.IsUtensil())
             {
                 logic.ADDUtensil(otherIng);
             }
@@ -52,7 +53,9 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
     private void OnTriggerExit(Collider other)
     {
         logic.SETIngredientInProcess(null);
+        logic.ClearAddedUtensilAttributes();
     }
+
 }
     
 enum ProcessUnitState{
@@ -152,5 +155,10 @@ public class FoodProcessor
     public void TurnOff()
     {
         _isOn = ProcessUnitState.OFF;
+    }
+
+    public void ClearAddedUtensilAttributes()
+    {
+        _addedUtensilAttrs.Clear();
     }
 }

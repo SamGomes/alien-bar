@@ -22,7 +22,8 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
             if (Physics.Raycast(ray, out hit))
             {
                 new Ingredient(
-                     false,
+                     false, 
+                     template.IsUtensil(),
                      cam, 
                      new Vector3( hit.point.x, 
                         hit.point.y + template.GETGameObject().transform.position.y, 
@@ -38,6 +39,28 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
     }
 }
 
+public class Board : MonoBehaviour
+{
+    private Order _order;
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Entered processor");
+        var ingEvents = other.GetComponent<IngredientObjectEvents>();
+        if (ingEvents != null)
+        {
+            Ingredient otherIng = ingEvents.logic;
+            if (otherIng.IsUtensil())
+            {
+                // logic.ADDUtensil(otherIng);
+            }
+            else
+            {
+                // logic.SETIngredientInProcess(otherIng);
+            }
+        }
+
+    }
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -54,8 +77,8 @@ public class GameManager : MonoBehaviour
     public GameObject _freezerObj;
 
     public List<GameObject> _orangePrefabs;
-    public GameObject _lemonPrefab;
-    public GameObject _applePrefab;
+    public List<GameObject> _lemonPrefabs;
+    public List<GameObject> _applePrefabs;
     
     public GameObject _cupPrefab;
     
@@ -69,6 +92,8 @@ public class GameManager : MonoBehaviour
     
     public GameObject _cupsSpawner;
 
+    
+    public GameObject _board;
 
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
@@ -85,43 +110,46 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _juiceFoodProcessor = new FoodProcessor(_juiceFoodProcessorObj,
-            new List<IngredientAttr> {IngredientAttr.UTENSIL,IngredientAttr.CUP},
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.DRINK},
+            new List<IngredientAttr> {IngredientAttr.CUP},
             1);
         _knife = new FoodProcessor(_knifeObj,
-            new List<IngredientAttr>(),
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr>(),
             1);
 
         InitSpawner(_orangeSpawner,
-        new Ingredient(true, 
-            _cam,new Vector3(), _cuttingTable, new List<GameObject> {_orangePrefabs[0], _orangePrefabs[1]},
+        new Ingredient(true,false,  
+            _cam,new Vector3(), _cuttingTable, 
+            _orangePrefabs,
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
             "orange", 0)
         );
         
         InitSpawner(_lemonsSpawner,
-            new Ingredient(true, 
-                _cam,new Vector3(), _cuttingTable, new List<GameObject> {_lemonPrefab},
+            new Ingredient(true, false, 
+                _cam,new Vector3(), _cuttingTable, 
+                _lemonPrefabs,
                 new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
                 "lemon", 0)
         );
 
         InitSpawner(_applesSpawner,
-            new Ingredient(true, 
-                _cam,new Vector3(), _cuttingTable, new List<GameObject> {_applePrefab},
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
+            new Ingredient(true, false, 
+                _cam,new Vector3(), _cuttingTable, 
+                _applePrefabs, 
+                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE}, 
                 "apple", 0)
         );
 
         InitSpawner(_cupsSpawner,
-            new Ingredient(true, 
+            new Ingredient(true,true,  
                 _cam,new Vector3(), _cuttingTable, new List<GameObject> {_cupPrefab},
-                new List<IngredientAttr> {IngredientAttr.UTENSIL, IngredientAttr.CUP},
+                new List<IngredientAttr> {IngredientAttr.CUP},
                 "cup", 0)
         );
         
