@@ -58,7 +58,12 @@ public enum IngredientAttr
     CUT,
     COLD,
     HOT,
+    
     FRUIT,
+    ORANGE,
+    LEMON,
+    APPLE,
+    
     OIL,
     DRINK
 }
@@ -68,8 +73,9 @@ public class Ingredient
     private bool _isUtensil;
     private List<GameObject> _stateObjects;
     private GameObject _gameObject;
+
+
     private List<IngredientAttr> _attributes;
-    private string _name;
     private int _timeToProcess;
     
     private int _currIngState;
@@ -88,35 +94,22 @@ public class Ingredient
         set => _attributes = value;
     }
 
-    // public string Name
-    // {
-    //     get => _name;
-    //     set => _name = value;
-    // }
-    public string GETName()
+    public GameObject GameObject
     {
-        return _name;
+        get => _gameObject;
+        set => _gameObject = value;
     }
 
-
-    // public int TimeToProcess
-    // {
-    //     get => _timeToProcess;
-    //     set => _timeToProcess = value;
-    // }
-    public int GETTimeToProcess()
+    public int TimeToProcess
     {
-        return _timeToProcess;
+        get => _timeToProcess;
+        set => _timeToProcess = value;
     }
-
-        
-    public GameObject GETGameObject()
-    {
-        return _gameObject;
-    }
-
-    public Ingredient(bool isTemplate, bool isUtensil, Camera cam, Vector3 spawnPos, GameObject table, List<GameObject> stateObjects, List<IngredientAttr> attributes, 
-        string name, int timeToProcess)
+   
+    public Ingredient(bool isTemplate, bool isUtensil, 
+        Camera cam, Vector3 spawnPos, 
+        GameObject table, List<GameObject> stateObjects, 
+        List<IngredientAttr> attributes, int timeToProcess)
     {
         _isUtensil = isUtensil;
         
@@ -126,7 +119,6 @@ public class Ingredient
         _cam = cam;
         
         _attributes = attributes;
-        _name = name;
         _timeToProcess = timeToProcess;
         
         //only instantiate if it is not a template

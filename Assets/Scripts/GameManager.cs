@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 
 public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
@@ -26,13 +24,12 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
                      template.IsUtensil(),
                      cam, 
                      new Vector3( hit.point.x, 
-                        hit.point.y + template.GETGameObject().transform.position.y, 
+                        hit.point.y + template.GameObject.transform.position.y, 
                         hit.point.z),
                      cuttingTable,
                      template.GETStateObjects(),
                      template.GETAttributes(),
-                     template.GETName(),
-                     template.GETTimeToProcess()
+                     template.TimeToProcess
                      );
             }
         }
@@ -126,31 +123,31 @@ public class GameManager : MonoBehaviour
         new Ingredient(true,false,  
             _cam,new Vector3(), _cuttingTable, 
             _orangePrefabs,
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
-            "orange", 0)
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
+            0)
         );
         
         InitSpawner(_lemonsSpawner,
             new Ingredient(true, false, 
                 _cam,new Vector3(), _cuttingTable, 
                 _lemonPrefabs,
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE},
-                "lemon", 0)
+                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
+                0)
         );
 
         InitSpawner(_applesSpawner,
             new Ingredient(true, false, 
                 _cam,new Vector3(), _cuttingTable, 
                 _applePrefabs, 
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.WHOLE}, 
-                "apple", 0)
+                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE}, 
+                0)
         );
 
         InitSpawner(_cupsSpawner,
             new Ingredient(true,true,  
                 _cam,new Vector3(), _cuttingTable, new List<GameObject> {_cupPrefab},
                 new List<IngredientAttr> {IngredientAttr.CUP},
-                "cup", 0)
+                0)
         );
         
         
