@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,14 +22,14 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
             {
                 new Ingredient(
                      false, 
-                     template.IsUtensil(),
+                     template.IsUtensil,
                      cam, 
                      new Vector3( hit.point.x, 
                         hit.point.y + template.GameObject.transform.position.y, 
                         hit.point.z),
                      cuttingTable,
-                     template.GETStateObjects(),
-                     template.GETAttributes(),
+                     template.StateObjects,
+                     template.Attributes,
                      template.TimeToProcess
                      );
             }
@@ -46,7 +47,7 @@ public class Board : MonoBehaviour
         if (ingEvents != null)
         {
             Ingredient otherIng = ingEvents.logic;
-            if (otherIng.IsUtensil())
+            if (otherIng.IsUtensil)
             {
                 // logic.ADDUtensil(otherIng);
             }
@@ -61,96 +62,214 @@ public class Board : MonoBehaviour
 
 public class GameManager : MonoBehaviour
 {
-    public Camera _cam;
-    public GameObject _cuttingTable;
+    private int _currOrderLevel;
+    
+    
+    private float _minOrderTime;
+    private float _maxOrderTime;
+    
+    public List<List<Recipe>> orderRecipesByLevel;
+    [SerializeField]
+    public List<Order> currOrders;
+    
+    public Camera cam;
+    public GameObject cuttingTable;
 
-    public GameObject _juiceFoodProcessorObj;
-    public GameObject _knifeObj;
-    public GameObject _burner1Obj;
-    public GameObject _burner2Obj;
-    public GameObject _burner3Obj;
-    public GameObject _burner4Obj;
-    public GameObject _coffeeMachineObj;
-    public GameObject _freezerObj;
+    public GameObject juiceFoodProcessorObj;
+    public GameObject knifeObj;
+    public GameObject burner1Obj;
+    public GameObject burner2Obj;
+    public GameObject burner3Obj;
+    public GameObject burner4Obj;
+    public GameObject coffeeMachineObj;
 
-    public List<GameObject> _orangePrefabs;
-    public List<GameObject> _lemonPrefabs;
-    public List<GameObject> _applePrefabs;
+    public List<GameObject> orangePrefabs;
+    public List<GameObject> lemonPrefabs;
+    public List<GameObject> applePrefabs;
     
-    public GameObject _cupPrefab;
+    public GameObject cupPrefab;
     
-    private FoodProcessor _juiceFoodProcessor;
-    private FoodProcessor _knife;
-    
-    public GameObject _orangeSpawner;
-    public GameObject _lemonsSpawner;
-    public GameObject _applesSpawner;
+    public GameObject orangeSpawner;
+    public GameObject lemonsSpawner;
+    public GameObject applesSpawner;
     
     
-    public GameObject _cupsSpawner;
+    public GameObject cupsSpawner;
 
-    
-    public GameObject _board;
+    public GameObject board;
 
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
         spawnerObj.AddComponent<IngredientSpawner>();
         var spawner = spawnerObj.GetComponent<IngredientSpawner>();
-        spawner.cuttingTable = _cuttingTable;
-        spawner.cam = _cam;
+        spawner.cuttingTable = cuttingTable;
+        spawner.cam = cam;
         spawner.template = template;
     }
-    
-    
+
+    void InitFruitSectionSpawners()
+    {
+        InitSpawner(orangeSpawner,
+            new Ingredient(true,false,  
+                cam,new Vector3(), cuttingTable, 
+                orangePrefabs,
+                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
+                0)
+        );
+        
+        InitSpawner(lemonsSpawner,
+            new Ingredient(true, false, 
+                cam,new Vector3(), cuttingTable, 
+                lemonPrefabs,
+                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
+                0)
+        );
+
+        InitSpawner(applesSpawner,
+            new Ingredient(true, false, 
+                cam,new Vector3(), cuttingTable, 
+                applePrefabs, 
+                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE}, 
+                0)
+        );
+
+        InitSpawner(cupsSpawner,
+            new Ingredient(true,true,  
+                cam,new Vector3(), cuttingTable, new List<GameObject> {cupPrefab},
+                new List<IngredientAttr> {IngredientAttr.CUP},
+                0)
+        );
+    }
+
+    void InitPossibleOrders()
+    {
+        Ingredient orangeWhole = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            orangePrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
+            0);
+        
+        Ingredient lemonWhole = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            lemonPrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
+            0);
+       
+        Ingredient appleWhole = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            applePrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE},
+            0);
+        
+        
+        Ingredient orangeCut = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            orangePrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.CUT},
+            0);
+        
+        Ingredient lemonCut = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            lemonPrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.CUT},
+            0);
+       
+        Ingredient appleCut = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            applePrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.CUT},
+            0);
+        
+        
+        
+        Ingredient orangeJuice = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            orangePrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.DRINK},
+            0);
+        
+        Ingredient lemonJuice = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            lemonPrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.DRINK},
+            0);
+       
+        Ingredient appleJuice = new Ingredient(true,false,  
+            cam,new Vector3(), cuttingTable, 
+            applePrefabs,
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.DRINK},
+            0);
+        
+        
+        Ingredient cup = new Ingredient(true,true,  
+            cam,new Vector3(), cuttingTable, new List<GameObject> {cupPrefab},
+            new List<IngredientAttr> {IngredientAttr.CUP},
+            0);
+
+
+        orderRecipesByLevel = new List<List<Recipe>>();
+        orderRecipesByLevel.Add(new List<Recipe>());
+        orderRecipesByLevel[0].Add(new Recipe(new List<Ingredient>() {orangeWhole}, 1));
+        orderRecipesByLevel[0].Add(new Recipe(new List<Ingredient>() {lemonWhole}, 1));
+        orderRecipesByLevel[0].Add(new Recipe(new List<Ingredient>() {appleWhole}, 1));
+        
+        orderRecipesByLevel.Add(new List<Recipe>());
+        orderRecipesByLevel[1].Add(new Recipe(new List<Ingredient>() {orangeCut}, 2));
+        orderRecipesByLevel[1].Add(new Recipe(new List<Ingredient>() {lemonCut}, 2));
+        orderRecipesByLevel[1].Add(new Recipe(new List<Ingredient>() {appleCut}, 2));
+        
+        orderRecipesByLevel.Add(new List<Recipe>());
+        orderRecipesByLevel[2].Add(new Recipe(new List<Ingredient>() {orangeCut}, 3));
+        orderRecipesByLevel[2].Add(new Recipe(new List<Ingredient>() {lemonCut}, 3));
+        orderRecipesByLevel[2].Add(new Recipe(new List<Ingredient>() {appleCut}, 3));
+
+        
+    }
+
+    void AskForOrders()
+    {
+        Order newOrder = new Order();
+
+        int numRecipes = _currOrderLevel / Random.Range(1, _currOrderLevel+1);
+        for (int i = 0; i < numRecipes; i++)
+        {
+            List <Recipe> orderRecipes = orderRecipesByLevel[(_currOrderLevel / numRecipes) - 1];
+            newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
+        }
+
+        currOrders.Add(newOrder);
+    }
     
     // Start is called before the first frame update
     void Start()
     {
-        _juiceFoodProcessor = new FoodProcessor(_juiceFoodProcessorObj,
+        var juiceFoodProcessor = new FoodProcessor(juiceFoodProcessorObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.DRINK},
             new List<IngredientAttr> {IngredientAttr.CUP},
             1);
-        _knife = new FoodProcessor(_knifeObj,
+        var knife = new FoodProcessor(knifeObj,
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
             1);
 
-        InitSpawner(_orangeSpawner,
-        new Ingredient(true,false,  
-            _cam,new Vector3(), _cuttingTable, 
-            _orangePrefabs,
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
-            0)
-        );
+        _minOrderTime = 0;
+        _maxOrderTime = 1;
+        _currOrderLevel = 3;
+        currOrders = new List<Order>();
         
-        InitSpawner(_lemonsSpawner,
-            new Ingredient(true, false, 
-                _cam,new Vector3(), _cuttingTable, 
-                _lemonPrefabs,
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
-                0)
-        );
+        InitFruitSectionSpawners();
+        InitPossibleOrders();
+        
+        AskForOrders();
+//        InvokeRepeating("AskForOrders", 
+//            0.0f, 
+//            Random.Range(_minOrderTime, _maxOrderTime));
 
-        InitSpawner(_applesSpawner,
-            new Ingredient(true, false, 
-                _cam,new Vector3(), _cuttingTable, 
-                _applePrefabs, 
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE}, 
-                0)
-        );
 
-        InitSpawner(_cupsSpawner,
-            new Ingredient(true,true,  
-                _cam,new Vector3(), _cuttingTable, new List<GameObject> {_cupPrefab},
-                new List<IngredientAttr> {IngredientAttr.CUP},
-                0)
-        );
-        
-        
     }
 
     // public void Update()

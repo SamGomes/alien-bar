@@ -70,95 +70,58 @@ public enum IngredientAttr
 
 public class Ingredient
 {
-    private bool _isUtensil;
-    private List<GameObject> _stateObjects;
-    private GameObject _gameObject;
-
-
-    private List<IngredientAttr> _attributes;
-    private int _timeToProcess;
+    public Camera Cam { get; set; }
+    public List<GameObject> StateObjects { get; set; }
+    public List<IngredientAttr> Attributes { get; set; }
+    public GameObject GameObject { get; set; }
+    public int TimeToProcess { get; set; }
+    public bool IsUtensil { get; set; }
+    public int CurrIngState { get; set; }
     
-    private int _currIngState;
-
-    private Camera _cam;
-    
-    // public List<GameObject> StateObjects => _stateObjects;
-    public List<GameObject> GETStateObjects()
-    {
-        return _stateObjects;
-    }
-
-    public List<IngredientAttr> Attributes
-    {
-        get => _attributes;
-        set => _attributes = value;
-    }
-
-    public GameObject GameObject
-    {
-        get => _gameObject;
-        set => _gameObject = value;
-    }
-
-    public int TimeToProcess
-    {
-        get => _timeToProcess;
-        set => _timeToProcess = value;
-    }
-   
     public Ingredient(bool isTemplate, bool isUtensil, 
         Camera cam, Vector3 spawnPos, 
         GameObject table, List<GameObject> stateObjects, 
         List<IngredientAttr> attributes, int timeToProcess)
     {
-        _isUtensil = isUtensil;
+        IsUtensil = isUtensil;
         
-        _currIngState = 0;
+        CurrIngState = 0;
         
-        _stateObjects = stateObjects;
-        _cam = cam;
+        StateObjects = stateObjects;
+        Cam = cam;
         
-        _attributes = attributes;
-        _timeToProcess = timeToProcess;
+        Attributes = attributes;
+        TimeToProcess = timeToProcess;
         
         //only instantiate if it is not a template
         if (!isTemplate)
         {
             Debug.Log(spawnPos);
-            _gameObject = Object.Instantiate(_stateObjects[0], spawnPos, Quaternion.identity);
-            var events = _gameObject.AddComponent<IngredientObjectEvents>();
-            events.cam = _cam;
+            GameObject = Object.Instantiate(StateObjects[0], spawnPos, Quaternion.identity);
+            var events = GameObject.AddComponent<IngredientObjectEvents>();
+            events.cam = Cam;
             events.logic = this;
         }
         else
         {
-            _gameObject = _stateObjects[0];
+            GameObject = StateObjects[0];
         }
 
     }
         
     public IEnumerator Process(int machineDelay, List<IngredientAttr> inputtedAttr, List<IngredientAttr> outputtedAttr)
     {
-        yield return new WaitForSeconds(_timeToProcess + machineDelay);
-        _attributes = _attributes.Except(inputtedAttr).ToList();
-        _attributes.AddRange(outputtedAttr);
+        yield return new WaitForSeconds(TimeToProcess + machineDelay);
+        Attributes = Attributes.Except(inputtedAttr).ToList();
+        Attributes.AddRange(outputtedAttr);
         
-        Object.Destroy(_gameObject);
-        _gameObject = Object.Instantiate(_stateObjects[++_currIngState], 
-            _gameObject.transform.position, 
+        Object.Destroy(GameObject);
+        GameObject = Object.Instantiate(StateObjects[++CurrIngState], 
+            GameObject.transform.position, 
             Quaternion.identity);
-        var events = _gameObject.AddComponent<IngredientObjectEvents>();
-        events.cam = _cam;
+        var events = GameObject.AddComponent<IngredientObjectEvents>();
+        events.cam = Cam;
         events.logic = this;
     }
 
-    public List<IngredientAttr> GETAttributes()
-    {
-        return _attributes;
-    }
-    
-    public bool IsUtensil()
-    {
-        return _isUtensil;
-    }
 }

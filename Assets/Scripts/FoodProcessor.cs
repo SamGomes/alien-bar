@@ -45,7 +45,7 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
         if (ingEvents != null)
         {
             Ingredient otherIng = ingEvents.logic;
-            if (otherIng.IsUtensil())
+            if (otherIng.IsUtensil)
             {
                 logic.ADDUtensil(otherIng);
             }
@@ -180,7 +180,7 @@ public class FoodProcessor
     public void ADDUtensil(Ingredient utensilToAdd)
     {
         List<IngredientAttr> utensilAttrsToAdd = 
-            utensilToAdd.GETAttributes().Except(_addedUtensilAttrs).ToList();
+            utensilToAdd.Attributes.Except(_addedUtensilAttrs).ToList();
         _addedUtensilAttrs.AddRange(utensilAttrsToAdd);
         Object.Destroy(utensilToAdd.GameObject);
     }
@@ -210,7 +210,7 @@ public class FoodProcessor
         bool isCurrIngrAccepted = true;
         foreach (var attr in _acceptedAttrs)
         {
-            if (!_ingredientInProcess.GETAttributes().Contains(attr))
+            if (!_ingredientInProcess.Attributes.Contains(attr))
             {
                 isCurrIngrAccepted = false;
                 break;

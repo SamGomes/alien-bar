@@ -1,45 +1,45 @@
 using System.Collections.Generic;
 public class Recipe
 {
-    private List<Ingredient> _ingredients;
-    private int _level;
-
-    public List<Ingredient> Ingredients
+    public List<Ingredient> Ingredients { get; set; }
+    public int Level { get; set; }
+    
+    public Recipe(List<Ingredient> ingredients, int level)
     {
-        get => _ingredients;
-        set => _ingredients = value;
-    }
-
-    public int Level
-    {
-        get => _level;
-        set => _level = value;
+        Ingredients = ingredients;
+        Level = level;
     }
 
 }
 
 public class Order
 {
-    private List<Recipe> _recipes;
-    private int _level;
+    public int Level { get; set; }
 
+    private List<Recipe> _recipes;
     public List<Recipe> Recipes
     {
-        get => _recipes;
-        set => _recipes = value;
-    }
-
-    public int Level
-    {
-        get
+        get { return _recipes; }
+        private set
         {
-            int level = 0;
+            _recipes = value;
+            int Level = 0;
             foreach(Recipe recipe in _recipes)
             {
-                level += recipe.Level;
+                Level += recipe.Level;
             }
-            return level;
         }
+    }
+
+    public void AddRecipe(Recipe recipe)
+    {
+        Recipes.Add(recipe);
+        Level += recipe.Level;
+    }
+
+    public Order()
+    {
+        Recipes = new List<Recipe>();
     }
 
 }
