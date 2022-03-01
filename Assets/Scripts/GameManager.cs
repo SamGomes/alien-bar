@@ -69,8 +69,10 @@ public class GameManager : MonoBehaviour
     private float _maxOrderTime;
     
     public List<List<Recipe>> orderRecipesByLevel;
-    [SerializeField]
+    public GameObject orderDisplayPositioner;
+    public List<GameObject> orderSectionPositioners;
     public List<Order> currOrders;
+    
     
     public Camera cam;
     public GameObject cuttingTable;
@@ -98,6 +100,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject board;
 
+
+    
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
         spawnerObj.AddComponent<IngredientSpawner>();
@@ -237,9 +241,15 @@ public class GameManager : MonoBehaviour
             newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
         }
 
+        PrintOrder(newOrder);
         currOrders.Add(newOrder);
     }
-    
+
+    private void PrintOrder(Order newOrder)
+    {
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {

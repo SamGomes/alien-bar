@@ -1,6 +1,15 @@
 using System.Collections.Generic;
+
+public enum OrderSection
+{
+    Fruits = 0,
+    Dessert = 1,
+    Pasta = 2
+}
+
 public class Recipe
 {
+    public OrderSection section;
     public List<Ingredient> Ingredients { get; set; }
     public int Level { get; set; }
     
