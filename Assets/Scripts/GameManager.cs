@@ -69,8 +69,11 @@ public class GameManager : MonoBehaviour
     private float _maxOrderTime;
     
     public List<List<Recipe>> orderRecipesByLevel;
+    
+    public GameObject orderPrefab;
+    public GameObject orderContainer;
     public GameObject orderDisplayPositioner;
-    public List<GameObject> orderSectionPositioners;
+    
     public List<Order> currOrders;
     
     
@@ -149,38 +152,38 @@ public class GameManager : MonoBehaviour
     {
         Ingredient orangeWhole = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            orangePrefabs,
+            new List<GameObject>{orangePrefabs[0]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
             0);
         
         Ingredient lemonWhole = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            lemonPrefabs,
+            new List<GameObject>{lemonPrefabs[0]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
             0);
        
         Ingredient appleWhole = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            applePrefabs,
+            new List<GameObject>{applePrefabs[0]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE},
             0);
         
         
         Ingredient orangeCut = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            orangePrefabs,
+            new List<GameObject>{orangePrefabs[1]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.CUT},
             0);
         
         Ingredient lemonCut = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            lemonPrefabs,
+            new List<GameObject>{lemonPrefabs[1]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.CUT},
             0);
        
         Ingredient appleCut = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            applePrefabs,
+            new List<GameObject>{applePrefabs[1]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.CUT},
             0);
         
@@ -188,19 +191,19 @@ public class GameManager : MonoBehaviour
         
         Ingredient orangeJuice = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            orangePrefabs,
+            new List<GameObject>{orangePrefabs[2]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.DRINK},
             0);
         
         Ingredient lemonJuice = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            lemonPrefabs,
+            new List<GameObject>{lemonPrefabs[2]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.DRINK},
             0);
        
         Ingredient appleJuice = new Ingredient(true,false,  
             cam,new Vector3(), cuttingTable, 
-            applePrefabs,
+            new List<GameObject>{applePrefabs[2]},
             new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.DRINK},
             0);
         
@@ -230,25 +233,21 @@ public class GameManager : MonoBehaviour
         
     }
 
-    void AskForOrders()
+    void GenerateOrder()
     {
         Order newOrder = new Order();
-
-        int numRecipes = _currOrderLevel / Random.Range(1, _currOrderLevel+1);
+        int numRecipes = _currOrderLevel / Random.Range(1, _currOrderLevel + 1);
         for (int i = 0; i < numRecipes; i++)
         {
             List <Recipe> orderRecipes = orderRecipesByLevel[(_currOrderLevel / numRecipes) - 1];
             newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
         }
 
-        PrintOrder(newOrder);
         currOrders.Add(newOrder);
+        newOrder.PrintOrder(orderPrefab, cam, orderContainer, orderDisplayPositioner);
     }
 
-    private void PrintOrder(Order newOrder)
-    {
-        
-    }
+    
 
     // Start is called before the first frame update
     void Start()
@@ -266,18 +265,18 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr>(),
             1);
 
-        _minOrderTime = 0;
-        _maxOrderTime = 1;
+        _minOrderTime = 5;
+        _maxOrderTime = 10;
         _currOrderLevel = 3;
         currOrders = new List<Order>();
         
         InitFruitSectionSpawners();
         InitPossibleOrders();
         
-        AskForOrders();
-//        InvokeRepeating("AskForOrders", 
-//            0.0f, 
-//            Random.Range(_minOrderTime, _maxOrderTime));
+//        GenerateOrder();
+        InvokeRepeating("GenerateOrder", 
+            0.0f, 
+            Random.Range(_minOrderTime, _maxOrderTime));
 
 
     }
