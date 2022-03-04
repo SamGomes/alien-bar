@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 
 public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
@@ -40,24 +41,6 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
 public class Board : MonoBehaviour
 {
     private Order _order;
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Entered processor");
-        var ingEvents = other.GetComponent<IngredientObjectEvents>();
-        if (ingEvents != null)
-        {
-            Ingredient otherIng = ingEvents.logic;
-            if (otherIng.IsUtensil)
-            {
-                // logic.ADDUtensil(otherIng);
-            }
-            else
-            {
-                // logic.SETIngredientInProcess(otherIng);
-            }
-        }
-
-    }
 }
 
 public class GameManager : MonoBehaviour
@@ -67,12 +50,12 @@ public class GameManager : MonoBehaviour
     
     private float _minOrderTime;
     private float _maxOrderTime;
+    private float _maxPendingOrders;
     
     public List<List<Recipe>> orderRecipesByLevel;
     
     public GameObject orderPrefab;
     public GameObject orderContainer;
-    public GameObject orderDisplayPositioner;
     
     public List<Order> currOrders;
     
@@ -150,87 +133,70 @@ public class GameManager : MonoBehaviour
 
     void InitPossibleOrders()
     {
-        Ingredient orangeWhole = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{orangePrefabs[0]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
-            0);
+        List<IngredientAttr> orangeWhole = 
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE};
         
-        Ingredient lemonWhole = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{lemonPrefabs[0]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
-            0);
+        List<IngredientAttr> lemonWhole = 
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE};
+
+        List<IngredientAttr> appleWhole =
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE};
+
+
+        List<IngredientAttr> orangeCut = 
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.CUT};
+        
+        List<IngredientAttr> lemonCut = 
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.CUT};
        
-        Ingredient appleWhole = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{applePrefabs[0]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE},
-            0);
+        List<IngredientAttr> appleCut = 
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.CUT};
         
         
-        Ingredient orangeCut = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{orangePrefabs[1]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.CUT},
-            0);
+        List<IngredientAttr> orangeJuice = 
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.DRINK};
         
-        Ingredient lemonCut = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{lemonPrefabs[1]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.CUT},
-            0);
+        List<IngredientAttr> lemonJuice = 
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.DRINK};
        
-        Ingredient appleCut = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{applePrefabs[1]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.CUT},
-            0);
-        
-        
-        
-        Ingredient orangeJuice = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{orangePrefabs[2]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.DRINK},
-            0);
-        
-        Ingredient lemonJuice = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{lemonPrefabs[2]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.DRINK},
-            0);
-       
-        Ingredient appleJuice = new Ingredient(true,false,  
-            cam,new Vector3(), cuttingTable, 
-            new List<GameObject>{applePrefabs[2]},
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.DRINK},
-            0);
-        
-        
-        Ingredient cup = new Ingredient(true,true,  
-            cam,new Vector3(), cuttingTable, new List<GameObject> {cupPrefab},
-            new List<IngredientAttr> {IngredientAttr.CUP},
-            0);
+        List<IngredientAttr> appleJuice = 
+            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.DRINK};
+
+        List<IngredientAttr> cup = new List<IngredientAttr> {IngredientAttr.CUP};
 
 
         orderRecipesByLevel = new List<List<Recipe>>();
         orderRecipesByLevel.Add(new List<Recipe>());
-        orderRecipesByLevel[0].Add(new Recipe(new List<Ingredient>() {orangeWhole}, 1));
-        orderRecipesByLevel[0].Add(new Recipe(new List<Ingredient>() {lemonWhole}, 1));
-        orderRecipesByLevel[0].Add(new Recipe(new List<Ingredient>() {appleWhole}, 1));
+        orderRecipesByLevel[0].Add(new Recipe("orangeWhole", 
+            new List<List<IngredientAttr>>() {orangeWhole}, 1));
+        orderRecipesByLevel[0].Add(new Recipe("lemonWhole", 
+            new List<List<IngredientAttr>>() {lemonWhole}, 1));
+        orderRecipesByLevel[0].Add(new Recipe("appleWhole", 
+            new List<List<IngredientAttr>>() {appleWhole}, 1));
         
         orderRecipesByLevel.Add(new List<Recipe>());
-        orderRecipesByLevel[1].Add(new Recipe(new List<Ingredient>() {orangeCut}, 2));
-        orderRecipesByLevel[1].Add(new Recipe(new List<Ingredient>() {lemonCut}, 2));
-        orderRecipesByLevel[1].Add(new Recipe(new List<Ingredient>() {appleCut}, 2));
+        orderRecipesByLevel[1].Add(new Recipe("orangeCut", 
+            new List<List<IngredientAttr>>() {orangeCut}, 2));
+        orderRecipesByLevel[1].Add(new Recipe("lemonCut", 
+            new List<List<IngredientAttr>>() {lemonCut}, 2));
+        orderRecipesByLevel[1].Add(new Recipe("appleCut", 
+            new List<List<IngredientAttr>>() {appleCut}, 2));
         
         orderRecipesByLevel.Add(new List<Recipe>());
-        orderRecipesByLevel[2].Add(new Recipe(new List<Ingredient>() {orangeCut}, 3));
-        orderRecipesByLevel[2].Add(new Recipe(new List<Ingredient>() {lemonCut}, 3));
-        orderRecipesByLevel[2].Add(new Recipe(new List<Ingredient>() {appleCut}, 3));
+        orderRecipesByLevel[2].Add(new Recipe("orangeJuice", 
+            new List<List<IngredientAttr>>() {orangeJuice}, 3));
+        orderRecipesByLevel[2].Add(new Recipe("lemonJuice", 
+            new List<List<IngredientAttr>>() {lemonJuice}, 3));
+        orderRecipesByLevel[2].Add(new Recipe("appleJuice", 
+            new List<List<IngredientAttr>>() {appleJuice}, 3));
 
-        
+        orderRecipesByLevel.Add(new List<Recipe>());
+        orderRecipesByLevel[3].Add(new Recipe("citrusJuice", 
+            new List<List<IngredientAttr>>() {orangeJuice,lemonJuice}, 4));
+        orderRecipesByLevel[3].Add(new Recipe("tuttiFruttiJuice", 
+            new List<List<IngredientAttr>>() {orangeJuice,appleJuice,lemonJuice}, 4));
+
+
     }
 
     void GenerateOrder()
@@ -244,7 +210,7 @@ public class GameManager : MonoBehaviour
         }
 
         currOrders.Add(newOrder);
-        newOrder.PrintOrder(orderPrefab, cam, orderContainer, orderDisplayPositioner);
+        newOrder.PrintOrder(orderPrefab, cam, orderContainer);
     }
 
     
@@ -265,15 +231,16 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr>(),
             1);
 
-        _minOrderTime = 5;
-        _maxOrderTime = 10;
-        _currOrderLevel = 3;
+        _minOrderTime = 1;
+        _maxOrderTime = 1;
+        _currOrderLevel = 4;
+        _maxPendingOrders = 5;
         currOrders = new List<Order>();
         
         InitFruitSectionSpawners();
         InitPossibleOrders();
         
-//        GenerateOrder();
+        
         InvokeRepeating("GenerateOrder", 
             0.0f, 
             Random.Range(_minOrderTime, _maxOrderTime));
@@ -281,8 +248,11 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // public void Update()
-    // {
-    //     _applesSpawner.transform.Translate(new Vector3());
-    // }
+    public void Update()
+    {
+        if (currOrders.Count == _maxPendingOrders)
+        {
+            SceneManager.LoadScene("GameOverScene");
+        }
+    }
 }

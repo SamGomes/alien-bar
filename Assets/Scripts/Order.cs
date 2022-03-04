@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 public enum OrderSection
 {
@@ -12,33 +12,30 @@ public enum OrderSection
 
 public class Recipe
 {
+    public string Name { get; set; }
     public OrderSection Section { get; set; }
-    public List<Ingredient> Ingredients { get; set; }
+    public List<List<IngredientAttr>> IngredientAttrs { get; set; }
     public int Level { get; set; }
     
-    public Recipe(List<Ingredient> ingredients, int level)
+    public Recipe(string name, List<List<IngredientAttr>> ingredientAttrs, int level)
     {
-        Ingredients = ingredients;
+        Name = name;
+        IngredientAttrs = ingredientAttrs;
         Level = level;
     }
 
 }
 
 
-public class OrderObjectEvents : MonoBehaviour//, IPointerClickHandler
+public class OrderObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public Camera cam;
     public Order logic;
-//    public void OnPointerClick(PointerEventData pointerEventData)
-//    {
-//        
-//    }
-
-    public void Update()
+    public void OnPointerClick(PointerEventData pointerEventData)
     {
-        Debug.Log(logic.TimeLeft);
-//        gameObject.transform.GetChild(0)
+        
     }
+
 }
 
 
@@ -46,7 +43,6 @@ public class OrderObjectEvents : MonoBehaviour//, IPointerClickHandler
 public class Order
 {
     private GameObject _gameObject;
-    public float TimeLeft { get; set; }
     public int Level { get; set; }
 
     private List<Recipe> _recipes;
@@ -77,8 +73,7 @@ public class Order
     
     public void PrintOrder(GameObject orderPrefab, 
                 Camera cam, 
-                GameObject orderContainer, 
-                GameObject orderDisplayPositioner)
+                GameObject orderContainer)
     {
     
         Transform newOrderObj = Object.Instantiate(orderPrefab,orderContainer.transform).transform;
@@ -91,12 +86,9 @@ public class Order
         
         foreach (Recipe recipe in Recipes)
         {
-            foreach(Ingredient ing in recipe.Ingredients)
-            {
-                GameObject positionerObj = Object.Instantiate(orderDisplayPositioner.gameObject, 
-                    orderSectionPositioner.GetChild((int) recipe.Section).GetChild(0).transform);
-                Object.Instantiate(ing.GameObject, positionerObj.transform.GetChild(0).transform);
-            }
+            var tmp = orderSectionPositioner.GetChild((int) recipe.Section).GetChild(1).
+                    GetComponent<TextMeshPro>();
+            tmp.text = (tmp.text.Length == 0)? recipe.Name: tmp.text + "," + recipe.Name;
         }
     }
 
