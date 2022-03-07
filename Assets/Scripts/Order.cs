@@ -10,6 +10,12 @@ public enum OrderSection
     PASTAS = 2
 }
 
+public class RecipeObjectEvents : MonoBehaviour
+{
+    public Recipe logic;
+
+}
+
 public class Recipe
 {
     public string Name { get; set; }
@@ -27,16 +33,17 @@ public class Recipe
 }
 
 
-public class OrderObjectEvents : MonoBehaviour, IPointerClickHandler
-{
-    public Camera cam;
-    public Order logic;
-    public void OnPointerClick(PointerEventData pointerEventData)
-    {
-        
-    }
-
-}
+// public class OrderObjectEvents : MonoBehaviour, IPointerClickHandler
+// {
+//     public Camera cam;
+//     public Order order;
+//     public GameManager gm;
+//     public void OnPointerClick(PointerEventData pointerEventData)
+//     {
+//         gm.currOrder
+//     }
+//
+// }
 
 
 
@@ -77,9 +84,9 @@ public class Order
     {
     
         Transform newOrderObj = Object.Instantiate(orderPrefab,orderContainer.transform).transform;
-        var events = newOrderObj.gameObject.AddComponent<OrderObjectEvents>();
-        events.cam = cam;
-        events.logic = this;
+        // var events = newOrderObj.gameObject.AddComponent<OrderObjectEvents>();
+        // events.cam = cam;
+        // events.logic = this;
         
         Transform orderSectionPositioner = newOrderObj.transform.GetChild(1).transform;
         

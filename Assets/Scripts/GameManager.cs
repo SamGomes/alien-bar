@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
 {
     public Camera cam;
-    public GameObject cuttingTable;
     public Ingredient template;
     public void OnPointerClick(PointerEventData pointerEventData)
     {
@@ -25,10 +24,9 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
                      false, 
                      template.IsUtensil,
                      cam, 
-                     new Vector3( hit.point.x, 
-                        hit.point.y + template.GameObject.transform.position.y, 
-                        hit.point.z),
-                     cuttingTable,
+                     new Vector3( 350, 
+                        0 + template.GameObject.transform.position.y, 
+                        100),
                      template.StateObjects,
                      template.Attributes,
                      template.TimeToProcess
@@ -38,9 +36,28 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
     }
 }
 
-public class Board : MonoBehaviour
+public class DeliveryBoardEvents : MonoBehaviour
 {
+    public GameManager gm;
+    
     private Order _order;
+    private List<Recipe> _recipes;
+    
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Entered delivery board");
+        var recEvents = other.GetComponent<RecipeObjectEvents>();
+        if (recEvents != null)
+        {
+            _recipes.Add(recEvents.logic);
+        }
+    }
+    
+    public void OnPointerClick(PointerEventData pointerEventData)
+    {
+        gm.EvaluateOrder(_order, _recipes);
+    }
 }
 
 public class GameManager : MonoBehaviour
@@ -61,16 +78,14 @@ public class GameManager : MonoBehaviour
     
     
     public Camera cam;
-    public GameObject cuttingTable;
+    
+    //food combiners
+    public GameObject fruitCombinerObj;
 
+    //food processors
     public GameObject juiceFoodProcessorObj;
     public GameObject knifeObj;
-    public GameObject burner1Obj;
-    public GameObject burner2Obj;
-    public GameObject burner3Obj;
-    public GameObject burner4Obj;
-    public GameObject coffeeMachineObj;
-
+   
     public List<GameObject> orangePrefabs;
     public List<GameObject> lemonPrefabs;
     public List<GameObject> applePrefabs;
@@ -84,15 +99,12 @@ public class GameManager : MonoBehaviour
     
     public GameObject cupsSpawner;
 
-    public GameObject board;
-
 
     
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
         spawnerObj.AddComponent<IngredientSpawner>();
         var spawner = spawnerObj.GetComponent<IngredientSpawner>();
-        spawner.cuttingTable = cuttingTable;
         spawner.cam = cam;
         spawner.template = template;
     }
@@ -101,7 +113,7 @@ public class GameManager : MonoBehaviour
     {
         InitSpawner(orangeSpawner,
             new Ingredient(true,false,  
-                cam,new Vector3(), cuttingTable, 
+                cam,new Vector3(), 
                 orangePrefabs,
                 new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
                 0)
@@ -109,7 +121,7 @@ public class GameManager : MonoBehaviour
         
         InitSpawner(lemonsSpawner,
             new Ingredient(true, false, 
-                cam,new Vector3(), cuttingTable, 
+                cam,new Vector3(), 
                 lemonPrefabs,
                 new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
                 0)
@@ -117,7 +129,7 @@ public class GameManager : MonoBehaviour
 
         InitSpawner(applesSpawner,
             new Ingredient(true, false, 
-                cam,new Vector3(), cuttingTable, 
+                cam,new Vector3(), 
                 applePrefabs, 
                 new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE}, 
                 0)
@@ -125,7 +137,7 @@ public class GameManager : MonoBehaviour
 
         InitSpawner(cupsSpawner,
             new Ingredient(true,true,  
-                cam,new Vector3(), cuttingTable, new List<GameObject> {cupPrefab},
+                cam,new Vector3(), new List<GameObject> {cupPrefab},
                 new List<IngredientAttr> {IngredientAttr.CUP},
                 0)
         );
@@ -184,17 +196,17 @@ public class GameManager : MonoBehaviour
         
         orderRecipesByLevel.Add(new List<Recipe>());
         orderRecipesByLevel[2].Add(new Recipe("orangeJuice", 
-            new List<List<IngredientAttr>>() {orangeJuice}, 3));
+            new List<List<IngredientAttr>>() {cup,orangeJuice}, 3));
         orderRecipesByLevel[2].Add(new Recipe("lemonJuice", 
-            new List<List<IngredientAttr>>() {lemonJuice}, 3));
+            new List<List<IngredientAttr>>() {cup,lemonJuice}, 3));
         orderRecipesByLevel[2].Add(new Recipe("appleJuice", 
-            new List<List<IngredientAttr>>() {appleJuice}, 3));
+            new List<List<IngredientAttr>>() {cup,appleJuice}, 3));
 
         orderRecipesByLevel.Add(new List<Recipe>());
         orderRecipesByLevel[3].Add(new Recipe("citrusJuice", 
-            new List<List<IngredientAttr>>() {orangeJuice,lemonJuice}, 4));
+            new List<List<IngredientAttr>>() {cup,orangeJuice,lemonJuice}, 4));
         orderRecipesByLevel[3].Add(new Recipe("tuttiFruttiJuice", 
-            new List<List<IngredientAttr>>() {orangeJuice,appleJuice,lemonJuice}, 4));
+            new List<List<IngredientAttr>>() {cup,orangeJuice,appleJuice,lemonJuice}, 4));
 
 
     }
@@ -213,12 +225,17 @@ public class GameManager : MonoBehaviour
         newOrder.PrintOrder(orderPrefab, cam, orderContainer);
     }
 
-    void EvaluateOrder(List<Ingredient> currIngredients)
+    public bool EvaluateOrder(Order selectedOrder, List<Recipe> userRecipes)
     {
-        foreach (var ing in currIngredients)
+        foreach (var recipe in selectedOrder.Recipes)
         {
-            
+            if (!userRecipes.Contains(recipe))
+            {
+                return false;
+            }
         }
+
+        return true;
     }
 
     

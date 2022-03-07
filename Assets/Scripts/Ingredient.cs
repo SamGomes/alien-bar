@@ -13,9 +13,12 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
     public Ingredient logic;
     public bool isBeingHeld;
     public Camera cam;
+    private LineRenderer _lineRenderer;
 
     public void Start()
     {
+        GameObject newLine = new GameObject("Line");
+        _lineRenderer = newLine.AddComponent<LineRenderer>();
         isBeingHeld = true;
     }
 
@@ -35,13 +38,21 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
         {
             Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
             RaycastHit hit;
-
+    
             if (Physics.Raycast(ray, out hit))
             {
-                transform.position = new Vector3(hit.point.x,
-                    10,
-                    hit.point.z);
+                _lineRenderer.startColor = Color.red;
+                _lineRenderer.endColor = Color.red;
+ 
+                // set width of the renderer
+                _lineRenderer.startWidth = 0.3f;
+                _lineRenderer.endWidth = 0.3f;
+ 
+                // set the position
+                _lineRenderer.SetPosition(0, transform.position);
+                _lineRenderer.SetPosition(1, new Vector3(hit.point.x, 10, hit.point.z));
             }
+            
         }
     }
 }
@@ -80,7 +91,7 @@ public class Ingredient
     
     public Ingredient(bool isTemplate, bool isUtensil, 
         Camera cam, Vector3 spawnPos, 
-        GameObject table, List<GameObject> stateObjects, 
+        List<GameObject> stateObjects, 
         List<IngredientAttr> attributes, int timeToProcess)
     {
         IsUtensil = isUtensil;
