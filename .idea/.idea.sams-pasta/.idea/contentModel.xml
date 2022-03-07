@@ -11,6 +11,7 @@
           <e p="ReplaceGameObjects.cs" t="Include" />
         </e>
         <e p="Scripts" t="Include">
+          <e p="FoodCombiner.cs" t="Include" />
           <e p="FoodProcessor.cs" t="Include" />
           <e p="GameManager.cs" t="Include" />
           <e p="Ingredient.cs" t="Include" />

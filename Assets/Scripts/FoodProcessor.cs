@@ -154,7 +154,8 @@ public class FoodProcessor
     }
 
 
-    public FoodProcessor(GameObject gameObject, 
+    public FoodProcessor(
+        GameObject gameObject, 
         List<IngredientAttr> acceptedAttrs, 
         List<IngredientAttr> inputAttrs, 
         List<IngredientAttr> outputAttrs, 

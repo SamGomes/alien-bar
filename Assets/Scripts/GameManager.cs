@@ -213,6 +213,14 @@ public class GameManager : MonoBehaviour
         newOrder.PrintOrder(orderPrefab, cam, orderContainer);
     }
 
+    void EvaluateOrder(List<Ingredient> currIngredients)
+    {
+        foreach (var ing in currIngredients)
+        {
+            
+        }
+    }
+
     
 
     // Start is called before the first frame update
@@ -239,11 +247,11 @@ public class GameManager : MonoBehaviour
         
         InitFruitSectionSpawners();
         InitPossibleOrders();
-        
-        
-        InvokeRepeating("GenerateOrder", 
-            0.0f, 
-            Random.Range(_minOrderTime, _maxOrderTime));
+
+        GenerateOrder();
+//        InvokeRepeating("GenerateOrder", 
+//            0.0f, 
+//            Random.Range(_minOrderTime, _maxOrderTime));
 
 
     }
