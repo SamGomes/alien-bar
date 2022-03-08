@@ -41,16 +41,18 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
     
             if (Physics.Raycast(ray, out hit))
             {
-                _lineRenderer.startColor = Color.red;
-                _lineRenderer.endColor = Color.red;
- 
-                // set width of the renderer
-                _lineRenderer.startWidth = 0.3f;
-                _lineRenderer.endWidth = 0.3f;
- 
-                // set the position
-                _lineRenderer.SetPosition(0, transform.position);
-                _lineRenderer.SetPosition(1, new Vector3(hit.point.x, 10, hit.point.z));
+                transform.position = new Vector3(hit.point.x, 15, hit.point.z);
+                //
+                // _lineRenderer.startColor = Color.red;
+                // _lineRenderer.endColor = Color.red;
+                //
+                // // set width of the renderer
+                // _lineRenderer.startWidth = 0.3f;
+                // _lineRenderer.endWidth = 0.3f;
+                //
+                // // set the position
+                // _lineRenderer.SetPosition(0, transform.position);
+                // _lineRenderer.SetPosition(1, new Vector3(hit.point.x, 10, hit.point.z));
             }
             
         }

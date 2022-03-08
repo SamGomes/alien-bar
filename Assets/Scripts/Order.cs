@@ -36,7 +36,7 @@ public class Recipe
 // public class OrderObjectEvents : MonoBehaviour, IPointerClickHandler
 // {
 //     public Camera cam;
-//     public Order order;
+//     public Order logic;
 //     public GameManager gm;
 //     public void OnPointerClick(PointerEventData pointerEventData)
 //     {

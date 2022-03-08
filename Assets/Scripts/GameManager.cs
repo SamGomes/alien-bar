@@ -39,8 +39,6 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
 public class DeliveryBoardEvents : MonoBehaviour
 {
     public GameManager gm;
-    
-    private Order _order;
     private List<Recipe> _recipes;
     
     
@@ -56,7 +54,10 @@ public class DeliveryBoardEvents : MonoBehaviour
     
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        gm.EvaluateOrder(_order, _recipes);
+        if (gm.EvaluateOrder(gm.selectedOrder, _recipes))
+        {
+            gm.currOrders.Remove(gm.selectedOrder);
+        }
     }
 }
 
@@ -75,12 +76,15 @@ public class GameManager : MonoBehaviour
     public GameObject orderContainer;
     
     public List<Order> currOrders;
+    public Order selectedOrder;
     
     
     public Camera cam;
     
     //food combiners
+    public FoodCombiner fruitCombiner;
     public GameObject fruitCombinerObj;
+    public GameObject deliveryBagPrefab;
 
     //food processors
     public GameObject juiceFoodProcessorObj;
@@ -100,6 +104,7 @@ public class GameManager : MonoBehaviour
     public GameObject cupsSpawner;
 
 
+    public GameObject deliveryBoardObj;
     
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
@@ -261,6 +266,11 @@ public class GameManager : MonoBehaviour
         _currOrderLevel = 4;
         _maxPendingOrders = 5;
         currOrders = new List<Order>();
+
+        DeliveryBoardEvents delBoardEvents = deliveryBoardObj.AddComponent<DeliveryBoardEvents>();
+        delBoardEvents.gm = this;
+
+        fruitCombiner = new FoodCombiner(fruitCombinerObj, deliveryBagPrefab);
         
         InitFruitSectionSpawners();
         InitPossibleOrders();

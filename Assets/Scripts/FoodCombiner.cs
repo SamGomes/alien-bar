@@ -2,10 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class FoodCombinerObjectEvents : MonoBehaviour
+public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public FoodCombiner logic;
+    private Vector3 baseScale;
     
+    public void Start()
+    {
+        baseScale = transform.localScale;
+    }
+
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         //Use this to tell when the user left-clicks on the Button
@@ -13,14 +19,21 @@ public class FoodCombinerObjectEvents : MonoBehaviour
         {
             Recipe userRec = logic.Combine();
             GameObject newDevBag = Instantiate(logic.DeliveryBagPrefab);
+            newDevBag.transform.position = transform.position;
             RecipeObjectEvents recEvents = newDevBag.AddComponent<RecipeObjectEvents>();
             recEvents.logic = userRec;
 
+            foreach (Ingredient ing in logic.IngredientsToCombine)
+            {
+                Object.Destroy(ing);
+            }
+            logic.IngredientsToCombine.Clear();
         }
     }
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Entered combiner");
+        transform.localScale = 1.1f * baseScale;
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
@@ -32,6 +45,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour
     
     private void OnTriggerExit(Collider other)
     {
+        transform.localScale = baseScale;
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
@@ -56,6 +70,7 @@ public class FoodCombiner
         GameObject.GetComponent<FoodCombinerObjectEvents>().logic = this;
 
         DeliveryBagPrefab = deliveryBagPrefab;
+        IngredientsToCombine = new List<Ingredient>();
     }
 
     public Recipe Combine()
