@@ -20,7 +20,34 @@ public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler
 
     public void Start()
     {
-        gameObject.GetComponentInChildren<TextMeshPro>().text = JsonUtility.ToJson(logic.IngredientAttrs);
+        string ingredAttrsText = "{\n";
+
+        List<List<IngredientAttr>> ingredientList = logic.IngredientAttrs;
+        for (int ingI = 0; ingI< ingredientList.Count; ingI++)
+        {
+            var ing = ingredientList[ingI]; 
+            
+            ingredAttrsText += "{";
+            for (int ingAttrI = 0; ingAttrI< ing.Count; ingAttrI++)
+            {
+                var ingAttr = ing[ingAttrI]; 
+                ingredAttrsText += ingAttr; 
+
+                if (ingAttrI < ing.Count - 1)
+                {
+                    ingredAttrsText += ",";
+                }
+            }
+            ingredAttrsText += "}\n";
+            
+            if (ingI < logic.IngredientAttrs.Count - 1)
+            {
+                ingredAttrsText += ",";
+            }
+        }
+        ingredAttrsText += "}\n";
+        
+        gameObject.GetComponentInChildren<TextMeshPro>().text = ingredAttrsText;
     }
     
     public void OnPointerClick(PointerEventData pointerEventData)
@@ -42,7 +69,7 @@ public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler
     
             if (Physics.Raycast(ray, out hit))
             {
-                transform.position = new Vector3(hit.point.x, 15, hit.point.z);
+                transform.position = new Vector3(hit.point.x, transform.position.y, hit.point.z);
                 //
                 // _lineRenderer.startColor = Color.red;
                 // _lineRenderer.endColor = Color.red;

@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 
 public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
@@ -36,12 +39,20 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
     }
 }
 
-public class DeliveryBoardEvents : MonoBehaviour
+public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 {
     public GameManager gm;
     private List<Recipe> _recipes;
-    
-    
+    private Vector3 _baseScale;
+
+    public string recipesStr;
+
+    public void Start()
+    {
+        _recipes = new List<Recipe>();   
+        _baseScale = transform.localScale;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Entered delivery board");
@@ -52,19 +63,35 @@ public class DeliveryBoardEvents : MonoBehaviour
         }
     }
     
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Exited delivery board");
+        var recEvents = other.GetComponent<RecipeObjectEvents>();
+        if (recEvents != null)
+        {
+            _recipes.Remove(recEvents.logic);
+        }
+    }
+    
     public void OnPointerClick(PointerEventData pointerEventData)
     {
+//        transform.localScale = 1.1f * _baseScale;
         if (gm.EvaluateOrder(gm.selectedOrder, _recipes))
         {
             gm.currOrders.Remove(gm.selectedOrder);
         }
     }
+
+    void Update()
+    {
+        recipesStr = _recipes.Count.ToString();
+    }
+    
 }
 
 public class GameManager : MonoBehaviour
 {
     private int _currOrderLevel;
-    
     
     private float _minOrderTime;
     private float _maxOrderTime;
@@ -214,7 +241,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void GenerateOrder()
+    Order GenerateOrder()
     {
         Order newOrder = new Order();
         int numRecipes = _currOrderLevel / Random.Range(1, _currOrderLevel + 1);
@@ -226,18 +253,29 @@ public class GameManager : MonoBehaviour
 
         currOrders.Add(newOrder);
         newOrder.PrintOrder(orderPrefab, cam, orderContainer);
+        
+        return newOrder;
     }
 
     public bool EvaluateOrder(Order selectedOrder, List<Recipe> userRecipes)
     {
-        foreach (var recipe in selectedOrder.Recipes)
+        foreach (var userRecipe in userRecipes)
         {
-            if (!userRecipes.Contains(recipe))
+            foreach (var orderRecipe in selectedOrder.Recipes)
             {
-                return false;
+                foreach (var userIng in userRecipe.IngredientAttrs)
+                {
+                    foreach (var orderIng in orderRecipe.IngredientAttrs)
+                    {
+                        bool isEqual = !userIng.Except(orderIng).Any();
+                        if (!isEqual)
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
         }
-
         return true;
     }
 
@@ -248,7 +286,7 @@ public class GameManager : MonoBehaviour
     {
         var juiceFoodProcessor = new FoodProcessor(juiceFoodProcessorObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
+            new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.DRINK},
             new List<IngredientAttr> {IngredientAttr.CUP},
             1);
@@ -273,11 +311,12 @@ public class GameManager : MonoBehaviour
         InitFruitSectionSpawners();
         InitPossibleOrders();
 
-        GenerateOrder();
+        Order newOrders = GenerateOrder();
 //        InvokeRepeating("GenerateOrder", 
 //            0.0f, 
 //            Random.Range(_minOrderTime, _maxOrderTime));
 
+        selectedOrder = newOrders;
 
     }
 

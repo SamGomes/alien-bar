@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public FoodCombiner logic;
-    private Vector3 baseScale;
+    private Vector3 _baseScale;
     public Camera cam;
 
     public List<IngredientObjectEvents> objectsToComb;
@@ -17,7 +17,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
     
     public void Start()
     {
-        baseScale = transform.localScale;
+        _baseScale = transform.localScale;
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
@@ -42,7 +42,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Entered combiner");
-        transform.localScale = 1.1f * baseScale;
+        transform.localScale = 1.1f * _baseScale;
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
@@ -53,7 +53,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
     
     private void OnTriggerExit(Collider other)
     {
-        transform.localScale = baseScale;
+        transform.localScale = _baseScale;
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
