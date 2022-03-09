@@ -6,6 +6,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public FoodCombiner logic;
     private Vector3 baseScale;
+    public Camera cam;
 
     public List<IngredientObjectEvents> objectsToComb;
        
@@ -29,6 +30,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
             newDevBag.transform.position = transform.position;
             RecipeObjectEvents recEvents = newDevBag.AddComponent<RecipeObjectEvents>();
             recEvents.logic = userRec;
+            recEvents.cam = cam;
 
             foreach (var ing in logic.IngredientsToCombine)
             {
@@ -68,12 +70,14 @@ public class FoodCombiner
     
     public GameObject DeliveryBagPrefab { get; set; }
     public FoodCombiner(GameObject gameObject, 
-        GameObject deliveryBagPrefab)
+        GameObject deliveryBagPrefab,
+        Camera cam)
     {
         GameObject = gameObject;
         GameObject.AddComponent<FoodCombinerObjectEvents>();
         GameObject.GetComponent<FoodCombinerObjectEvents>().logic = this;
-
+        GameObject.GetComponent<FoodCombinerObjectEvents>().cam = cam;
+        
         DeliveryBagPrefab = deliveryBagPrefab;
         IngredientsToCombine = new List<IngredientObjectEvents>();
     }

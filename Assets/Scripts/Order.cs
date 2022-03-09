@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public enum OrderSection
@@ -11,13 +12,51 @@ public enum OrderSection
     PASTAS = 2
 }
 
-public class RecipeObjectEvents : MonoBehaviour
+public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public Recipe logic; 
-    
+    public bool isBeingHeld;
+    public Camera cam;
+
     public void Start()
     {
-        GetComponent<TextMeshPro>().text = JsonUtility.ToJson(logic.IngredientAttrs);
+        gameObject.GetComponentInChildren<TextMeshPro>().text = JsonUtility.ToJson(logic.IngredientAttrs);
+    }
+    
+    public void OnPointerClick(PointerEventData pointerEventData)
+    {
+        //Use this to tell when the user right-clicks on the Button
+        if (pointerEventData.button == PointerEventData.InputButton.Left)
+        {
+            isBeingHeld = !isBeingHeld;
+        }
+    }
+
+    public void FixedUpdate()
+    {
+        
+        if (isBeingHeld)
+        {
+            Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+            RaycastHit hit;
+    
+            if (Physics.Raycast(ray, out hit))
+            {
+                transform.position = new Vector3(hit.point.x, 15, hit.point.z);
+                //
+                // _lineRenderer.startColor = Color.red;
+                // _lineRenderer.endColor = Color.red;
+                //
+                // // set width of the renderer
+                // _lineRenderer.startWidth = 0.3f;
+                // _lineRenderer.endWidth = 0.3f;
+                //
+                // // set the position
+                // _lineRenderer.SetPosition(0, transform.position);
+                // _lineRenderer.SetPosition(1, new Vector3(hit.point.x, 10, hit.point.z));
+            }
+            
+        }
     }
 
 }
@@ -48,7 +87,6 @@ public class Recipe
 //     {
 //         gm.currOrder
 //     }
-//
 // }
 
 

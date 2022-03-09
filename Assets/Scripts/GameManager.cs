@@ -102,8 +102,6 @@ public class GameManager : MonoBehaviour
     
     
     public GameObject cupsSpawner;
-
-
     public GameObject deliveryBoardObj;
     
     void InitSpawner(GameObject spawnerObj, Ingredient template)
@@ -270,7 +268,7 @@ public class GameManager : MonoBehaviour
         DeliveryBoardEvents delBoardEvents = deliveryBoardObj.AddComponent<DeliveryBoardEvents>();
         delBoardEvents.gm = this;
 
-        fruitCombiner = new FoodCombiner(fruitCombinerObj, deliveryBagPrefab);
+        fruitCombiner = new FoodCombiner(fruitCombinerObj, deliveryBagPrefab, cam);
         
         InitFruitSectionSpawners();
         InitPossibleOrders();
