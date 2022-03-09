@@ -6,6 +6,13 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public FoodCombiner logic;
     private Vector3 baseScale;
+
+    public List<IngredientObjectEvents> objectsToComb;
+       
+    public void Update()
+    {
+        objectsToComb = logic.IngredientsToCombine;
+    }
     
     public void Start()
     {
@@ -15,7 +22,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         //Use this to tell when the user left-clicks on the Button
-        if (pointerEventData.button == PointerEventData.InputButton.Left)
+        if (pointerEventData.button == PointerEventData.InputButton.Left && logic.IngredientsToCombine.Count > 0)
         {
             Recipe userRec = logic.Combine();
             GameObject newDevBag = Instantiate(logic.DeliveryBagPrefab);
@@ -23,9 +30,9 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
             RecipeObjectEvents recEvents = newDevBag.AddComponent<RecipeObjectEvents>();
             recEvents.logic = userRec;
 
-            foreach (Ingredient ing in logic.IngredientsToCombine)
+            foreach (var ing in logic.IngredientsToCombine)
             {
-                Object.Destroy(ing);
+                Destroy(ing.gameObject);
             }
             logic.IngredientsToCombine.Clear();
         }
@@ -37,8 +44,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
-            Ingredient otherIng = ingEvents.logic;
-            logic.IngredientsToCombine.Add(otherIng);
+            logic.IngredientsToCombine.Add(ingEvents);
         }
         
     }
@@ -49,8 +55,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
-            Ingredient otherIng = ingEvents.logic;
-            logic.IngredientsToCombine.Remove(otherIng);
+            logic.IngredientsToCombine.Remove(ingEvents);
         }
         
     }
@@ -58,7 +63,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
     
 public class FoodCombiner
 {
-    public List<Ingredient> IngredientsToCombine { get; set; }
+    public List<IngredientObjectEvents> IngredientsToCombine { get; set; }
     public GameObject GameObject { get; set; }
     
     public GameObject DeliveryBagPrefab { get; set; }
@@ -70,7 +75,7 @@ public class FoodCombiner
         GameObject.GetComponent<FoodCombinerObjectEvents>().logic = this;
 
         DeliveryBagPrefab = deliveryBagPrefab;
-        IngredientsToCombine = new List<Ingredient>();
+        IngredientsToCombine = new List<IngredientObjectEvents>();
     }
 
     public Recipe Combine()
@@ -79,7 +84,7 @@ public class FoodCombiner
         string recipeName = "";
         foreach (var ing in IngredientsToCombine)
         {
-            listAttrs.Add(ing.Attributes);
+            listAttrs.Add(ing.logic.Attributes);
             recipeName += ing.ToString();
         }
         Recipe recipe = new Recipe(recipeName,  listAttrs, -1);

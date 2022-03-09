@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public enum OrderSection
 {
@@ -12,7 +13,12 @@ public enum OrderSection
 
 public class RecipeObjectEvents : MonoBehaviour
 {
-    public Recipe logic;
+    public Recipe logic; 
+    
+    public void Start()
+    {
+        GetComponent<TextMeshPro>().text = JsonUtility.ToJson(logic.IngredientAttrs);
+    }
 
 }
 
