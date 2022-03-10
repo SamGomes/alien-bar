@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 
@@ -42,14 +43,14 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
 public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 {
     public GameManager gm;
-    private List<Recipe> _recipes;
+    private List<RecipeObjectEvents> _recipes;
     private Vector3 _baseScale;
 
     public string recipesStr;
 
     public void Start()
     {
-        _recipes = new List<Recipe>();   
+        _recipes = new List<RecipeObjectEvents>();   
         _baseScale = transform.localScale;
     }
 
@@ -59,7 +60,7 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
         var recEvents = other.GetComponent<RecipeObjectEvents>();
         if (recEvents != null)
         {
-            _recipes.Add(recEvents.logic);
+            _recipes.Add(recEvents);
         }
     }
     
@@ -69,7 +70,7 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
         var recEvents = other.GetComponent<RecipeObjectEvents>();
         if (recEvents != null)
         {
-            _recipes.Remove(recEvents.logic);
+            _recipes.Remove(recEvents);
         }
     }
     
@@ -78,6 +79,11 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 //        transform.localScale = 1.1f * _baseScale;
         if (gm.EvaluateOrder(gm.selectedOrder, _recipes))
         {
+            Destroy(gm.selectedOrder.GameObject);
+            foreach (var recipe in _recipes)
+            {
+                Destroy(recipe.gameObject);
+            }
             gm.currOrders.Remove(gm.selectedOrder);
         }
     }
@@ -257,29 +263,42 @@ public class GameManager : MonoBehaviour
         return newOrder;
     }
 
-    public bool EvaluateOrder(Order selectedOrder, List<Recipe> userRecipes)
+    public bool EvaluateOrder(Order selectedOrder, List<RecipeObjectEvents> userRecipes)
     {
-        foreach (var userRecipe in userRecipes)
+        int numValidRecepies = 0;
+        foreach (var orderRecipe in selectedOrder.Recipes)
         {
-            foreach (var orderRecipe in selectedOrder.Recipes)
+            foreach (var userRecipe in userRecipes)
             {
-                foreach (var userIng in userRecipe.IngredientAttrs)
+                if (ValidateRecipe(orderRecipe, userRecipe.logic))
                 {
-                    foreach (var orderIng in orderRecipe.IngredientAttrs)
-                    {
-                        bool isEqual = !userIng.Except(orderIng).Any();
-                        if (!isEqual)
-                        {
-                            return false;
-                        }
-                    }
+                    numValidRecepies++;
+                    break;
                 }
             }
         }
-        return true;
+        
+        return (numValidRecepies == selectedOrder.Recipes.Count);
     }
 
-    
+    private bool ValidateRecipe(Recipe orderRecipe, Recipe userRecipe)
+    {
+        int numValidIngs = 0;
+        foreach (var orderIng in orderRecipe.IngredientAttrs)
+        {
+            foreach (var userIng in userRecipe.IngredientAttrs)
+            {
+                bool isEqual = !orderIng.Except(userIng).Any();
+                if (isEqual)
+                {
+                    numValidIngs++;
+                    break;
+                }
+            }
+        }
+        return (numValidIngs == orderRecipe.IngredientAttrs.Count);
+    }
+
 
     // Start is called before the first frame update
     void Start()

@@ -120,7 +120,7 @@ public class Recipe
 
 public class Order
 {
-    private GameObject _gameObject;
+    public GameObject GameObject;
     public int Level { get; set; }
 
     private List<Recipe> _recipes;
@@ -154,12 +154,12 @@ public class Order
                 GameObject orderContainer)
     {
     
-        Transform newOrderObj = Object.Instantiate(orderPrefab,orderContainer.transform).transform;
+        GameObject = Object.Instantiate(orderPrefab,orderContainer.transform);
         // var events = newOrderObj.gameObject.AddComponent<OrderObjectEvents>();
         // events.cam = cam;
         // events.logic = this;
         
-        Transform orderSectionPositioner = newOrderObj.transform.GetChild(1).transform;
+        Transform orderSectionPositioner = GameObject.transform.GetChild(1).transform;
         
         
         foreach (Recipe recipe in Recipes)

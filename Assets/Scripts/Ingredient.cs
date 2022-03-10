@@ -17,8 +17,8 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 
     public void Start()
     {
-        GameObject newLine = new GameObject("Line");
-        _lineRenderer = newLine.AddComponent<LineRenderer>();
+//        GameObject newLine = new GameObject("Line");
+//        _lineRenderer = newLine.AddComponent<LineRenderer>();
         isBeingHeld = true;
     }
 
