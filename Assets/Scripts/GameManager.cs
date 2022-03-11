@@ -10,6 +10,27 @@ using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 
+public class TrashBinObjectEvents : MonoBehaviour
+{
+    private Vector3 _baseScale;
+
+    public void Start()
+    {
+        _baseScale = transform.localScale;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Entered combiner");
+        transform.localScale = 1.1f * _baseScale;
+        var ingEvents = other.GetComponent<RecipeObjectEvents>();
+        if (ingEvents != null)
+        {
+            Destroy(other.gameObject);
+        }
+        
+    }
+}
 public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
 {
     public Camera cam;
@@ -136,6 +157,9 @@ public class GameManager : MonoBehaviour
     
     public GameObject cupsSpawner;
     public GameObject deliveryBoardObj;
+    
+    
+    public GameObject trashBin;
     
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
@@ -322,6 +346,8 @@ public class GameManager : MonoBehaviour
         _maxPendingOrders = 5;
         currOrders = new List<Order>();
 
+        trashBin.AddComponent<TrashBinObjectEvents>();
+        
         DeliveryBoardEvents delBoardEvents = deliveryBoardObj.AddComponent<DeliveryBoardEvents>();
         delBoardEvents.gm = this;
 
