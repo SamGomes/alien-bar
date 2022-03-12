@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
 using Object = UnityEngine.Object;
 
 public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
@@ -60,8 +60,7 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 }
 
 
-
-[Serializable]
+[JsonConverter(typeof(StringEnumConverter))]
 public enum IngredientAttr
 {
     CUP,

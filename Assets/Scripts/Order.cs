@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 
-[Serializable]
+[JsonConverter(typeof(StringEnumConverter))]
 public enum OrderSection
 {
     FRUITS = 0,
@@ -95,40 +96,13 @@ public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler
 
 
 
-[Serializable]
 public class Recipe
 {
-    [SerializeField] private string _name;
-    [SerializeField] private OrderSection _section;
-    [SerializeField] private List<List<IngredientAttr>> _ingredientAttrs;
-    [SerializeField] private int _level;
-    
-    public string Name
-    {
-        get => _name;
-        set => _name = value;
-    }
+    public string Name { get; set; }
+    public OrderSection Section { get; set; }
+    public List<List<IngredientAttr>> IngredientAttrs { get; set; }
+    public int Level { get; set; }
 
-    public OrderSection Section
-    {
-        get => _section;
-        set => _section = value;
-    }
-
-    public List<List<IngredientAttr>> IngredientAttrs
-    {
-        get => _ingredientAttrs;
-        set => _ingredientAttrs = value;
-    }
-
-    public int Level
-    {
-        get => _level;
-        set => _level = value;
-    }
-
-    
-    
     
     public Recipe(string name, List<List<IngredientAttr>> ingredientAttrs, int level)
     {
@@ -138,18 +112,6 @@ public class Recipe
     }
 
 }
-
-
-// public class OrderObjectEvents : MonoBehaviour, IPointerClickHandler
-// {
-//     public Camera cam;
-//     public Order logic;
-//     public GameManager gm;
-//     public void OnPointerClick(PointerEventData pointerEventData)
-//     {
-//         gm.currOrder
-//     }
-// }
 
 
 

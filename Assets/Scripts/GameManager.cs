@@ -1,17 +1,24 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 
-
+public class GameConfigurations
+{
+    public int CurrOrderLevel;
+    public float MINOrderTime;
+    public float MAXOrderTime;
+    public int MAXPendingOrders;
+    
+    public List<List<Recipe>> OrderRecipesByLevel;
+}
 
 
 public class TrashBinObjectEvents : MonoBehaviour
@@ -131,15 +138,9 @@ public class GameManager : MonoBehaviour
 {
     public TextMeshPro scoreValueObj;
     public int scoreMultiplier;
-    
-    private int _currOrderLevel;
-    
-    private float _minOrderTime;
-    private float _maxOrderTime;
-    private float _maxPendingOrders;
-    
-    public List<List<Recipe>> orderRecipesByLevel;
-    
+
+    private GameConfigurations _gameConfig;
+
     public GameObject orderPrefab;
     public GameObject orderContainer;
     
@@ -217,82 +218,13 @@ public class GameManager : MonoBehaviour
         );
     }
 
-    void InitPossibleOrders()
-    {
-        List<IngredientAttr> orangeWhole = 
-            new List<IngredientAttr>{IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE};
-        
-        List<IngredientAttr> lemonWhole = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE};
-
-        List<IngredientAttr> appleWhole =
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE};
-
-
-        List<IngredientAttr> orangeCut = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.CUT};
-        
-        List<IngredientAttr> lemonCut = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.CUT};
-       
-        List<IngredientAttr> appleCut = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.CUT};
-        
-        
-        List<IngredientAttr> orangeJuice = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.DRINK};
-        
-        List<IngredientAttr> lemonJuice = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.DRINK};
-       
-        List<IngredientAttr> appleJuice = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.DRINK};
-
-        List<IngredientAttr> cup = new List<IngredientAttr> {IngredientAttr.CUP};
-
-
-        orderRecipesByLevel = new List<List<Recipe>>();
-        orderRecipesByLevel.Add(new List<Recipe>());
-        orderRecipesByLevel[0].Add(new Recipe("orangeWhole", 
-            new List<List<IngredientAttr>>() {orangeWhole}, 1));
-        orderRecipesByLevel[0].Add(new Recipe("lemonWhole", 
-            new List<List<IngredientAttr>>() {lemonWhole}, 1));
-        orderRecipesByLevel[0].Add(new Recipe("appleWhole", 
-            new List<List<IngredientAttr>>() {appleWhole}, 1));
-        
-        orderRecipesByLevel.Add(new List<Recipe>());
-        orderRecipesByLevel[1].Add(new Recipe("orangeCut", 
-            new List<List<IngredientAttr>>() {orangeCut}, 2));
-        orderRecipesByLevel[1].Add(new Recipe("lemonCut", 
-            new List<List<IngredientAttr>>() {lemonCut}, 2));
-        orderRecipesByLevel[1].Add(new Recipe("appleCut", 
-            new List<List<IngredientAttr>>() {appleCut}, 2));
-        
-        orderRecipesByLevel.Add(new List<Recipe>());
-        orderRecipesByLevel[2].Add(new Recipe("orangeJuice", 
-            new List<List<IngredientAttr>>() {cup,orangeJuice}, 3));
-        orderRecipesByLevel[2].Add(new Recipe("lemonJuice", 
-            new List<List<IngredientAttr>>() {cup,lemonJuice}, 3));
-        orderRecipesByLevel[2].Add(new Recipe("appleJuice", 
-            new List<List<IngredientAttr>>() {cup,appleJuice}, 3));
-
-        orderRecipesByLevel.Add(new List<Recipe>());
-        orderRecipesByLevel[3].Add(new Recipe("citrusJuice", 
-            new List<List<IngredientAttr>>() {cup,orangeJuice,lemonJuice}, 4));
-        orderRecipesByLevel[3].Add(new Recipe("tuttiFruttiJuice", 
-            new List<List<IngredientAttr>>() {cup,orangeJuice,appleJuice,lemonJuice}, 4));
-
-
-        string json = JsonUtility.ToJson(orderRecipesByLevel);
-    }
-
     Order GenerateOrder()
     {
         Order newOrder = new Order();
-        int numRecipes = _currOrderLevel / Random.Range(1, _currOrderLevel + 1);
+        int numRecipes = _gameConfig.CurrOrderLevel / Random.Range(1, _gameConfig.CurrOrderLevel + 1);
         for (int i = 0; i < numRecipes; i++)
         {
-            List <Recipe> orderRecipes = orderRecipesByLevel[(_currOrderLevel / numRecipes) - 1];
+            List <Recipe> orderRecipes = _gameConfig.OrderRecipesByLevel[(_gameConfig.CurrOrderLevel / numRecipes) - 1];
             newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
         }
 
@@ -355,11 +287,31 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr>(),
             1);
 
-        _minOrderTime = 1;
-        _maxOrderTime = 1;
-        _currOrderLevel = 4;
-        _maxPendingOrders = 5;
         currOrders = new List<Order>();
+        
+        _gameConfig = new GameConfigurations();
+        string path = "Assets/StreamingAssets/configs.cfg";
+        StreamReader reader = new StreamReader(path);
+        string json = reader.ReadToEnd();
+        _gameConfig = JsonConvert.DeserializeObject<GameConfigurations>(json);
+        
+        // _gameConfig.MINOrderTime = 1;
+        // _gameConfig.MAXOrderTime = 1;
+        // _gameConfig.CurrOrderLevel = 4;
+        // _gameConfig.MAXPendingOrders = 5;
+        //
+        // // string path = "Assets/StreamingAssets/recipes.cfg";
+        // // StreamReader reader = new StreamReader(path);
+        // // string json = reader.ReadToEnd();
+        // _gameConfig.OrderRecipesByLevel = JsonConvert.DeserializeObject<List<List<Recipe>>>(json);
+       
+        // path = "Assets/StreamingAssets/configs.cfg";
+        // json = JsonConvert.SerializeObject(_gameConfig);
+        // StreamWriter writer = new StreamWriter(path, true);
+        //
+        // writer.WriteLine(json);
+        // writer.Close();
+        
 
         scoreMultiplier = 1000;
 
@@ -371,7 +323,6 @@ public class GameManager : MonoBehaviour
         fruitCombiner = new FoodCombiner(fruitCombinerObj, deliveryBagPrefab, cam);
         
         InitFruitSectionSpawners();
-        InitPossibleOrders();
 
         Order newOrders = GenerateOrder();
 //        InvokeRepeating("GenerateOrder", 
@@ -384,7 +335,12 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if (currOrders.Count == _maxPendingOrders)
+        if (_gameConfig == null)
+        {
+            return;
+        }
+        
+        if (currOrders.Count == _gameConfig.MAXPendingOrders)
         {
             SceneManager.LoadScene("GameOverScene");
         }

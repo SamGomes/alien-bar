@@ -62,7 +62,7 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
         
     }
 }
-    
+
 public class FoodCombiner
 {
     public List<IngredientObjectEvents> IngredientsToCombine { get; set; }
