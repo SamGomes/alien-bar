@@ -63,6 +63,7 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 [JsonConverter(typeof(StringEnumConverter))]
 public enum IngredientAttr
 {
+    UTENSIL,
     CUP,
     PLATE,
     TOOL,
@@ -73,34 +74,51 @@ public enum IngredientAttr
     HOT,
     
     FRUIT,
-    ORANGE,
-    LEMON,
-    APPLE,
+    ORGEINE,
+    LIEM,
+    APPIA,
     
     OIL,
+    FREET,
+    STRALECK,
+    NUMMABINE,
+    
+    DESSERT,
+    COLEFF,
+    SMALL,
+    MEDIUM,
+    FULL,
+    
+    DRUPPI_CAKE,
+    LURI_CAKE,
+    MARR_CAKE,
+    
+    KRUMSEC_MEET,
+    TRYUU_MEET,
+    FULADEC_EYE,
+    RYNUMIDEC_LEG,
+    
+    
     DRINK
 }
 
 public class Ingredient
 {
     public Camera Cam { get; set; }
-    public List<GameObject> StateObjects { get; set; }
+    public List<string> StateObjectPaths { get; set; }
     public List<IngredientAttr> Attributes { get; set; }
     public GameObject GameObject { get; set; }
     public int TimeToProcess { get; set; }
-    public bool IsUtensil { get; set; }
     public int CurrIngState { get; set; }
     
-    public Ingredient(bool isTemplate, bool isUtensil, 
+    public Ingredient(bool isTemplate, 
         Camera cam, Vector3 spawnPos, 
-        List<GameObject> stateObjects, 
+        List<string> stateObjectPaths, 
         List<IngredientAttr> attributes, int timeToProcess)
     {
-        IsUtensil = isUtensil;
-        
         CurrIngState = 0;
         
-        StateObjects = stateObjects;
+        StateObjectPaths = stateObjectPaths;
         Cam = cam;
         
         Attributes = attributes;
@@ -110,14 +128,16 @@ public class Ingredient
         if (!isTemplate)
         {
             Debug.Log(spawnPos);
-            GameObject = Object.Instantiate(StateObjects[0], spawnPos, Quaternion.identity);
+            GameObject = Object.Instantiate(
+                Resources.Load<GameObject>(StateObjectPaths[0]), 
+                spawnPos, Quaternion.identity);
             var events = GameObject.AddComponent<IngredientObjectEvents>();
             events.cam = Cam;
             events.logic = this;
         }
         else
         {
-            GameObject = StateObjects[0];
+            GameObject = Resources.Load<GameObject>(StateObjectPaths[0]);
         }
 
     }
@@ -129,7 +149,8 @@ public class Ingredient
         Attributes.AddRange(outputtedAttr);
         
         Object.Destroy(GameObject);
-        GameObject = Object.Instantiate(StateObjects[++CurrIngState], 
+        GameObject = Object.Instantiate(
+            (GameObject) Resources.Load(StateObjectPaths[++CurrIngState]), 
             GameObject.transform.position, 
             Quaternion.identity);
         var events = GameObject.AddComponent<IngredientObjectEvents>();

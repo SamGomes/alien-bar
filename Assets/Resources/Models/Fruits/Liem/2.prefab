@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3e48e3dbe06e15b3494f68885e0847a8, type: 2}
+  - {fileID: 2100000, guid: ca8a2af59eb4a99aeb564752c525429e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -159,7 +159,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3e48e3dbe06e15b3494f68885e0847a8, type: 2}
+  - {fileID: 2100000, guid: ca8a2af59eb4a99aeb564752c525429e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -256,7 +256,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3e48e3dbe06e15b3494f68885e0847a8, type: 2}
+  - {fileID: 2100000, guid: ca8a2af59eb4a99aeb564752c525429e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 521272985601696141}
   - component: {fileID: 2154577474953687240}
   m_Layer: 0
-  m_Name: CutOrange
+  m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

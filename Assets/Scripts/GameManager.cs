@@ -9,6 +9,11 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
+public class IngredientConfigurations
+{
+    public List<string> IngredientPrefabs;
+    public List<IngredientAttr> IngredientAttrs;
+}
 
 public class GameConfigurations
 {
@@ -17,6 +22,8 @@ public class GameConfigurations
     public float MAXOrderTime;
     public int MAXPendingOrders;
     
+    
+    public List<IngredientConfigurations> IngredientConfigs;
     public List<List<Recipe>> OrderRecipesByLevel;
 }
 
@@ -59,12 +66,11 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
             {
                 new Ingredient(
                      false, 
-                     template.IsUtensil,
                      cam, 
                      new Vector3( 350, 
                         0 + template.GameObject.transform.position.y, 
                         100),
-                     template.StateObjects,
+                     template.StateObjectPaths,
                      template.Attributes,
                      template.TimeToProcess
                      );
@@ -151,26 +157,14 @@ public class GameManager : MonoBehaviour
     public Camera cam;
     
     //food combiners
-    public FoodCombiner fruitCombiner;
-    public GameObject fruitCombinerObj;
+    public List<GameObject> foodCombinerObjs;
     public GameObject deliveryBagPrefab;
 
     //food processors
     public GameObject juiceFoodProcessorObj;
     public GameObject knifeObj;
-   
-    public List<GameObject> orangePrefabs;
-    public List<GameObject> lemonPrefabs;
-    public List<GameObject> applePrefabs;
-    
-    public GameObject cupPrefab;
-    
-    public GameObject orangeSpawner;
-    public GameObject lemonsSpawner;
-    public GameObject applesSpawner;
-    
-    
-    public GameObject cupsSpawner;
+
+    public List<GameObject> ingredientSpawners;
     public GameObject deliveryBoardObj;
     
     
@@ -186,36 +180,16 @@ public class GameManager : MonoBehaviour
 
     void InitFruitSectionSpawners()
     {
-        InitSpawner(orangeSpawner,
-            new Ingredient(true,false,  
-                cam,new Vector3(), 
-                orangePrefabs,
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
-                0)
-        );
-        
-        InitSpawner(lemonsSpawner,
-            new Ingredient(true, false, 
-                cam,new Vector3(), 
-                lemonPrefabs,
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
-                0)
-        );
-
-        InitSpawner(applesSpawner,
-            new Ingredient(true, false, 
-                cam,new Vector3(), 
-                applePrefabs, 
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE}, 
-                0)
-        );
-
-        InitSpawner(cupsSpawner,
-            new Ingredient(true,true,  
-                cam,new Vector3(), new List<GameObject> {cupPrefab},
-                new List<IngredientAttr> {IngredientAttr.CUP},
-                0)
-        );
+        for (int i=0; i<ingredientSpawners.Count; i++)
+        {
+            InitSpawner(ingredientSpawners[i],
+                new Ingredient(true, 
+                    cam,new Vector3(), 
+                    _gameConfig.IngredientConfigs[i].IngredientPrefabs,
+                    _gameConfig.IngredientConfigs[i].IngredientAttrs,
+                    0)
+            );
+        }
     }
 
     Order GenerateOrder()
@@ -274,13 +248,13 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var juiceFoodProcessor = new FoodProcessor(juiceFoodProcessorObj,
+        new FoodProcessor(juiceFoodProcessorObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.DRINK},
             new List<IngredientAttr> {IngredientAttr.CUP},
             1);
-        var knife = new FoodProcessor(knifeObj,
+        new FoodProcessor(knifeObj,
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
@@ -294,6 +268,7 @@ public class GameManager : MonoBehaviour
         StreamReader reader = new StreamReader(path);
         string json = reader.ReadToEnd();
         _gameConfig = JsonConvert.DeserializeObject<GameConfigurations>(json);
+        reader.Close();
         
         // _gameConfig.MINOrderTime = 1;
         // _gameConfig.MAXOrderTime = 1;
@@ -311,7 +286,7 @@ public class GameManager : MonoBehaviour
         //
         // writer.WriteLine(json);
         // writer.Close();
-        
+        //
 
         scoreMultiplier = 1000;
 
@@ -320,7 +295,10 @@ public class GameManager : MonoBehaviour
         DeliveryBoardEvents delBoardEvents = deliveryBoardObj.AddComponent<DeliveryBoardEvents>();
         delBoardEvents.gm = this;
 
-        fruitCombiner = new FoodCombiner(fruitCombinerObj, deliveryBagPrefab, cam);
+        foreach (var combinerObj in foodCombinerObjs)
+        {
+            new FoodCombiner(combinerObj, deliveryBagPrefab, cam);
+        }
         
         InitFruitSectionSpawners();
 

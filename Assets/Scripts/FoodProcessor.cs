@@ -43,7 +43,7 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
         if (ingEvents != null)
         {
             Ingredient otherIng = ingEvents.logic;
-            if (otherIng.IsUtensil)
+            if (otherIng.Attributes.Contains(IngredientAttr.UTENSIL))
             {
                 logic.ADDUtensil(otherIng);
             }
