@@ -87,17 +87,17 @@ public class FoodProcessor
 {
     public GameObject GameObject { get; set; }
 
-    public SList<IngredientAttr> AcceptedAttrs { get; set; }
+    public List<IngredientAttr> AcceptedAttrs { get; set; }
 
-    public SList<IngredientAttr> InputAttrs { get; set; }
+    public List<IngredientAttr> InputAttrs { get; set; }
 
-    public SList<IngredientAttr> OutputAttrs { get; set; }
+    public List<IngredientAttr> OutputAttrs { get; set; }
 
     public Ingredient IngredientInProcess { get; set; }
 
-    public SList<IngredientAttr> RequiredUtensilAttrs { get; set; }
+    public List<IngredientAttr> RequiredUtensilAttrs { get; set; }
 
-    public SList<IngredientAttr> AddedUtensilAttrs { get; set; }
+    public List<IngredientAttr> AddedUtensilAttrs { get; set; }
 
     public ProcessUnitState IsOn { get; set; }
 
@@ -106,10 +106,10 @@ public class FoodProcessor
 
     public FoodProcessor(
         GameObject gameObject, 
-        SList<IngredientAttr> acceptedAttrs, 
-        SList<IngredientAttr> inputAttrs, 
-        SList<IngredientAttr> outputAttrs, 
-        SList<IngredientAttr> requiredUtensilAttrs,
+        List<IngredientAttr> acceptedAttrs, 
+        List<IngredientAttr> inputAttrs, 
+        List<IngredientAttr> outputAttrs, 
+        List<IngredientAttr> requiredUtensilAttrs,
         int processingDelay)
     {
         GameObject = gameObject;
@@ -123,7 +123,7 @@ public class FoodProcessor
             
         IngredientInProcess = null;
         
-        AddedUtensilAttrs = new SList<IngredientAttr>();
+        AddedUtensilAttrs = new List<IngredientAttr>();
         RequiredUtensilAttrs = requiredUtensilAttrs;
     }
     

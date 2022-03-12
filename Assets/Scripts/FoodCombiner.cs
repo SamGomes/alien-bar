@@ -84,7 +84,7 @@ public class FoodCombiner
 
     public Recipe Combine()
     {
-        SList<SList<IngredientAttr>> listAttrs = new SList<SList<IngredientAttr>>();
+        List<List<IngredientAttr>> listAttrs = new List<List<IngredientAttr>>();
         string recipeName = "";
         foreach (var ing in IngredientsToCombine)
         {
