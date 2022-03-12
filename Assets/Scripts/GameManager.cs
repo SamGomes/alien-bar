@@ -42,7 +42,8 @@ public class TrashBinObjectEvents : MonoBehaviour
         Debug.Log("Entered combiner");
         transform.localScale = 1.1f * _baseScale;
         var ingEvents = other.GetComponent<RecipeObjectEvents>();
-        if (ingEvents != null)
+        var ingEvents2 = other.GetComponent<IngredientObjectEvents>();
+        if (ingEvents != null || ingEvents2!= null)
         {
             Destroy(other.gameObject);
         }
@@ -115,21 +116,30 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
     
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-//        transform.localScale = 1.1f * _baseScale;
-        if (gm.EvaluateOrder(gm.selectedOrder, _recipes))
+        Order orderToRemove = null;
+        foreach (Order order in gm.currOrders)
         {
-            foreach(var targetRecipe in gm.selectedOrder.Recipes)
+            if (gm.EvaluateOrder(order, _recipes))
             {
-                gm.scoreValueObj.text = 
-                    (int.Parse(gm.scoreValueObj.text) + gm.scoreMultiplier*targetRecipe.Level).ToString();
+                foreach (var targetRecipe in order.Recipes)
+                {
+                    gm.scoreValueObj.text =
+                        (int.Parse(gm.scoreValueObj.text) + gm.scoreMultiplier * targetRecipe.Level).ToString();
+                }
+
+                Destroy(order.GameObject);
+                foreach (var recipe in _recipes)
+                {
+                    Destroy(recipe.gameObject);
+                }
+
+                orderToRemove = order;
             }
-            
-            Destroy(gm.selectedOrder.GameObject);
-            foreach (var recipe in _recipes)
-            {
-                Destroy(recipe.gameObject);
-            }
-            gm.currOrders.Remove(gm.selectedOrder);
+        }
+
+        if (orderToRemove != null)
+        {
+            gm.currOrders.Remove(orderToRemove);
         }
     }
 
@@ -151,7 +161,6 @@ public class GameManager : MonoBehaviour
     public GameObject orderContainer;
     
     public List<Order> currOrders;
-    public Order selectedOrder;
     
     
     public Camera cam;
@@ -302,12 +311,10 @@ public class GameManager : MonoBehaviour
         
         InitFruitSectionSpawners();
 
-        Order newOrders = GenerateOrder();
-//        InvokeRepeating("GenerateOrder", 
-//            0.0f, 
-//            Random.Range(_minOrderTime, _maxOrderTime));
-
-        selectedOrder = newOrders;
+        // Order newOrders = GenerateOrder();
+        InvokeRepeating("GenerateOrder", 
+            0.0f, 
+            Random.Range(_gameConfig.MINOrderTime, _gameConfig.MAXOrderTime));
 
     }
 

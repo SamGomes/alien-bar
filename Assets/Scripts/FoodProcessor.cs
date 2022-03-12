@@ -12,6 +12,8 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
 
     public List<IngredientAttr> _addedUtensilAttrs;
     
+    public bool isBeingHeld;
+    
     public void Start()
     {
         baseScale = transform.localScale;
@@ -65,15 +67,6 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
     public void Update()
     {
         _addedUtensilAttrs = logic.AddedUtensilAttrs;
-        
-//        if (logic.IsOn == ProcessUnitState.ON && logic.IngredientInProcess != null)
-//        {
-//            logic.TurnOff();
-//            transform.localScale = baseScale;
-//            
-//            logic.IngredientInProcess = null;
-//            logic.ClearAddedUtensilAttributes();
-//        }
     }
 }
     
