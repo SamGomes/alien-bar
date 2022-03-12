@@ -31,6 +31,7 @@ public class TrashBinObjectEvents : MonoBehaviour
         
     }
 }
+
 public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
 {
     public Camera cam;
@@ -269,6 +270,7 @@ public class GameManager : MonoBehaviour
             new List<List<IngredientAttr>>() {cup,orangeJuice,appleJuice,lemonJuice}, 4));
 
 
+        string json = JsonUtility.ToJson(orderRecipesByLevel);
     }
 
     Order GenerateOrder()

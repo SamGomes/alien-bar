@@ -61,6 +61,7 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 
 
 
+[Serializable]
 public enum IngredientAttr
 {
     CUP,

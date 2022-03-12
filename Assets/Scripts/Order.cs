@@ -1,10 +1,14 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
+
+[Serializable]
 public enum OrderSection
 {
     FRUITS = 0,
@@ -88,6 +92,7 @@ public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler
 
 }
 
+[Serializable]
 public class Recipe
 {
     public string Name { get; set; }
@@ -118,6 +123,7 @@ public class Recipe
 
 
 
+[Serializable]
 public class Order
 {
     public GameObject GameObject;
