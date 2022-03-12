@@ -26,7 +26,7 @@ public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler
     {
         string ingredAttrsText = "{\n";
 
-        List<List<IngredientAttr>> ingredientList = logic.IngredientAttrs;
+        SList<SList<IngredientAttr>> ingredientList = logic.IngredientAttrs;
         for (int ingI = 0; ingI< ingredientList.Count; ingI++)
         {
             var ing = ingredientList[ingI]; 
@@ -92,15 +92,61 @@ public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler
 
 }
 
+
+[Serializable]
+public class SList<T>: List<T>
+{
+    [SerializeField]
+    public List<T> list;
+
+    public SList()
+    {
+        list = new List<T>();
+    }
+    public SList(List<T> data)
+    {
+        list = data;
+    }
+}
+
+
+
 [Serializable]
 public class Recipe
 {
-    public string Name { get; set; }
-    public OrderSection Section { get; set; }
-    public List<List<IngredientAttr>> IngredientAttrs { get; set; }
-    public int Level { get; set; }
+    [SerializeField] private string _name;
+    [SerializeField] private OrderSection _section;
+    [SerializeField] private SList<SList<IngredientAttr>> _ingredientAttrs;
+    [SerializeField] private int _level;
     
-    public Recipe(string name, List<List<IngredientAttr>> ingredientAttrs, int level)
+    public string Name
+    {
+        get => _name;
+        set => _name = value;
+    }
+
+    public OrderSection Section
+    {
+        get => _section;
+        set => _section = value;
+    }
+
+    public SList<SList<IngredientAttr>> IngredientAttrs
+    {
+        get => _ingredientAttrs;
+        set => _ingredientAttrs = value;
+    }
+
+    public int Level
+    {
+        get => _level;
+        set => _level = value;
+    }
+
+    
+    
+    
+    public Recipe(string name, SList<SList<IngredientAttr>> ingredientAttrs, int level)
     {
         Name = name;
         IngredientAttrs = ingredientAttrs;
@@ -123,7 +169,6 @@ public class Recipe
 
 
 
-[Serializable]
 public class Order
 {
     public GameObject GameObject;

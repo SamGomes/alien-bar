@@ -86,7 +86,7 @@ public class Ingredient
 {
     public Camera Cam { get; set; }
     public List<GameObject> StateObjects { get; set; }
-    public List<IngredientAttr> Attributes { get; set; }
+    public SList<IngredientAttr> Attributes { get; set; }
     public GameObject GameObject { get; set; }
     public int TimeToProcess { get; set; }
     public bool IsUtensil { get; set; }
@@ -95,7 +95,7 @@ public class Ingredient
     public Ingredient(bool isTemplate, bool isUtensil, 
         Camera cam, Vector3 spawnPos, 
         List<GameObject> stateObjects, 
-        List<IngredientAttr> attributes, int timeToProcess)
+        SList<IngredientAttr> attributes, int timeToProcess)
     {
         IsUtensil = isUtensil;
         
@@ -123,10 +123,10 @@ public class Ingredient
 
     }
         
-    public IEnumerator Process(int machineDelay, List<IngredientAttr> inputtedAttr, List<IngredientAttr> outputtedAttr)
+    public IEnumerator Process(int machineDelay, SList<IngredientAttr> inputtedAttr, SList<IngredientAttr> outputtedAttr)
     {
         yield return new WaitForSeconds(TimeToProcess + machineDelay);
-        Attributes = Attributes.Except(inputtedAttr).ToList();
+        Attributes = new SList<IngredientAttr>(Attributes.Except(inputtedAttr).ToList());
         Attributes.AddRange(outputtedAttr);
         
         Object.Destroy(GameObject);

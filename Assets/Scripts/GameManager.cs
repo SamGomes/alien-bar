@@ -2,12 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+
+
+
 
 
 public class TrashBinObjectEvents : MonoBehaviour
@@ -104,6 +108,8 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
             Destroy(gm.selectedOrder.GameObject);
             foreach (var recipe in _recipes)
             {
+                gm.scoreValueObj.text = 
+                    (int.Parse(gm.scoreValueObj.text) + gm.scoreMultiplier*recipe.logic.Level).ToString();
                 Destroy(recipe.gameObject);
             }
             gm.currOrders.Remove(gm.selectedOrder);
@@ -119,13 +125,16 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 
 public class GameManager : MonoBehaviour
 {
+    public TextMeshPro scoreValueObj;
+    public int scoreMultiplier;
+    
     private int _currOrderLevel;
     
     private float _minOrderTime;
     private float _maxOrderTime;
     private float _maxPendingOrders;
     
-    public List<List<Recipe>> orderRecipesByLevel;
+    public SList<SList<Recipe>> orderRecipesByLevel;
     
     public GameObject orderPrefab;
     public GameObject orderContainer;
@@ -176,7 +185,7 @@ public class GameManager : MonoBehaviour
             new Ingredient(true,false,  
                 cam,new Vector3(), 
                 orangePrefabs,
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
+                new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE},
                 0)
         );
         
@@ -184,7 +193,7 @@ public class GameManager : MonoBehaviour
             new Ingredient(true, false, 
                 cam,new Vector3(), 
                 lemonPrefabs,
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
+                new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE},
                 0)
         );
 
@@ -192,82 +201,82 @@ public class GameManager : MonoBehaviour
             new Ingredient(true, false, 
                 cam,new Vector3(), 
                 applePrefabs, 
-                new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE}, 
+                new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE}, 
                 0)
         );
 
         InitSpawner(cupsSpawner,
             new Ingredient(true,true,  
                 cam,new Vector3(), new List<GameObject> {cupPrefab},
-                new List<IngredientAttr> {IngredientAttr.CUP},
+                new SList<IngredientAttr> {IngredientAttr.CUP},
                 0)
         );
     }
 
     void InitPossibleOrders()
     {
-        List<IngredientAttr> orangeWhole = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE};
+        SList<IngredientAttr> orangeWhole = 
+            new SList<IngredientAttr>{IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.WHOLE};
         
-        List<IngredientAttr> lemonWhole = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE};
+        SList<IngredientAttr> lemonWhole = 
+            new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.WHOLE};
 
-        List<IngredientAttr> appleWhole =
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE};
+        SList<IngredientAttr> appleWhole =
+            new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.WHOLE};
 
 
-        List<IngredientAttr> orangeCut = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.CUT};
+        SList<IngredientAttr> orangeCut = 
+            new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.CUT};
         
-        List<IngredientAttr> lemonCut = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.CUT};
+        SList<IngredientAttr> lemonCut = 
+            new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.CUT};
        
-        List<IngredientAttr> appleCut = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.CUT};
+        SList<IngredientAttr> appleCut = 
+            new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.CUT};
         
         
-        List<IngredientAttr> orangeJuice = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.DRINK};
+        SList<IngredientAttr> orangeJuice = 
+            new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.ORANGE, IngredientAttr.DRINK};
         
-        List<IngredientAttr> lemonJuice = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.DRINK};
+        SList<IngredientAttr> lemonJuice = 
+            new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.LEMON, IngredientAttr.DRINK};
        
-        List<IngredientAttr> appleJuice = 
-            new List<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.DRINK};
+        SList<IngredientAttr> appleJuice = 
+            new SList<IngredientAttr> {IngredientAttr.FRUIT, IngredientAttr.APPLE, IngredientAttr.DRINK};
 
-        List<IngredientAttr> cup = new List<IngredientAttr> {IngredientAttr.CUP};
+        SList<IngredientAttr> cup = new SList<IngredientAttr> {IngredientAttr.CUP};
 
 
-        orderRecipesByLevel = new List<List<Recipe>>();
-        orderRecipesByLevel.Add(new List<Recipe>());
+        orderRecipesByLevel = new SList<SList<Recipe>>();
+        orderRecipesByLevel.Add(new SList<Recipe>());
         orderRecipesByLevel[0].Add(new Recipe("orangeWhole", 
-            new List<List<IngredientAttr>>() {orangeWhole}, 1));
+            new SList<SList<IngredientAttr>>() {orangeWhole}, 1));
         orderRecipesByLevel[0].Add(new Recipe("lemonWhole", 
-            new List<List<IngredientAttr>>() {lemonWhole}, 1));
+            new SList<SList<IngredientAttr>>() {lemonWhole}, 1));
         orderRecipesByLevel[0].Add(new Recipe("appleWhole", 
-            new List<List<IngredientAttr>>() {appleWhole}, 1));
+            new SList<SList<IngredientAttr>>() {appleWhole}, 1));
         
-        orderRecipesByLevel.Add(new List<Recipe>());
+        orderRecipesByLevel.Add(new SList<Recipe>());
         orderRecipesByLevel[1].Add(new Recipe("orangeCut", 
-            new List<List<IngredientAttr>>() {orangeCut}, 2));
+            new SList<SList<IngredientAttr>>() {orangeCut}, 2));
         orderRecipesByLevel[1].Add(new Recipe("lemonCut", 
-            new List<List<IngredientAttr>>() {lemonCut}, 2));
+            new SList<SList<IngredientAttr>>() {lemonCut}, 2));
         orderRecipesByLevel[1].Add(new Recipe("appleCut", 
-            new List<List<IngredientAttr>>() {appleCut}, 2));
+            new SList<SList<IngredientAttr>>() {appleCut}, 2));
         
-        orderRecipesByLevel.Add(new List<Recipe>());
+        orderRecipesByLevel.Add(new SList<Recipe>());
         orderRecipesByLevel[2].Add(new Recipe("orangeJuice", 
-            new List<List<IngredientAttr>>() {cup,orangeJuice}, 3));
+            new SList<SList<IngredientAttr>>() {cup,orangeJuice}, 3));
         orderRecipesByLevel[2].Add(new Recipe("lemonJuice", 
-            new List<List<IngredientAttr>>() {cup,lemonJuice}, 3));
+            new SList<SList<IngredientAttr>>() {cup,lemonJuice}, 3));
         orderRecipesByLevel[2].Add(new Recipe("appleJuice", 
-            new List<List<IngredientAttr>>() {cup,appleJuice}, 3));
+            new SList<SList<IngredientAttr>>() {cup,appleJuice}, 3));
 
-        orderRecipesByLevel.Add(new List<Recipe>());
+        orderRecipesByLevel.Add(new SList<Recipe>());
         orderRecipesByLevel[3].Add(new Recipe("citrusJuice", 
-            new List<List<IngredientAttr>>() {cup,orangeJuice,lemonJuice}, 4));
+            new SList<SList<IngredientAttr>>() {cup,orangeJuice,lemonJuice}, 4));
         orderRecipesByLevel[3].Add(new Recipe("tuttiFruttiJuice", 
-            new List<List<IngredientAttr>>() {cup,orangeJuice,appleJuice,lemonJuice}, 4));
+            new SList<SList<IngredientAttr>>() {cup,orangeJuice,appleJuice,lemonJuice}, 4));
 
 
         string json = JsonUtility.ToJson(orderRecipesByLevel);
@@ -330,16 +339,16 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         var juiceFoodProcessor = new FoodProcessor(juiceFoodProcessorObj,
-            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.DRINK},
-            new List<IngredientAttr> {IngredientAttr.CUP},
+            new SList<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
+            new SList<IngredientAttr> {IngredientAttr.CUT},
+            new SList<IngredientAttr> {IngredientAttr.DRINK},
+            new SList<IngredientAttr> {IngredientAttr.CUP},
             1);
         var knife = new FoodProcessor(knifeObj,
-            new List<IngredientAttr> {IngredientAttr.WHOLE},
-            new List<IngredientAttr> {IngredientAttr.WHOLE},
-            new List<IngredientAttr> {IngredientAttr.CUT},
-            new List<IngredientAttr>(),
+            new SList<IngredientAttr> {IngredientAttr.WHOLE},
+            new SList<IngredientAttr> {IngredientAttr.WHOLE},
+            new SList<IngredientAttr> {IngredientAttr.CUT},
+            new SList<IngredientAttr>(),
             1);
 
         _minOrderTime = 1;
@@ -347,6 +356,8 @@ public class GameManager : MonoBehaviour
         _currOrderLevel = 4;
         _maxPendingOrders = 5;
         currOrders = new List<Order>();
+
+        scoreMultiplier = 1000;
 
         trashBin.AddComponent<TrashBinObjectEvents>();
         
