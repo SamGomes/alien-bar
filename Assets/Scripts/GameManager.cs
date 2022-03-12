@@ -105,11 +105,15 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 //        transform.localScale = 1.1f * _baseScale;
         if (gm.EvaluateOrder(gm.selectedOrder, _recipes))
         {
+            foreach(var targetRecipe in gm.selectedOrder.Recipes)
+            {
+                gm.scoreValueObj.text = 
+                    (int.Parse(gm.scoreValueObj.text) + gm.scoreMultiplier*targetRecipe.Level).ToString();
+            }
+            
             Destroy(gm.selectedOrder.GameObject);
             foreach (var recipe in _recipes)
             {
-                gm.scoreValueObj.text = 
-                    (int.Parse(gm.scoreValueObj.text) + gm.scoreMultiplier*recipe.logic.Level).ToString();
                 Destroy(recipe.gameObject);
             }
             gm.currOrders.Remove(gm.selectedOrder);
