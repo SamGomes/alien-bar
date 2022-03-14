@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class IngredientConfigurations
@@ -55,6 +56,12 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
 {
     public Camera cam;
     public Ingredient template;
+    
+    public void Start()
+    {
+        gameObject.GetComponentInChildren<TextMeshPro>().text = JsonConvert.SerializeObject(template.Attributes);
+    }
+
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         //Use this to tell when the user right-clicks on the Button
@@ -179,6 +186,10 @@ public class GameManager : MonoBehaviour
     
     public GameObject trashBin;
     
+    public List<GameObject> cameraPositioners;
+    private int _currCameraSection;
+    public List<Button> cameraChangeButtons;
+    
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
         spawnerObj.AddComponent<IngredientSpawner>();
@@ -254,6 +265,19 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void IncreaseCameraSection()
+    {
+        _currCameraSection =
+            (_currCameraSection == cameraPositioners.Count) ? _currCameraSection : _currCameraSection++;
+        cam.transform.parent = cameraPositioners[_currCameraSection].transform;
+    }
+    public void DecreaseCameraSection()
+    {
+        _currCameraSection =
+            (_currCameraSection == 0) ? _currCameraSection : _currCameraSection--;
+        cam.transform.parent = cameraPositioners[_currCameraSection].transform;
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -315,6 +339,11 @@ public class GameManager : MonoBehaviour
         InvokeRepeating("GenerateOrder", 
             0.0f, 
             Random.Range(_gameConfig.MINOrderTime, _gameConfig.MAXOrderTime));
+
+        _currCameraSection = 0;
+        cam.transform.parent = cameraPositioners[0].transform;
+        cameraChangeButtons[0].onClick.AddListener(IncreaseCameraSection);
+        cameraChangeButtons[1].onClick.AddListener(DecreaseCameraSection);
 
     }
 

@@ -25,34 +25,7 @@ public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler
 
     public void Start()
     {
-        string ingredAttrsText = "{\n";
-
-        List<List<IngredientAttr>> ingredientList = logic.IngredientAttrs;
-        for (int ingI = 0; ingI< ingredientList.Count; ingI++)
-        {
-            var ing = ingredientList[ingI]; 
-            
-            ingredAttrsText += "{";
-            for (int ingAttrI = 0; ingAttrI< ing.Count; ingAttrI++)
-            {
-                var ingAttr = ing[ingAttrI]; 
-                ingredAttrsText += ingAttr; 
-
-                if (ingAttrI < ing.Count - 1)
-                {
-                    ingredAttrsText += ",";
-                }
-            }
-            ingredAttrsText += "}\n";
-            
-            if (ingI < logic.IngredientAttrs.Count - 1)
-            {
-                ingredAttrsText += ",";
-            }
-        }
-        ingredAttrsText += "}\n";
-        
-        gameObject.GetComponentInChildren<TextMeshPro>().text = ingredAttrsText;
+        gameObject.GetComponentInChildren<TextMeshPro>().text = JsonConvert.SerializeObject(logic.IngredientAttrs);
     }
     
     public void OnPointerClick(PointerEventData pointerEventData)
