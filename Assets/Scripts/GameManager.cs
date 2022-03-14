@@ -268,14 +268,17 @@ public class GameManager : MonoBehaviour
     public void IncreaseCameraSection()
     {
         _currCameraSection =
-            (_currCameraSection == cameraPositioners.Count) ? _currCameraSection : _currCameraSection++;
+            (_currCameraSection < cameraPositioners.Count) ? _currCameraSection + 1 : _currCameraSection;
         cam.transform.parent = cameraPositioners[_currCameraSection].transform;
+        cam.transform.localPosition = new Vector3();
     }
     public void DecreaseCameraSection()
     {
         _currCameraSection =
-            (_currCameraSection == 0) ? _currCameraSection : _currCameraSection--;
+            (_currCameraSection > 0) ? _currCameraSection - 1 : _currCameraSection;
         cam.transform.parent = cameraPositioners[_currCameraSection].transform;
+        cam.transform.localPosition = new Vector3();
+
     }
     
     // Start is called before the first frame update
