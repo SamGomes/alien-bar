@@ -13,8 +13,7 @@ using Object = UnityEngine.Object;
 public enum OrderSection
 {
     FRUITS = 0,
-    DESSERTS = 1,
-    PASTAS = 2
+    DESSERTS = 1
 }
 
 public class RecipeObjectEvents : MonoBehaviour, IPointerClickHandler

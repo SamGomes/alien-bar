@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+
 public class IngredientConfigurations
 {
     public List<string> IngredientPrefabs;
@@ -18,7 +19,10 @@ public class IngredientConfigurations
 
 public class GameConfigurations
 {
-    public int CurrOrderLevel;
+    public bool IsTraining;
+    public int ScoreMultiplier;
+    
+    public int OrderDifficulty;
     public float MINOrderTime;
     public float MAXOrderTime;
     public int MAXPendingOrders;
@@ -131,9 +135,10 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
                 foreach (var targetRecipe in order.Recipes)
                 {
                     gm.scoreValueObj.text =
-                        (int.Parse(gm.scoreValueObj.text) + gm.scoreMultiplier * targetRecipe.Level).ToString();
+                        (int.Parse(gm.scoreValueObj.text) + gm.gameConfig.ScoreMultiplier * targetRecipe.Level).ToString();
                 }
-
+                
+                _recipes.Clear();
                 Destroy(order.GameObject);
                 foreach (var recipe in _recipes)
                 {
@@ -141,6 +146,16 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
                 }
 
                 orderToRemove = order;
+                
+                
+                
+                //decrement repeatRate on survival
+                if(!gm.gameConfig.IsTraining)
+                {
+                    gm.repeatRate = 
+                        (gm.repeatRate > gm.gameConfig.MINOrderTime) ? gm.repeatRate * 0.9f : gm.repeatRate;
+                }
+
             }
         }
 
@@ -160,9 +175,8 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 public class GameManager : MonoBehaviour
 {
     public TextMeshPro scoreValueObj;
-    public int scoreMultiplier;
 
-    private GameConfigurations _gameConfig;
+    public GameConfigurations gameConfig;
 
     public GameObject orderPrefab;
     public GameObject orderContainer;
@@ -177,9 +191,16 @@ public class GameManager : MonoBehaviour
     public GameObject deliveryBagPrefab;
 
     //food processors
-    public GameObject juiceFoodProcessorObj;
-    public GameObject knifeObj;
+    public GameObject juiceBlenderObj;
+    public GameObject juiceKnifeObj;
 
+    public GameObject dessertBlenderObj;
+    public GameObject dessertKnifeObj;
+    public GameObject coleffMachineSmallObj;
+    public GameObject coleffMachineMediumObj;
+    public GameObject coleffMachineLargeObj;
+
+    
     public List<GameObject> ingredientSpawners;
     public GameObject deliveryBoardObj;
     
@@ -190,6 +211,8 @@ public class GameManager : MonoBehaviour
     private int _currCameraSection;
     public List<Button> cameraChangeButtons;
     
+    public float repeatRate;
+
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
         spawnerObj.AddComponent<IngredientSpawner>();
@@ -205,27 +228,30 @@ public class GameManager : MonoBehaviour
             InitSpawner(ingredientSpawners[i],
                 new Ingredient(true, 
                     cam,new Vector3(), 
-                    _gameConfig.IngredientConfigs[i].IngredientPrefabs,
-                    _gameConfig.IngredientConfigs[i].IngredientAttrs,
+                    gameConfig.IngredientConfigs[i].IngredientPrefabs,
+                    gameConfig.IngredientConfigs[i].IngredientAttrs,
                     0)
             );
         }
     }
 
-    Order GenerateOrder()
+    void GenerateOrder()
     {
+        if (gameConfig.IsTraining && currOrders.Count == gameConfig.MAXPendingOrders)
+        {
+            return;
+        }
+        
         Order newOrder = new Order();
-        int numRecipes = _gameConfig.CurrOrderLevel / Random.Range(1, _gameConfig.CurrOrderLevel + 1);
+        int numRecipes = gameConfig.OrderDifficulty / Random.Range(1, gameConfig.OrderDifficulty + 1);
         for (int i = 0; i < numRecipes; i++)
         {
-            List <Recipe> orderRecipes = _gameConfig.OrderRecipesByLevel[(_gameConfig.CurrOrderLevel / numRecipes) - 1];
+            List <Recipe> orderRecipes = gameConfig.OrderRecipesByLevel[(gameConfig.OrderDifficulty / numRecipes) - 1];
             newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
         }
 
         currOrders.Add(newOrder);
         newOrder.PrintOrder(orderPrefab, cam, orderContainer);
-        
-        return newOrder;
     }
 
     public bool EvaluateOrder(Order selectedOrder, List<RecipeObjectEvents> userRecipes)
@@ -268,7 +294,7 @@ public class GameManager : MonoBehaviour
     public void IncreaseCameraSection()
     {
         _currCameraSection =
-            (_currCameraSection < cameraPositioners.Count) ? _currCameraSection + 1 : _currCameraSection;
+            (_currCameraSection < (cameraPositioners.Count - 1)) ? _currCameraSection + 1 : _currCameraSection;
         cam.transform.parent = cameraPositioners[_currCameraSection].transform;
         cam.transform.localPosition = new Vector3();
     }
@@ -284,26 +310,61 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        new FoodProcessor(juiceFoodProcessorObj,
+        DontDestroyOnLoad(gameObject);
+        
+        new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.DRINK},
             new List<IngredientAttr> {IngredientAttr.CUP},
             1);
-        new FoodProcessor(knifeObj,
-            new List<IngredientAttr> {IngredientAttr.WHOLE},
+        new FoodProcessor(juiceKnifeObj,
+            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
             1);
 
+        
+        new FoodProcessor(dessertBlenderObj,
+            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.WHOLE},
+            new List<IngredientAttr> {IngredientAttr.WHOLE},
+            new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr>(),
+            1);
+        new FoodProcessor(coleffMachineSmallObj,
+            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.CUT},
+            new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr> {IngredientAttr.DRINK,IngredientAttr.SMALL},
+            new List<IngredientAttr> {IngredientAttr.DESSERT,IngredientAttr.CUP},
+            1);
+        new FoodProcessor(coleffMachineMediumObj,
+            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.DRINK, IngredientAttr.SMALL},
+            new List<IngredientAttr> {IngredientAttr.SMALL},
+            new List<IngredientAttr> {IngredientAttr.MEDIUM},
+            new List<IngredientAttr> {IngredientAttr.DESSERT,IngredientAttr.CUP},
+            2);
+        new FoodProcessor(coleffMachineLargeObj,
+            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.DRINK, IngredientAttr.MEDIUM},
+            new List<IngredientAttr> {IngredientAttr.MEDIUM},
+            new List<IngredientAttr> {IngredientAttr.LARGE},
+            new List<IngredientAttr> {IngredientAttr.DESSERT,IngredientAttr.CUP},
+            3);
+        new FoodProcessor(dessertKnifeObj,
+            new List<IngredientAttr> {IngredientAttr.CAKE,IngredientAttr.WHOLE},
+            new List<IngredientAttr> {IngredientAttr.WHOLE},
+            new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr>(),
+            1);
+        
+        
         currOrders = new List<Order>();
         
-        _gameConfig = new GameConfigurations();
+        gameConfig = new GameConfigurations();
         string path = "Assets/StreamingAssets/configs.cfg";
         StreamReader reader = new StreamReader(path);
         string json = reader.ReadToEnd();
-        _gameConfig = JsonConvert.DeserializeObject<GameConfigurations>(json);
+        gameConfig = JsonConvert.DeserializeObject<GameConfigurations>(json);
         reader.Close();
         
         // _gameConfig.MINOrderTime = 1;
@@ -324,7 +385,7 @@ public class GameManager : MonoBehaviour
         // writer.Close();
         //
 
-        scoreMultiplier = 1000;
+//        scoreMultiplier = 1000;
 
         trashBin.AddComponent<TrashBinObjectEvents>();
         
@@ -338,10 +399,11 @@ public class GameManager : MonoBehaviour
         
         InitFruitSectionSpawners();
 
-        // Order newOrders = GenerateOrder();
-        InvokeRepeating("GenerateOrder", 
-            0.0f, 
-            Random.Range(_gameConfig.MINOrderTime, _gameConfig.MAXOrderTime));
+        repeatRate = 0.25f;
+        
+        InvokeRepeating(nameof(GenerateOrder),
+            0.0f,
+            repeatRate); //Random.Range(gameConfig.MINOrderTime, gameConfig.MAXOrderTime));
 
         _currCameraSection = 0;
         cam.transform.parent = cameraPositioners[0].transform;
@@ -352,14 +414,17 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if (_gameConfig == null)
+        if (gameConfig == null)
         {
             return;
         }
         
-        if (currOrders.Count == _gameConfig.MAXPendingOrders)
+        if (currOrders.Count == 1) // > gameConfig.MAXPendingOrders)
         {
+
+            CancelInvoke(nameof(GenerateOrder));
             SceneManager.LoadScene("GameOverScene");
+            currOrders.Clear();
         }
     }
 }

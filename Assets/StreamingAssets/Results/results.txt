@@ -1,0 +1,4 @@
+{ "abilityInc": 0,"engagementInc": 0.5,"gradeInc": 0.5}
+{ "abilityInc": 0,"engagementInc": 0.5,"gradeInc": 0.5}
+{ "abilityInc": 0,"engagementInc": 0,"gradeInc": 0.5}
+{ "abilityInc": 0,"engagementInc": 0,"gradeInc": 0.5}

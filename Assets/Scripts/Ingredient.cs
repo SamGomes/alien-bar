@@ -77,8 +77,9 @@ public enum IngredientAttr
     COLEFF,
     SMALL,
     MEDIUM,
-    FULL,
+    LARGE,
     
+    CAKE,
     DRUPPI_CAKE,
     LURI_CAKE,
     MARR_CAKE,
@@ -89,7 +90,9 @@ public enum IngredientAttr
     RYNUMIDEC_LEG,
     
     
-    DRINK
+    DRINK,
+    WATER,
+    COLA
 }
 
 public class Ingredient

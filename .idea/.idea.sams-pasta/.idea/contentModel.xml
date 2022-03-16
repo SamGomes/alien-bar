@@ -14,8 +14,14 @@
           <e p="FoodCombiner.cs" t="Include" />
           <e p="FoodProcessor.cs" t="Include" />
           <e p="GameManager.cs" t="Include" />
+          <e p="GameOverSceneFunctionalities.cs" t="Include" />
           <e p="Ingredient.cs" t="Include" />
           <e p="Order.cs" t="Include" />
+        </e>
+        <e p="StreamingAssets" t="Include">
+          <e p="Results" t="Include">
+            <e p="results.txt" t="Include" />
+          </e>
         </e>
         <e p="TextMesh Pro" t="Include">
           <e p="Fonts" t="Include">
