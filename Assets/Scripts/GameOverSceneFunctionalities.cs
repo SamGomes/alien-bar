@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,7 +13,10 @@ public class GameOverSceneFunctionalities: MonoBehaviour
     private Slider[] engQuestions;
     public void Start()
     {
-        var gm = FindObjectOfType<GameManager>();
+        var scoreObj = FindObjectOfType<TextMeshPro>();
+        float score = float.Parse(scoreObj.text);
+        scoreObj.gameObject.SetActive(false);
+
         engQuestions = FindObjectsOfType<Slider>();
         
         submitButton.onClick.AddListener(() => {
@@ -25,12 +29,11 @@ public class GameOverSceneFunctionalities: MonoBehaviour
             }
         
             string path = "Assets/StreamingAssets/Results/results.txt";
-            string json = "{ \"abilityInc\": "+float.Parse(gm.scoreValueObj.text)/ 10000.0f+
+            string json = "{ \"abilityInc\": "+ score/ 10000.0f+
                           ",\"engagementInc\": "+engValue+",\"gradeInc\": "+0.5+"}";
-            StreamWriter writer = new StreamWriter(path, true);
         
-            writer.WriteLine(json);
-            writer.Close();
+            File.WriteAllText(path,json);
+            
         });
     }
     

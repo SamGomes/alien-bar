@@ -138,12 +138,12 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
                         (int.Parse(gm.scoreValueObj.text) + gm.gameConfig.ScoreMultiplier * targetRecipe.Level).ToString();
                 }
                 
-                _recipes.Clear();
-                Destroy(order.GameObject);
                 foreach (var recipe in _recipes)
                 {
                     Destroy(recipe.gameObject);
                 }
+                _recipes.Clear();
+                Destroy(order.GameObject);
 
                 orderToRemove = order;
                 
@@ -310,7 +310,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
         
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
@@ -418,13 +417,15 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        
-        if (currOrders.Count == 1) // > gameConfig.MAXPendingOrders)
-        {
 
+//        if((gameConfig.IsTraining && (int.Parse(scoreValueObj.text) == 10000)) ||
+//           (!gameConfig.IsTraining && (currOrders.Count > gameConfig.MAXPendingOrders)))
+//        {
+            scoreValueObj.transform.parent = null;
+            DontDestroyOnLoad(scoreValueObj);
+            
             CancelInvoke(nameof(GenerateOrder));
             SceneManager.LoadScene("GameOverScene");
-            currOrders.Clear();
-        }
+//        }
     }
 }
