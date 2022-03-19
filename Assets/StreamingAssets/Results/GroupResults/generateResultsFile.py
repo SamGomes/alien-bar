@@ -1,18 +1,32 @@
+import os
 import json
 
 with open('../../configs.cfg', 'r') as configsJson:
-	print(configsJson)
+	gradeSelfWeight = json.load(configsJson)["GradeSelfWeight"]
+	gradeInc = 0
+
+
+	# my results
+	myLearnerMetrics = "" 
+	for filename in os.listdir(os.getcwd()):
+		if(filename.__contains__(".txt") and not filename.__contains__(".meta")):
+				with open(filename, 'r') as metricsJson:
+					myLearnerMetrics = json.load(metricsJson)
+					gradeInc = gradeInc + myLearnerMetrics["abilityInc"]*gradeSelfWeight
+
+
+	# others results
+	for filename in os.listdir(os.getcwd()+"/OthersResults"):
+		if(filename.__contains__(".txt") and not filename.__contains__(".meta")):
+			with open("./OthersResults/" + filename, 'r') as metricsJson:
+				learnerMetrics = json.load(metricsJson)
+				gradeInc = gradeInc + learnerMetrics["abilityInc"]*(1 - gradeSelfWeight)
 	
-	gradeSelfWeight = json.load(configsJson)
-	for key, value in gradeSelfWeight.items():
-		print(key, ":", value)
+	gradeInc = gradeInc / 3.0
+	
 
-# with open("s2.txt", "r") as read_file:
-#     print(json.load(read_file).abilityInc)
+	myLearnerMetrics["gradeInc"] = gradeInc
+	with open('YourTaskResults.txt', 'w') as f:
+		json.dump(myLearnerMetrics, f)
 
-
-# for filename in os.listdir(directory):
-#     f = os.path.join(directory, filename)
-#     # checking if it is a file
-#     if os.path.isfile(f):
-#         print(f)
+	print('YourTaskResults.txt generated at location: '+str(os.getcwd())+'! You can now upload your results to GIMME-Web!')
