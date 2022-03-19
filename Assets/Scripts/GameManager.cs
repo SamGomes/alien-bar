@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,26 +12,6 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 
-public class IngredientConfigurations
-{
-    public List<string> IngredientPrefabs;
-    public List<IngredientAttr> IngredientAttrs;
-}
-
-public class GameConfigurations
-{
-    public bool IsTraining;
-    public int ScoreMultiplier;
-    
-    public int OrderDifficulty;
-    public float MINOrderTime;
-    public float MAXOrderTime;
-    public int MAXPendingOrders;
-    
-    
-    public List<IngredientConfigurations> IngredientConfigs;
-    public List<List<Recipe>> OrderRecipesByLevel;
-}
 
 
 public class TrashBinObjectEvents : MonoBehaviour
@@ -135,7 +116,7 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
                 foreach (var targetRecipe in order.Recipes)
                 {
                     gm.scoreValueObj.text =
-                        (int.Parse(gm.scoreValueObj.text) + gm.gameConfig.ScoreMultiplier * targetRecipe.Level).ToString();
+                        (int.Parse(gm.scoreValueObj.text) + GameGlobals.GameConfigs.ScoreMultiplier * targetRecipe.Level).ToString();
                 }
                 
                 foreach (var recipe in _recipes)
@@ -147,15 +128,6 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 
                 orderToRemove = order;
                 
-                
-                
-                //decrement repeatRate on survival
-                if(!gm.gameConfig.IsTraining)
-                {
-                    gm.repeatRate = 
-                        (gm.repeatRate > gm.gameConfig.MINOrderTime) ? gm.repeatRate * 0.9f : gm.repeatRate;
-                }
-
             }
         }
 
@@ -175,8 +147,6 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 public class GameManager : MonoBehaviour
 {
     public TextMeshPro scoreValueObj;
-
-    public GameConfigurations gameConfig;
 
     public GameObject orderPrefab;
     public GameObject orderContainer;
@@ -228,30 +198,45 @@ public class GameManager : MonoBehaviour
             InitSpawner(ingredientSpawners[i],
                 new Ingredient(true, 
                     cam,new Vector3(), 
-                    gameConfig.IngredientConfigs[i].IngredientPrefabs,
-                    gameConfig.IngredientConfigs[i].IngredientAttrs,
+                    GameGlobals.GameConfigs.IngredientConfigs[i].IngredientPrefabs,
+                    GameGlobals.GameConfigs.IngredientConfigs[i].IngredientAttrs,
                     0)
             );
         }
     }
 
-    void GenerateOrder()
+    IEnumerator GenerateOrder()
     {
-        if (gameConfig.IsTraining && currOrders.Count == gameConfig.MAXPendingOrders)
-        {
-            return;
-        }
-        
         Order newOrder = new Order();
-        int numRecipes = gameConfig.OrderDifficulty / Random.Range(1, gameConfig.OrderDifficulty + 1);
+        int numRecipes = GameGlobals.GameConfigs.OrderDifficulty 
+                         / Random.Range(1, GameGlobals.GameConfigs.OrderDifficulty + 1);
         for (int i = 0; i < numRecipes; i++)
         {
-            List <Recipe> orderRecipes = gameConfig.OrderRecipesByLevel[(gameConfig.OrderDifficulty / numRecipes) - 1];
+            List <Recipe> orderRecipes = 
+                GameGlobals.GameConfigs.OrderRecipesByLevel[(GameGlobals.GameConfigs.OrderDifficulty / numRecipes) - 1];
             newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
         }
 
         currOrders.Add(newOrder);
         newOrder.PrintOrder(orderPrefab, cam, orderContainer);
+        
+        //decrement repeatRate on survival
+        if(!GameGlobals.IsTraining)
+        {
+            repeatRate = 
+                (repeatRate > GameGlobals.GameConfigs.MINOrderTime) ? repeatRate * 0.9f : repeatRate;
+        }
+
+        //decrement repeatRate on survival
+        if (GameGlobals.IsTraining && currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
+        {
+            yield return null;
+        }
+        else
+        {
+            yield return new WaitForSeconds(repeatRate);
+            StartCoroutine(GenerateOrder());
+        }
     }
 
     public bool EvaluateOrder(Order selectedOrder, List<RecipeObjectEvents> userRecipes)
@@ -307,6 +292,25 @@ public class GameManager : MonoBehaviour
 
     }
     
+    
+    
+    // public void Awake()
+    // {
+    //     if (!gameConfig.IsTraining)
+    //     {
+    //         if (!PlayerPrefs.HasKey("firstTime") || PlayerPrefs.GetInt("firstTime") != 69)
+    //         {
+    //             PlayerPrefs.SetInt("firstTime", 69);
+    //             PlayerPrefs.Save();
+    //         }
+    //         else if (PlayerPrefs.GetInt("firstTime") == 69)
+    //         {
+    //             Application.Quit();
+    //         }
+    //     }
+    // }
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -359,12 +363,6 @@ public class GameManager : MonoBehaviour
         
         currOrders = new List<Order>();
         
-        gameConfig = new GameConfigurations();
-        string path = "Assets/StreamingAssets/configs.cfg";
-        StreamReader reader = new StreamReader(path);
-        string json = reader.ReadToEnd();
-        gameConfig = JsonConvert.DeserializeObject<GameConfigurations>(json);
-        reader.Close();
         
         // _gameConfig.MINOrderTime = 1;
         // _gameConfig.MAXOrderTime = 1;
@@ -398,11 +396,9 @@ public class GameManager : MonoBehaviour
         
         InitFruitSectionSpawners();
 
-        repeatRate = 0.25f;
+        repeatRate = (GameGlobals.IsTraining) ? 0.25f: GameGlobals.GameConfigs.MAXOrderTime;
         
-        InvokeRepeating(nameof(GenerateOrder),
-            0.0f,
-            repeatRate); //Random.Range(gameConfig.MINOrderTime, gameConfig.MAXOrderTime));
+        StartCoroutine(GenerateOrder()); //Random.Range(gameConfig.MINOrderTime, gameConfig.MAXOrderTime));
 
         _currCameraSection = 0;
         cam.transform.parent = cameraPositioners[0].transform;
@@ -413,21 +409,21 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if (gameConfig == null)
-        {
-            return;
-        }
-
-        /** /
-        if((gameConfig.IsTraining && (int.Parse(scoreValueObj.text) == 10000)) ||
-           (!gameConfig.IsTraining && (currOrders.Count > gameConfig.MAXPendingOrders)))
+        /**/
+        if((GameGlobals.IsTraining && (int.Parse(scoreValueObj.text) == 1000)) ||
+           (!GameGlobals.IsTraining && (currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders)))
         { /**/
-            scoreValueObj.transform.parent = null;
-            DontDestroyOnLoad(scoreValueObj);
+            GameGlobals.Score = float.Parse(scoreValueObj.text);
             
-            CancelInvoke(nameof(GenerateOrder));
-            SceneManager.LoadScene("EndScene"); 
-            /** /
+            if (GameGlobals.IsTraining)
+            {
+                SceneManager.LoadScene("EndSceneTraining");
+            }
+            else
+            {
+                SceneManager.LoadScene("EndSceneSurvival");
+            }
+            /**/
         }
         /**/
     }

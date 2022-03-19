@@ -1,22 +1,18 @@
 using System.IO;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EndSceneFunctionalities: MonoBehaviour
+public class EndSceneSurvivalFunctionalities: MonoBehaviour
 {
     public GameObject engQuestionnaire;
     public Button submitButton;
     private Slider[] engQuestions;
     public void Start()
     {
-        TextMeshPro scoreObj = GameObject.Find("Value").GetComponent<TextMeshPro>();
-        TextMeshPro playerIdObj = GameObject.Find("PlayerId").GetComponent<TextMeshPro>();
-        float score = float.Parse(scoreObj.text);
-        scoreObj.gameObject.SetActive(false);
-
-        engQuestions = FindObjectsOfType<Slider>();
         
+        engQuestions = FindObjectsOfType<Slider>();
         submitButton.onClick.AddListener(() => {
             
             float engValue = 0.0f;
@@ -26,8 +22,9 @@ public class EndSceneFunctionalities: MonoBehaviour
                 engValue += (currSlider.value/ 6.0f) / engQuestions.Length;
             }
         
-            string path = "Assets/StreamingAssets/Results/GroupResults/"+playerIdObj.text+".txt";
-            string json = "{ \"abilityInc\": "+ score/ 10000.0f+
+            string path = "Assets/StreamingAssets/Results/GroupResults/"+GameGlobals.PlayerId+".txt";
+            string json = "{ \"engAnswers\"" + JsonConvert.SerializeObject(engQuestions)+
+                          "\"abilityInc\": "+ GameGlobals.Score/ 10000.0f+
                           ",\"engagementInc\": "+engValue+"," +
                           "\"gradeInc\": "+0.5+"}";
             

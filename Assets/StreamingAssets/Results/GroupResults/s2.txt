@@ -1,1 +1,0 @@
-{ "abilityInc": 0.3,"engagementInc": 0.21,"gradeInc": 0.5}
