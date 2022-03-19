@@ -1,19 +1,17 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverSceneFunctionalities: MonoBehaviour
+public class EndSceneFunctionalities: MonoBehaviour
 {
     public GameObject engQuestionnaire;
     public Button submitButton;
     private Slider[] engQuestions;
     public void Start()
     {
-        var scoreObj = FindObjectOfType<TextMeshPro>();
+        TextMeshPro scoreObj = GameObject.Find("Value").GetComponent<TextMeshPro>();
+        TextMeshPro playerIdObj = GameObject.Find("PlayerId").GetComponent<TextMeshPro>();
         float score = float.Parse(scoreObj.text);
         scoreObj.gameObject.SetActive(false);
 
@@ -28,11 +26,15 @@ public class GameOverSceneFunctionalities: MonoBehaviour
                 engValue += (currSlider.value/ 6.0f) / engQuestions.Length;
             }
         
-            string path = "Assets/StreamingAssets/Results/results.txt";
+            string path = "Assets/StreamingAssets/Results/GroupResults/"+playerIdObj.text+".txt";
             string json = "{ \"abilityInc\": "+ score/ 10000.0f+
-                          ",\"engagementInc\": "+engValue+",\"gradeInc\": "+0.5+"}";
-        
+                          ",\"engagementInc\": "+engValue+"," +
+                          "\"gradeInc\": "+0.5+"}";
+            
+
+            
             File.WriteAllText(path,json);
+            submitButton.GetComponent<Image>().color = Color.green;
             
         });
     }

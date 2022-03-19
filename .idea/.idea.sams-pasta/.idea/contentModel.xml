@@ -11,12 +11,13 @@
           <e p="ReplaceGameObjects.cs" t="Include" />
         </e>
         <e p="Scripts" t="Include">
+          <e p="EndSceneFunctionalities.cs" t="Include" />
           <e p="FoodCombiner.cs" t="Include" />
           <e p="FoodProcessor.cs" t="Include" />
           <e p="GameManager.cs" t="Include" />
-          <e p="GameOverSceneFunctionalities.cs" t="Include" />
           <e p="Ingredient.cs" t="Include" />
           <e p="Order.cs" t="Include" />
+          <e p="StartSceneFunctionalities.cs" t="Include" />
         </e>
         <e p="StreamingAssets" t="Include">
           <e p="Results" t="Include">

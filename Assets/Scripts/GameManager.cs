@@ -418,14 +418,17 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-//        if((gameConfig.IsTraining && (int.Parse(scoreValueObj.text) == 10000)) ||
-//           (!gameConfig.IsTraining && (currOrders.Count > gameConfig.MAXPendingOrders)))
-//        {
+        /** /
+        if((gameConfig.IsTraining && (int.Parse(scoreValueObj.text) == 10000)) ||
+           (!gameConfig.IsTraining && (currOrders.Count > gameConfig.MAXPendingOrders)))
+        { /**/
             scoreValueObj.transform.parent = null;
             DontDestroyOnLoad(scoreValueObj);
             
             CancelInvoke(nameof(GenerateOrder));
-            SceneManager.LoadScene("GameOverScene");
-//        }
+            SceneManager.LoadScene("EndScene"); 
+            /** /
+        }
+        /**/
     }
 }
