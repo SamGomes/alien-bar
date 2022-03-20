@@ -108,10 +108,12 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
     
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        Order orderToRemove = null;
+        List<Order> ordersToRemove = new List<Order>();
         foreach (Order order in gm.currOrders)
         {
-            if (gm.EvaluateOrder(order, _recipes))
+            List<RecipeObjectEvents> validRecipes = 
+                gm.EvaluateOrder(order, _recipes);
+            if (validRecipes.Count > 0)
             {
                 foreach (var targetRecipe in order.Recipes)
                 {
@@ -119,21 +121,21 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
                         (int.Parse(gm.scoreValueObj.text) + GameGlobals.GameConfigs.ScoreMultiplier * targetRecipe.Level).ToString();
                 }
                 
-                foreach (var recipe in _recipes)
+                foreach (var recipe in validRecipes)
                 {
                     Destroy(recipe.gameObject);
                 }
-                _recipes.Clear();
+                _recipes = _recipes.Except(validRecipes).ToList();
                 Destroy(order.GameObject);
 
-                orderToRemove = order;
+                ordersToRemove.Add(order);
                 
             }
         }
 
-        if (orderToRemove != null)
+        if (ordersToRemove.Count > 0)
         {
-            gm.currOrders.Remove(orderToRemove);
+            gm.currOrders = gm.currOrders.Except(ordersToRemove).ToList();
         }
     }
 
@@ -252,26 +254,31 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public bool EvaluateOrder(Order selectedOrder, List<RecipeObjectEvents> userRecipes)
+    public List<RecipeObjectEvents> EvaluateOrder(Order selectedOrder, List<RecipeObjectEvents> userRecipes)
     {
-        int numValidRecepies = 0;
+        List<RecipeObjectEvents> validRecipes = new List<RecipeObjectEvents>();
         foreach (var orderRecipe in selectedOrder.Recipes)
         {
             foreach (var userRecipe in userRecipes)
             {
                 if (ValidateRecipe(orderRecipe, userRecipe.logic))
                 {
-                    numValidRecepies++;
+                    validRecipes.Add(userRecipe);
                     break;
                 }
             }
         }
         
-        return (numValidRecepies == selectedOrder.Recipes.Count);
+        return validRecipes;
     }
 
     private bool ValidateRecipe(Recipe orderRecipe, Recipe userRecipe)
     {
+        if (orderRecipe.IngredientAttrs.Count != userRecipe.IngredientAttrs.Count)
+        {
+            return false;
+        }
+
         int numValidIngs = 0;
         foreach (var orderIng in orderRecipe.IngredientAttrs)
         {
@@ -412,8 +419,14 @@ public class GameManager : MonoBehaviour
         repeatRate = (GameGlobals.IsTraining) ? 0.25f: GameGlobals.GameConfigs.MAXOrderTime;
         
         StartCoroutine(GenerateOrder()); //Random.Range(gameConfig.MINOrderTime, gameConfig.MAXOrderTime));
-        StartCoroutine(IncreaseOrderDifficulty());
         
+        //increase difficulty on survival
+        if (!GameGlobals.IsTraining)
+        {
+            StartCoroutine(IncreaseOrderDifficulty());
+        }
+        
+
         _currCameraSection = 0;
         cam.transform.parent = cameraPositioners[0].transform;
         cameraChangeButtons[0].onClick.AddListener(IncreaseCameraSection);
