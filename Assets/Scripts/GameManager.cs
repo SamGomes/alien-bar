@@ -205,35 +205,48 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    IEnumerator IncreaseOrderDifficulty()
+    {
+        yield return new WaitForSeconds(GameGlobals.GameConfigs.SurvivalIncreaseDifficultyDelay);
+        if (GameGlobals.GameConfigs.OrderDifficulty <
+            GameGlobals.GameConfigs.OrderRecipesByLevel.Count())
+        {
+            GameGlobals.GameConfigs.OrderDifficulty++;
+        }
+        StartCoroutine(IncreaseOrderDifficulty());
+    }
+
+
     IEnumerator GenerateOrder()
     {
-        Order newOrder = new Order();
-        int numRecipes = GameGlobals.GameConfigs.OrderDifficulty 
-                         / Random.Range(1, GameGlobals.GameConfigs.OrderDifficulty + 1);
-        for (int i = 0; i < numRecipes; i++)
-        {
-            List <Recipe> orderRecipes = 
-                GameGlobals.GameConfigs.OrderRecipesByLevel[(GameGlobals.GameConfigs.OrderDifficulty / numRecipes) - 1];
-            newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
-        }
-
-        currOrders.Add(newOrder);
-        newOrder.PrintOrder(orderPrefab, cam, orderContainer);
-        
-        //decrement repeatRate on survival
-        if(!GameGlobals.IsTraining)
-        {
-            repeatRate = 
-                (repeatRate > GameGlobals.GameConfigs.MINOrderTime) ? repeatRate * 0.9f : repeatRate;
-        }
-
-        //decrement repeatRate on survival
         if (GameGlobals.IsTraining && currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
         {
-            yield return null;
+            yield return new WaitForSeconds(repeatRate);
+            StartCoroutine(GenerateOrder());
         }
-        else
-        {
+        else{
+            Order newOrder = new Order();
+            int numRecipes = GameGlobals.GameConfigs.OrderDifficulty
+                             / Random.Range(1, GameGlobals.GameConfigs.OrderDifficulty + 1);
+            for (int i = 0; i < numRecipes; i++)
+            {
+                List<Recipe> orderRecipes =
+                    GameGlobals.GameConfigs.
+                        OrderRecipesByLevel[(GameGlobals.GameConfigs.OrderDifficulty / numRecipes) - 1];
+                newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
+            }
+
+            currOrders.Add(newOrder);
+            newOrder.PrintOrder(orderPrefab, cam, orderContainer);
+
+            //decrement repeatRate on survival
+            if (!GameGlobals.IsTraining)
+            {
+                repeatRate =
+                    (repeatRate > GameGlobals.GameConfigs.MINOrderTime) ? 
+                        repeatRate * GameGlobals.GameConfigs.SurvivalDecreaseTimeRate : repeatRate;
+            }
+
             yield return new WaitForSeconds(repeatRate);
             StartCoroutine(GenerateOrder());
         }
@@ -399,7 +412,8 @@ public class GameManager : MonoBehaviour
         repeatRate = (GameGlobals.IsTraining) ? 0.25f: GameGlobals.GameConfigs.MAXOrderTime;
         
         StartCoroutine(GenerateOrder()); //Random.Range(gameConfig.MINOrderTime, gameConfig.MAXOrderTime));
-
+        StartCoroutine(IncreaseOrderDifficulty());
+        
         _currCameraSection = 0;
         cam.transform.parent = cameraPositioners[0].transform;
         cameraChangeButtons[0].onClick.AddListener(IncreaseCameraSection);
@@ -410,7 +424,7 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
         /**/
-        if((GameGlobals.IsTraining && (int.Parse(scoreValueObj.text) == 1000)) ||
+        if((GameGlobals.IsTraining && (int.Parse(scoreValueObj.text) == 10000)) ||
            (!GameGlobals.IsTraining && (currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders)))
         { /**/
             GameGlobals.Score = float.Parse(scoreValueObj.text);

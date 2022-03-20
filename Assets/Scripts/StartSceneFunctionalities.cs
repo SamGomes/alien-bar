@@ -23,7 +23,9 @@ public class GameConfigurations
     public float MINOrderTime;
     public float MAXOrderTime;
     public int MAXPendingOrders;
-    
+ 
+    public int SurvivalIncreaseDifficultyDelay;
+    public float SurvivalDecreaseTimeRate;
     
     public List<IngredientConfigurations> IngredientConfigs;
     public List<List<Recipe>> OrderRecipesByLevel;

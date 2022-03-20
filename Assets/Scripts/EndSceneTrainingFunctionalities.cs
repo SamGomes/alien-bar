@@ -12,7 +12,7 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
     {
         
         restartButton.onClick.AddListener(() => {
-            SceneManager.LoadScene("MainScene");
+            SceneManager.LoadScene("StartScene");
         });
     }
     
