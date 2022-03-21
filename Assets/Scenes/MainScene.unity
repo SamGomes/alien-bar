@@ -505,7 +505,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 314779009}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.37, y: 0.1, z: -0.144}
+  m_LocalPosition: {x: 0.37, y: 0.1, z: -0.59}
   m_LocalScale: {x: 0.13533956, y: 0.2040055, z: 1.2820631}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -573,8 +573,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.9999995, z: 0.81100374}
-  m_Center: {x: 0.0000005439242, y: 0, z: -0.24339868}
+  m_Size: {x: 1, y: 0.64852786, z: 0.81100374}
+  m_Center: {x: 0.0000005439242, y: -0.6757348, z: -0.24339868}
 --- !u!1 &331586245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1039,8 +1039,8 @@ MonoBehaviour:
   dessertBlenderObj: {fileID: 1862087635}
   dessertKnifeObj: {fileID: 2127087573}
   coleffMachineSmallObj: {fileID: 314779009}
-  coleffMachineMediumObj: {fileID: 1949018578}
-  coleffMachineLargeObj: {fileID: 1998637078}
+  coleffMachineMediumObj: {fileID: 314779009}
+  coleffMachineLargeObj: {fileID: 314779009}
   ingredientSpawners:
   - {fileID: 1321679429}
   - {fileID: 637006028}
@@ -3233,7 +3233,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1949018578}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.003, y: 0.1, z: -0.144}
+  m_LocalPosition: {x: -0.003, y: 0.1, z: -0.59000003}
   m_LocalScale: {x: 0.13533956, y: 0.2040055, z: 1.2820631}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3301,8 +3301,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.9999995, z: 0.81100374}
-  m_Center: {x: 0.0000005439242, y: 0, z: -0.24339868}
+  m_Size: {x: 1, y: 0.64852786, z: 0.81100374}
+  m_Center: {x: 0.0000005439242, y: -0.6757348, z: -0.24339868}
 --- !u!1 &1997542019
 GameObject:
   m_ObjectHideFlags: 0
@@ -3427,7 +3427,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1998637078}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.392, y: 0.1, z: -0.144}
+  m_LocalPosition: {x: -0.392, y: 0.1, z: -0.59000003}
   m_LocalScale: {x: 0.13533956, y: 0.2040055, z: 1.2820631}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3495,8 +3495,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.9999995, z: 0.81100374}
-  m_Center: {x: 0.0000005439242, y: 0, z: -0.24339868}
+  m_Size: {x: 1, y: 0.64852786, z: 0.81100374}
+  m_Center: {x: 0.0000005439242, y: -0.6757348, z: -0.24339868}
 --- !u!1 &2044672395
 GameObject:
   m_ObjectHideFlags: 0
