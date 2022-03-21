@@ -104,8 +104,8 @@ public class FoodProcessor
         int processingDelay)
     {
         GameObject = gameObject;
-        GameObject.AddComponent<FoodProcessorObjectEvents>();
-        GameObject.GetComponent<FoodProcessorObjectEvents>().logic = this;
+        var foodProcEvents = GameObject.AddComponent<FoodProcessorObjectEvents>();
+        foodProcEvents.logic = this;
             
         ProcessingDelay = processingDelay;
         AcceptedAttrs = acceptedAttrs;

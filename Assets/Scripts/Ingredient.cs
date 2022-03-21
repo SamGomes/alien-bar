@@ -91,8 +91,8 @@ public enum IngredientAttr
     
     
     DRINK,
-    WATER,
-    COLA
+    AKWA,
+    ALOC
 }
 
 public class Ingredient

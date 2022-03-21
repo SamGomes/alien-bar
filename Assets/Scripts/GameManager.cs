@@ -331,9 +331,24 @@ public class GameManager : MonoBehaviour
     // }
     
     
+    public void MockedStartScene()
+    {
+        string path = "Assets/StreamingAssets/configs.cfg";
+        StreamReader reader = new StreamReader(path);
+        string json = reader.ReadToEnd();
+        GameGlobals.GameConfigs = 
+            JsonConvert.DeserializeObject<GameConfigurations>(json);
+        reader.Close();
+        
+        GameGlobals.IsTraining = true;
+    }
+    
+    
+    
     // Start is called before the first frame update
     void Start()
     {
+        MockedStartScene();
         
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
@@ -365,13 +380,13 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.DRINK, IngredientAttr.SMALL},
             new List<IngredientAttr> {IngredientAttr.SMALL},
             new List<IngredientAttr> {IngredientAttr.MEDIUM},
-            new List<IngredientAttr> {IngredientAttr.DESSERT,IngredientAttr.CUP},
+            new List<IngredientAttr>(),
             2);
         new FoodProcessor(coleffMachineLargeObj,
             new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.DRINK, IngredientAttr.MEDIUM},
             new List<IngredientAttr> {IngredientAttr.MEDIUM},
             new List<IngredientAttr> {IngredientAttr.LARGE},
-            new List<IngredientAttr> {IngredientAttr.DESSERT,IngredientAttr.CUP},
+            new List<IngredientAttr>(),
             3);
         new FoodProcessor(dessertKnifeObj,
             new List<IngredientAttr> {IngredientAttr.CAKE,IngredientAttr.WHOLE},
