@@ -128,7 +128,7 @@ public class Order
         // events.cam = cam;
         // events.logic = this;
         
-        Transform orderSectionPositioner = GameObject.transform.GetChild(1).transform;
+        Transform orderSectionPositioner = GameObject.transform.GetChild(0).transform;
         
         
         foreach (Recipe recipe in Recipes)

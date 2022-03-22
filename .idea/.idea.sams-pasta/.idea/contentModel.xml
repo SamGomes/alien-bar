@@ -10,6 +10,13 @@
         <e p="Editor" t="Include">
           <e p="ReplaceGameObjects.cs" t="Include" />
         </e>
+        <e p="Resources" t="Include">
+          <e p="Fonts" t="Include">
+            <e p="AlienEclipse" t="Include">
+              <e p="info.txt" t="Include" />
+            </e>
+          </e>
+        </e>
         <e p="Scripts" t="Include">
           <e p="EndSceneSurvivalFunctionalities.cs" t="Include" />
           <e p="EndSceneTrainingFunctionalities.cs" t="Include" />

@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 1d15af75546634273a3acf17790bc279
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Alien Eclipse
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 8247cfb2ac1f212b99fb246102b2f6f9, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
