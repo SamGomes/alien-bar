@@ -53,6 +53,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 870630176894578905}
     m_Modifications:
+    - target: {fileID: 1880055395697137282, guid: 2a7e6d8308662e5389e2be0f535d8e82, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 508a8a90db45312c9ac9141f8551bcb8, type: 2}
     - target: {fileID: 5284802082999978067, guid: 2a7e6d8308662e5389e2be0f535d8e82, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -101,6 +105,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bowl
       objectReference: {fileID: 0}
+    - target: {fileID: 6775677104197638250, guid: 2a7e6d8308662e5389e2be0f535d8e82, type: 3}
+      propertyPath: m_fontSize
+      value: 44.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6775677104197638250, guid: 2a7e6d8308662e5389e2be0f535d8e82, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 6775677104197638250, guid: 2a7e6d8308662e5389e2be0f535d8e82, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 508a8a90db45312c9ac9141f8551bcb8, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2a7e6d8308662e5389e2be0f535d8e82, type: 3}
 --- !u!4 &4990686536688896960 stripped
