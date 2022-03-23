@@ -25,16 +25,15 @@ public class TrashBinObjectEvents : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entered combiner");
         transform.localScale = 1.1f * _baseScale;
         var ingEvents = other.GetComponent<RecipeObjectEvents>();
         var ingEvents2 = other.GetComponent<IngredientObjectEvents>();
-        if (ingEvents != null || ingEvents2!= null)
+        if (ingEvents != null || ingEvents2 != null)
         {
             Destroy(other.gameObject);
         }
-        
     }
+
 }
 
 public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
@@ -88,7 +87,6 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entered delivery board");
         var recEvents = other.GetComponent<RecipeObjectEvents>();
         if (recEvents != null)
         {
@@ -98,7 +96,6 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
     
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Exited delivery board");
         var recEvents = other.GetComponent<RecipeObjectEvents>();
         if (recEvents != null)
         {

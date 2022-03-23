@@ -41,7 +41,6 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entered combiner");
         transform.localScale = 1.1f * _baseScale;
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)

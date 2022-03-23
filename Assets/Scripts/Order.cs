@@ -134,7 +134,7 @@ public class Order
         foreach (Recipe recipe in Recipes)
         {
             var tmp = orderSectionPositioner.GetChild((int) recipe.Section).GetChild(1).
-                    GetComponent<TextMeshPro>();
+                    GetComponent<TextMeshProUGUI>();
             tmp.text = (tmp.text.Length == 0)? recipe.Name: tmp.text + "," + recipe.Name;
         }
     }
