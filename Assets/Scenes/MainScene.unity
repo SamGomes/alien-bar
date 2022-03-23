@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 69607831}
   - component: {fileID: 69607832}
   m_Layer: 0
-  m_Name: OrderContainerObj (1)
+  m_Name: PixelMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1204,6 +1204,7 @@ GameObject:
   - component: {fileID: 512753808}
   - component: {fileID: 512753810}
   - component: {fileID: 512753811}
+  - component: {fileID: 512753812}
   m_Layer: 0
   m_Name: Directional Light (2)
   m_TagString: Untagged
@@ -1218,17 +1219,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 512753807}
-  m_LocalRotation: {x: 0.5551987, y: 0.32884434, z: -0.10435898, w: 0.756786}
-  m_LocalPosition: {x: 0, y: 0, z: -110.213936}
+  m_LocalRotation: {x: 0.575166, y: 0.31712034, z: -0.09920194, w: 0.7475144}
+  m_LocalPosition: {x: 0, y: 0, z: -110.215355}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1741276130}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 65.363, y: 66.349, z: 29.804}
+  m_LocalEulerAnglesHint: {x: 67.34, y: 69.132, z: 34.188}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 372.39874, y: 87.80598}
+  m_AnchoredPosition: {x: 372.39868, y: 87.806564}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!108 &512753810
@@ -1243,7 +1244,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.5
+  m_Intensity: 0.5
   m_Range: 50
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -1313,6 +1314,26 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &512753812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512753807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &543616713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1370,7 +1391,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1495,7 +1516,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!1 &637006028 stripped
 GameObject:
@@ -1554,7 +1575,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1659,7 +1680,7 @@ GameObject:
   - component: {fileID: 710642014}
   - component: {fileID: 710642015}
   m_Layer: 0
-  m_Name: OrderContainerObj
+  m_Name: Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1705,7 +1726,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1850,7 +1871,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2073,7 +2094,7 @@ GameObject:
   - component: {fileID: 871223518}
   - component: {fileID: 871223517}
   m_Layer: 0
-  m_Name: OrderContainerObj (2)
+  m_Name: Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2486,6 +2507,7 @@ GameObject:
   - component: {fileID: 1141719231}
   - component: {fileID: 1141719233}
   - component: {fileID: 1141719234}
+  - component: {fileID: 1141719235}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -2500,17 +2522,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1141719230}
-  m_LocalRotation: {x: 0.62731564, y: 0.124838434, z: -0.13813846, w: 0.7561801}
-  m_LocalPosition: {x: 0, y: 0, z: -110.20951}
+  m_LocalRotation: {x: 0.6455415, y: 0.113156304, z: -0.13641685, w: 0.7428744}
+  m_LocalPosition: {x: 0, y: 0, z: -110.21104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1741276130}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 79.488, y: 4.87, z: -16.655}
+  m_LocalEulerAnglesHint: {x: 81.884, y: -3.25, z: -23.631}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 372.39954, y: 87.804504}
+  m_AnchoredPosition: {x: 372.39932, y: 87.8049}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!108 &1141719233
@@ -2525,7 +2547,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.5
+  m_Intensity: 0.5
   m_Range: 50
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2595,6 +2617,26 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1141719235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1141719230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &1174919658
 GameObject:
   m_ObjectHideFlags: 0
@@ -3000,7 +3042,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4224,6 +4266,7 @@ GameObject:
   - component: {fileID: 2145413192}
   - component: {fileID: 2145413194}
   - component: {fileID: 2145413195}
+  - component: {fileID: 2145413196}
   m_Layer: 0
   m_Name: Directional Light (1)
   m_TagString: Untagged
@@ -4238,17 +4281,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2145413191}
-  m_LocalRotation: {x: 0.6410226, y: -0.09526935, z: -0.17004716, w: 0.7423597}
-  m_LocalPosition: {x: 0, y: 0, z: -110.21581}
+  m_LocalRotation: {x: 0.65706986, y: -0.106208645, z: -0.17259052, w: 0.7260795}
+  m_LocalPosition: {x: 0, y: 0, z: -110.217255}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1741276130}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 66.83, y: -66.002, z: -72.19}
+  m_LocalEulerAnglesHint: {x: 66.565, y: -73.35, z: -78.845}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 372.40164, y: 87.80623}
+  m_AnchoredPosition: {x: 372.40155, y: 87.806854}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!108 &2145413194
@@ -4263,7 +4306,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.5
+  m_Intensity: 0.5
   m_Range: 50
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -4333,6 +4376,26 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2145413196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145413191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1001 &870630175783406239
 PrefabInstance:
   m_ObjectHideFlags: 0
