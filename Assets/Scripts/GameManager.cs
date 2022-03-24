@@ -110,7 +110,7 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
         {
             List<RecipeObjectEvents> validRecipes = 
                 gm.EvaluateOrder(order, _recipes);
-            if (validRecipes.Count > 0)
+            if (validRecipes.Count == order.Recipes.Count)
             {
                 foreach (var targetRecipe in order.Recipes)
                 {
@@ -330,7 +330,7 @@ public class GameManager : MonoBehaviour
     
     public void MockedStartScene()
     {
-        string path = "Assets/StreamingAssets/configs.cfg";
+        string path =  Application.streamingAssetsPath + "/configs.cfg";
         StreamReader reader = new StreamReader(path);
         string json = reader.ReadToEnd();
         GameGlobals.GameConfigs = 
@@ -345,7 +345,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MockedStartScene();
+//        MockedStartScene();
         
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},

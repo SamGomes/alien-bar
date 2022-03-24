@@ -42,7 +42,7 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
     
             if (Physics.Raycast(ray, out hit))
             {
-                transform.position = new Vector3(hit.point.x, 15, hit.point.z);
+                transform.position = new Vector3(hit.point.x, 5, hit.point.z);
             }
             
         }

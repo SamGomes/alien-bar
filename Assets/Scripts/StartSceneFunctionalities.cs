@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -53,7 +54,7 @@ public class StartSceneFunctionalities: MonoBehaviour
     public void Start()
     {
         
-        string path = "Assets/StreamingAssets/configs.cfg";
+        string path =  Application.streamingAssetsPath + "/configs.cfg";
         StreamReader reader = new StreamReader(path);
         string json = reader.ReadToEnd();
         GameGlobals.GameConfigs = 
