@@ -26,7 +26,7 @@ public class GameConfigurations
     public int MAXPendingOrders;
  
     public int SurvivalIncreaseDifficultyDelay;
-    public float SurvivalDecreaseTimeRate;
+    public float SurvivalTimeChangeRate;
     
     public List<IngredientConfigurations> IngredientConfigs;
     public List<List<Recipe>> OrderRecipesByLevel;
@@ -50,6 +50,8 @@ public class StartSceneFunctionalities: MonoBehaviour
     public TMP_InputField playerIdInput;
     public Button trainingButton;
     public Button survivalButton;
+    
+    public Button exitButton;
 
     public void Start()
     {
@@ -61,6 +63,11 @@ public class StartSceneFunctionalities: MonoBehaviour
             JsonConvert.DeserializeObject<GameConfigurations>(json);
         reader.Close();
             
+        exitButton.onClick.AddListener(() =>
+        {
+            Application.Quit();
+        });
+        
         trainingButton.onClick.AddListener(() =>
         {
             GameGlobals.PlayerId = playerIdInput.text;

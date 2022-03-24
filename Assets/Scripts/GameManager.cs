@@ -243,7 +243,7 @@ public class GameManager : MonoBehaviour
             {
                 repeatRate =
                     (repeatRate > GameGlobals.GameConfigs.MINOrderTime) ? 
-                        repeatRate * GameGlobals.GameConfigs.SurvivalDecreaseTimeRate : repeatRate;
+                        repeatRate * GameGlobals.GameConfigs.SurvivalTimeChangeRate : repeatRate;
             }
 
             yield return new WaitForSeconds(repeatRate);
