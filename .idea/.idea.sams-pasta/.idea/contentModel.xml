@@ -36,6 +36,7 @@
               </e>
               <e p="YourTaskResults.txt" t="Include" />
               <e p="stest.txt" t="Include" />
+              <e p="testDummy.txt" t="Include" />
             </e>
             <e p="results.txt" t="Include" />
           </e>

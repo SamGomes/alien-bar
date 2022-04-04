@@ -345,7 +345,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-//        MockedStartScene();
+        MockedStartScene();
         
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
