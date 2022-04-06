@@ -41,10 +41,10 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
     public Camera cam;
     public Ingredient template;
     
-    public void Start()
-    {
-        gameObject.GetComponentInChildren<TextMeshPro>().text = JsonConvert.SerializeObject(template.Attributes);
-    }
+//    public void Start()
+//    {
+//        gameObject.GetComponentInChildren<TextMeshPro>().text = JsonConvert.SerializeObject(template.Attributes);
+//    }
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
