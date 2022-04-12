@@ -145,6 +145,11 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 
 public class GameManager : MonoBehaviour
 {
+    
+    public AudioSource orderReceivedSound;
+    public AudioSource orderDeliveredSound;
+    
+    
     public TextMeshPro scoreValueObj;
 
     public GameObject orderPrefab;
@@ -245,7 +250,9 @@ public class GameManager : MonoBehaviour
                     (repeatRate > GameGlobals.GameConfigs.MINOrderTime) ? 
                         repeatRate * GameGlobals.GameConfigs.SurvivalTimeChangeRate : repeatRate;
             }
-
+            
+            orderReceivedSound.Play();
+            
             yield return new WaitForSeconds(repeatRate);
             StartCoroutine(GenerateOrder());
         }
@@ -289,7 +296,13 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        return (numValidIngs == orderRecipe.IngredientAttrs.Count);
+
+        if (numValidIngs>0 && numValidIngs == orderRecipe.IngredientAttrs.Count)
+        {
+            orderDeliveredSound.Play();
+            return true;
+        }
+        return false;
     }
 
 
@@ -345,7 +358,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MockedStartScene();
+//        MockedStartScene();
         
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},

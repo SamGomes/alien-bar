@@ -5,10 +5,18 @@ using Newtonsoft.Json;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
+public class ButtonObjectEvents : MonoBehaviour, IPointerEnterHandler
+{
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        GetComponent<AudioSource>().Play();
+    }
+}
 
 public class IngredientConfigurations
 {
@@ -63,6 +71,12 @@ public class StartSceneFunctionalities: MonoBehaviour
             JsonConvert.DeserializeObject<GameConfigurations>(json);
         reader.Close();
             
+        
+        exitButton.gameObject.AddComponent<ButtonObjectEvents>();
+        trainingButton.gameObject.AddComponent<ButtonObjectEvents>();
+        survivalButton.gameObject.AddComponent<ButtonObjectEvents>();
+        
+        
         exitButton.onClick.AddListener(() =>
         {
             Application.Quit();
