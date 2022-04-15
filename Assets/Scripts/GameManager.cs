@@ -127,6 +127,7 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 
                 ordersToRemove.Add(order);
                 
+                gm.orderDeliveredSound.Play();
             }
         }
 
@@ -261,11 +262,13 @@ public class GameManager : MonoBehaviour
     public List<RecipeObjectEvents> EvaluateOrder(Order selectedOrder, List<RecipeObjectEvents> userRecipes)
     {
         List<RecipeObjectEvents> validRecipes = new List<RecipeObjectEvents>();
+        
+        
         foreach (var orderRecipe in selectedOrder.Recipes)
         {
             foreach (var userRecipe in userRecipes)
             {
-                if (ValidateRecipe(orderRecipe, userRecipe.logic))
+                if (!validRecipes.Contains(userRecipe) && ValidateRecipe(orderRecipe, userRecipe.logic))
                 {
                     validRecipes.Add(userRecipe);
                     break;
@@ -297,12 +300,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (numValidIngs>0 && numValidIngs == orderRecipe.IngredientAttrs.Count)
-        {
-            orderDeliveredSound.Play();
-            return true;
-        }
-        return false;
+        return (numValidIngs > 0 && numValidIngs == orderRecipe.IngredientAttrs.Count);
     }
 
 
