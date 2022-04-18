@@ -304,15 +304,17 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void IncreaseCameraSection()
+    public void IncreaseCameraSection(Button invoker)
     {
+        invoker.gameObject.GetComponent<AudioSource>().Play();
         _currCameraSection =
             (_currCameraSection < (cameraPositioners.Count - 1)) ? _currCameraSection + 1 : _currCameraSection;
         cam.transform.parent = cameraPositioners[_currCameraSection].transform;
         cam.transform.localPosition = new Vector3();
     }
-    public void DecreaseCameraSection()
+    public void DecreaseCameraSection(Button invoker)
     {
+        invoker.gameObject.GetComponent<AudioSource>().Play();
         _currCameraSection =
             (_currCameraSection > 0) ? _currCameraSection - 1 : _currCameraSection;
         cam.transform.parent = cameraPositioners[_currCameraSection].transform;
@@ -356,7 +358,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-//        MockedStartScene();
+        MockedStartScene();
         
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
@@ -452,8 +454,8 @@ public class GameManager : MonoBehaviour
 
         _currCameraSection = 0;
         cam.transform.parent = cameraPositioners[0].transform;
-        cameraChangeButtons[0].onClick.AddListener(IncreaseCameraSection);
-        cameraChangeButtons[1].onClick.AddListener(DecreaseCameraSection);
+        cameraChangeButtons[0].onClick.AddListener(() => IncreaseCameraSection(cameraChangeButtons[0]));
+        cameraChangeButtons[1].onClick.AddListener(() => DecreaseCameraSection(cameraChangeButtons[1]));
 
     }
 
