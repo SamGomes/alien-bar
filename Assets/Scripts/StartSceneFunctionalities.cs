@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -55,6 +54,8 @@ public static class GameGlobals
 
 public class StartSceneFunctionalities: MonoBehaviour
 {
+    public TMP_InputField trainingLevelInput;
+    
     public TMP_InputField playerIdInput;
     public Button trainingButton;
     public Button survivalButton;
@@ -70,7 +71,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         GameGlobals.GameConfigs = 
             JsonConvert.DeserializeObject<GameConfigurations>(json);
         reader.Close();
-            
+
         
         exitButton.gameObject.AddComponent<ButtonObjectEvents>();
         trainingButton.gameObject.AddComponent<ButtonObjectEvents>();
@@ -84,6 +85,8 @@ public class StartSceneFunctionalities: MonoBehaviour
         
         trainingButton.onClick.AddListener(() =>
         {
+            GameGlobals.GameConfigs.OrderDifficulty = 
+                trainingLevelInput.text == ""? 1: int.Parse(trainingLevelInput.text);
             GameGlobals.PlayerId = playerIdInput.text;
             GameGlobals.IsTraining = true;
             SceneManager.LoadScene("MainScene");

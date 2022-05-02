@@ -358,7 +358,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        MockedStartScene();
+//        MockedStartScene();
         
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
@@ -462,7 +462,7 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
         /**/
-        if((GameGlobals.IsTraining && (int.Parse(scoreValueObj.text) == 10000)) ||
+        if((GameGlobals.IsTraining && (int.Parse(scoreValueObj.text) >= 10000)) ||
            (!GameGlobals.IsTraining && (currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders)))
         { /**/
             GameGlobals.Score = float.Parse(scoreValueObj.text);

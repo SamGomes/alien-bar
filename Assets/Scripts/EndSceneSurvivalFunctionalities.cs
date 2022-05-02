@@ -7,18 +7,26 @@ using UnityEngine.UI;
 
 public class EndSceneSurvivalFunctionalities: MonoBehaviour
 {
+    public TextMeshProUGUI scoreDisplay;
     public GameObject thankYouObj;
     public GameObject engQuestionnaire;
+    public Button endButton;
     public Button submitButton;
     private Slider[] engQuestionsSliders;
     private GameObject[] engQuestions;
     
     public void Start()
     {
+
+        scoreDisplay.text = "Final Score: "+ GameGlobals.Score.ToString();
         
         engQuestionsSliders = engQuestionnaire.GetComponentsInChildren<Slider>();
         engQuestions = GameObject.FindGameObjectsWithTag("Question");
 
+        endButton.onClick.AddListener(() =>
+        {
+            Application.Quit();
+        });
         submitButton.onClick.AddListener(() => {
             
             float engValue = 0.0f;
@@ -42,7 +50,7 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
             submitButton.GetComponent<Image>().color = Color.green;
             engQuestionnaire.gameObject.SetActive(false);
             thankYouObj.SetActive(true);
-            
+            endButton.gameObject.SetActive(true);
         });
     }
     
