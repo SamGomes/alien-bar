@@ -94,17 +94,17 @@ public class StartSceneFunctionalities: MonoBehaviour
         
         survivalButton.onClick.AddListener(() =>
         {
-            if (playerIdInput.text != "")
-            {
+//            if (playerIdInput.text != "")
+//            {
                 GameGlobals.PlayerId = playerIdInput.text;
                 GameGlobals.IsTraining = false;
                 SceneManager.LoadScene("MainScene");
-            }
-            else
-            {
-                playerIdInput.transform.
-                    GetChild(0).gameObject.SetActive(true);
-            }
+//            }
+//            else
+//            {
+//                playerIdInput.transform.
+//                    GetChild(0).gameObject.SetActive(true);
+//            }
         });
     }
 }

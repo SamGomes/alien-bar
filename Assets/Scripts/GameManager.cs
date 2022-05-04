@@ -187,6 +187,7 @@ public class GameManager : MonoBehaviour
     public float repeatRate;
 
     public Button resetButton;
+    public Button quitButton;
     
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
@@ -364,11 +365,16 @@ public class GameManager : MonoBehaviour
         }
 
         resetButton.gameObject.SetActive(GameGlobals.IsTraining);
+        quitButton.gameObject.SetActive(GameGlobals.IsTraining);
         if (GameGlobals.IsTraining)
         {
             resetButton.onClick.AddListener(delegate
             {
                 SceneManager.LoadScene("StartScene");
+            });
+            quitButton.onClick.AddListener(delegate
+            {
+                Application.Quit();
             });
         }
 
