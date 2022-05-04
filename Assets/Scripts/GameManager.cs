@@ -377,13 +377,15 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.DRINK},
             new List<IngredientAttr> {IngredientAttr.CUP},
-            1);
+            1,
+            new List<FoodProcessor>());
         new FoodProcessor(juiceKnifeObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
-            1);
+            1,
+            new List<FoodProcessor>());
 
         
         new FoodProcessor(dessertBlenderObj,
@@ -391,27 +393,33 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
-            1);
+            1,
+            new List<FoodProcessor>());
+        
         foreach (GameObject coleffMachineTube in coleffMachineTubes)
         {
+            FoodProcessor coleffProc1 = new FoodProcessor(coleffMachineTube,
+                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.SMALL},
+                new List<IngredientAttr> {IngredientAttr.SMALL},
+                new List<IngredientAttr> {IngredientAttr.MEDIUM},
+                new List<IngredientAttr>(),
+                1,
+                new List<FoodProcessor>());
+            FoodProcessor coleffProc2 = new  FoodProcessor(coleffMachineTube,
+                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.MEDIUM},
+                new List<IngredientAttr> {IngredientAttr.MEDIUM},
+                new List<IngredientAttr> {IngredientAttr.LARGE},
+                new List<IngredientAttr>(),
+                1,
+                new List<FoodProcessor>());
+            
             new FoodProcessor(coleffMachineTube,
                 new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.CUT},
                 new List<IngredientAttr> {IngredientAttr.CUT},
                 new List<IngredientAttr> {IngredientAttr.DRINK, IngredientAttr.SMALL},
                 new List<IngredientAttr> {IngredientAttr.DESSERT, IngredientAttr.CUP},
-                1);
-            new FoodProcessor(coleffMachineTube,
-                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.SMALL},
-                new List<IngredientAttr> {IngredientAttr.SMALL},
-                new List<IngredientAttr> {IngredientAttr.MEDIUM},
-                new List<IngredientAttr>(),
-                1);
-            new FoodProcessor(coleffMachineTube,
-                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.MEDIUM},
-                new List<IngredientAttr> {IngredientAttr.MEDIUM},
-                new List<IngredientAttr> {IngredientAttr.LARGE},
-                new List<IngredientAttr>(),
-                1);
+                1,
+                new List<FoodProcessor>(){coleffProc1, coleffProc2});
         }
         
         new FoodProcessor(dessertKnifeObj,
@@ -419,7 +427,8 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
-            1);
+            1,
+            new List<FoodProcessor>());
         
         
         currOrders = new List<Order>();
