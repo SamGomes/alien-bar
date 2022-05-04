@@ -45,8 +45,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.4990311, y: 0.21662323, z: 1.1845822}
-  m_Center: {x: 0.19841415, y: -0.3916873, z: -0.021935271}
+  m_Size: {x: 0.81023586, y: 0.21662323, z: 0.8410201}
+  m_Center: {x: 0.09845718, y: -0.3916873, z: -0.005545845}
 --- !u!82 &4805908542026320136
 AudioSource:
   m_ObjectHideFlags: 0
@@ -213,7 +213,7 @@ PrefabInstance:
     - target: {fileID: -7023974396876390944, guid: bb9820898b85013c18e1a72244bb380d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f27c0ddb9ed5d8769a5411ca50d41656, type: 2}
+      objectReference: {fileID: 2100000, guid: 669920818e79317bcb11df36117e5319, type: 2}
     - target: {fileID: -4683669308469848369, guid: bb9820898b85013c18e1a72244bb380d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

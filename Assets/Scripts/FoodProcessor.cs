@@ -45,6 +45,7 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
+            ingEvents.isBeingHeld = false;
             Ingredient otherIng = ingEvents.logic;
             if (otherIng.Attributes.Contains(IngredientAttr.UTENSIL))
             {
@@ -60,7 +61,9 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
     private void OnTriggerExit(Collider other)
     {
         logic.IngredientInProcess = null;
-        logic.ClearAddedUtensilAttributes();
+        logic.TakeUtensilOff();
+        _isOn = false;
+        StartCoroutine(logic.TurnOff());
         transform.localScale = baseScale;
     }
 
@@ -189,5 +192,10 @@ public class FoodProcessor
     public void ClearAddedUtensilAttributes()
     {
         AddedUtensilAttrs.Clear();
+    }
+
+    public void TakeUtensilOff()
+    {
+        AddedUtensilAttrs = AddedUtensilAttrs.Except(RequiredUtensilAttrs).ToList();
     }
 }

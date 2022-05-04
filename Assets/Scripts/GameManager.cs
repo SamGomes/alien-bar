@@ -171,16 +171,14 @@ public class GameManager : MonoBehaviour
 
     public GameObject dessertBlenderObj;
     public GameObject dessertKnifeObj;
-    public GameObject coleffMachineSmallObj;
-    public GameObject coleffMachineMediumObj;
-    public GameObject coleffMachineLargeObj;
-
+    public List<GameObject> coleffMachineTubes;
+    
     
     public List<GameObject> ingredientSpawners;
     public GameObject deliveryBoardObj;
     
     
-    public GameObject trashBin;
+    public List<GameObject> trashBins;
     
     public List<GameObject> cameraPositioners;
     private int _currCameraSection;
@@ -188,6 +186,8 @@ public class GameManager : MonoBehaviour
     
     public float repeatRate;
 
+    public Button resetButton;
+    
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
         spawnerObj.AddComponent<IngredientSpawner>();
@@ -358,8 +358,20 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-//        MockedStartScene();
-        
+        if (GameGlobals.GameConfigs == null)
+        {
+            MockedStartScene();
+        }
+
+        resetButton.gameObject.SetActive(GameGlobals.IsTraining);
+        if (GameGlobals.IsTraining)
+        {
+            resetButton.onClick.AddListener(delegate
+            {
+                SceneManager.LoadScene("StartScene");
+            });
+        }
+
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
             new List<IngredientAttr> {IngredientAttr.CUT},
@@ -380,24 +392,28 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
             1);
-        new FoodProcessor(coleffMachineSmallObj,
-            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.DRINK,IngredientAttr.SMALL},
-            new List<IngredientAttr> {IngredientAttr.DESSERT,IngredientAttr.CUP},
-            1);
-        new FoodProcessor(coleffMachineMediumObj,
-            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.DRINK, IngredientAttr.SMALL},
-            new List<IngredientAttr> {IngredientAttr.SMALL},
-            new List<IngredientAttr> {IngredientAttr.MEDIUM},
-            new List<IngredientAttr>(),
-            2);
-        new FoodProcessor(coleffMachineLargeObj,
-            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.DRINK, IngredientAttr.MEDIUM},
-            new List<IngredientAttr> {IngredientAttr.MEDIUM},
-            new List<IngredientAttr> {IngredientAttr.LARGE},
-            new List<IngredientAttr>(),
-            3);
+        foreach (GameObject coleffMachineTube in coleffMachineTubes)
+        {
+            new FoodProcessor(coleffMachineTube,
+                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.CUT},
+                new List<IngredientAttr> {IngredientAttr.CUT},
+                new List<IngredientAttr> {IngredientAttr.DRINK, IngredientAttr.SMALL},
+                new List<IngredientAttr> {IngredientAttr.DESSERT, IngredientAttr.CUP},
+                1);
+            new FoodProcessor(coleffMachineTube,
+                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.SMALL},
+                new List<IngredientAttr> {IngredientAttr.SMALL},
+                new List<IngredientAttr> {IngredientAttr.MEDIUM},
+                new List<IngredientAttr>(),
+                1);
+            new FoodProcessor(coleffMachineTube,
+                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.MEDIUM},
+                new List<IngredientAttr> {IngredientAttr.MEDIUM},
+                new List<IngredientAttr> {IngredientAttr.LARGE},
+                new List<IngredientAttr>(),
+                1);
+        }
+        
         new FoodProcessor(dessertKnifeObj,
             new List<IngredientAttr> {IngredientAttr.CAKE,IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
@@ -429,7 +445,10 @@ public class GameManager : MonoBehaviour
 
 //        scoreMultiplier = 1000;
 
-        trashBin.AddComponent<TrashBinObjectEvents>();
+        foreach (var trashBin in trashBins)
+        {
+            trashBin.AddComponent<TrashBinObjectEvents>();
+        }
         
         DeliveryBoardEvents delBoardEvents = deliveryBoardObj.AddComponent<DeliveryBoardEvents>();
         delBoardEvents.gm = this;
