@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
@@ -8,6 +9,8 @@ using UnityEngine.UI;
 public class EndSceneSurvivalFunctionalities: MonoBehaviour
 {
     public TextMeshProUGUI scoreDisplay;
+    public TextMeshProUGUI trainingTimeDisplay;
+    
     public GameObject thankYouObj;
     public GameObject engQuestionnaire;
     public Button endButton;
@@ -17,8 +20,8 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
     
     public void Start()
     {
-
-        scoreDisplay.text = "Final Score: "+ GameGlobals.Score.ToString();
+        scoreDisplay.text = "Final Score: "+ GameGlobals.Score;
+        trainingTimeDisplay.text = "Training Time (s): "+ Math.Round(GameGlobals.PlayingTime, 3);
         
         engQuestionsSliders = engQuestionnaire.GetComponentsInChildren<Slider>();
         engQuestions = GameObject.FindGameObjectsWithTag("Question");

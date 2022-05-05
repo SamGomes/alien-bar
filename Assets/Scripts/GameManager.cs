@@ -187,7 +187,10 @@ public class GameManager : MonoBehaviour
     public float repeatRate;
 
     public Button resetButton;
-    public Button quitButton;
+//    public Button quitButton;
+
+    private float _playingTime;
+    private float _initialPlayingTime;
     
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
@@ -354,27 +357,23 @@ public class GameManager : MonoBehaviour
         GameGlobals.IsTraining = true;
     }
     
-    
-    
+
     // Start is called before the first frame update
     void Start()
     {
+        _initialPlayingTime = Time.time;
         if (GameGlobals.GameConfigs == null)
         {
             MockedStartScene();
         }
 
-        resetButton.gameObject.SetActive(GameGlobals.IsTraining);
-        quitButton.gameObject.SetActive(GameGlobals.IsTraining);
-        if (GameGlobals.IsTraining)
+        resetButton.gameObject.SetActive(GameGlobals.HasControls);
+//        quitButton.gameObject.SetActive(GameGlobals.HasControls);
+        if (GameGlobals.HasControls)
         {
             resetButton.onClick.AddListener(delegate
             {
-                SceneManager.LoadScene("StartScene");
-            });
-            quitButton.onClick.AddListener(delegate
-            {
-                Application.Quit();
+                QuitMainScene();
             });
         }
 
@@ -493,24 +492,28 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void QuitMainScene()
+    {
+        GameGlobals.PlayingTime = _playingTime;
+        GameGlobals.Score = float.Parse(scoreValueObj.text);
+            
+        if (GameGlobals.IsTraining)
+        {
+            SceneManager.LoadScene("EndSceneTraining");
+        }
+        else
+        {
+            SceneManager.LoadScene("EndSceneSurvival");
+        }
+    }
     public void Update()
     {
-        /**/
-        if((GameGlobals.IsTraining && (int.Parse(scoreValueObj.text) >= 10000)) ||
-           (!GameGlobals.IsTraining && (currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders)))
-        { /**/
-            GameGlobals.Score = float.Parse(scoreValueObj.text);
-            
-            if (GameGlobals.IsTraining)
-            {
-                SceneManager.LoadScene("EndSceneTraining");
-            }
-            else
-            {
-                SceneManager.LoadScene("EndSceneSurvival");
-            }
-            /**/
+        _playingTime = Time.time - _initialPlayingTime;
+        if(GameGlobals.IsTraining && _playingTime >= GameGlobals.GameConfigs.TrainingTimeMinutes*60.0f ||
+           !GameGlobals.IsTraining && currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders ||
+           !GameGlobals.IsTraining && _playingTime > GameGlobals.GameConfigs.MAXSurvivalTimeMinutes*60.0f)
+        { 
+            QuitMainScene();
         }
-        /**/
     }
 }

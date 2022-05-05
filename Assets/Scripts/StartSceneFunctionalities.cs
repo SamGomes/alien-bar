@@ -32,6 +32,9 @@ public class GameConfigurations
     public float MAXOrderTime;
     public int MAXPendingOrders;
  
+    public float TrainingTimeMinutes;
+    public float MAXSurvivalTimeMinutes;
+    
     public int SurvivalIncreaseDifficultyDelay;
     public float SurvivalTimeChangeRate;
     
@@ -43,6 +46,8 @@ public class GameConfigurations
 public static class GameGlobals
 {
     public static bool IsTraining;
+    public static float PlayingTime;
+    public static bool HasControls;
     public static string PlayerId;
     public static float Score;
     public static GameConfigurations GameConfigs;
@@ -54,9 +59,10 @@ public static class GameGlobals
 
 public class StartSceneFunctionalities: MonoBehaviour
 {
-    public TMP_InputField trainingLevelInput;
+    public Slider trainingLevelInput;
     
     public TMP_InputField playerIdInput;
+    public Button tutorialButton;
     public Button trainingButton;
     public Button survivalButton;
     
@@ -71,26 +77,34 @@ public class StartSceneFunctionalities: MonoBehaviour
         GameGlobals.GameConfigs = 
             JsonConvert.DeserializeObject<GameConfigurations>(json);
         reader.Close();
-
+        
         
         exitButton.gameObject.AddComponent<ButtonObjectEvents>();
-        trainingButton.gameObject.AddComponent<ButtonObjectEvents>();
+        tutorialButton.gameObject.AddComponent<ButtonObjectEvents>();
         survivalButton.gameObject.AddComponent<ButtonObjectEvents>();
         
+        GameGlobals.HasControls = false;
         
         exitButton.onClick.AddListener(() =>
         {
             Application.Quit();
         });
         
-        trainingButton.onClick.AddListener(() =>
+        tutorialButton.onClick.AddListener(() =>
         {
-            GameGlobals.GameConfigs.OrderDifficulty = 
-                trainingLevelInput.text == ""? 1: int.Parse(trainingLevelInput.text);
             GameGlobals.PlayerId = playerIdInput.text;
             GameGlobals.IsTraining = true;
             SceneManager.LoadScene("MainScene");
         });
+        trainingButton.onClick.AddListener(() =>
+        {
+            GameGlobals.GameConfigs.OrderDifficulty = (int) trainingLevelInput.value;
+            GameGlobals.PlayerId = playerIdInput.text;
+            GameGlobals.IsTraining = true;
+            GameGlobals.HasControls = true;
+            SceneManager.LoadScene("MainScene");
+        });
+        
         
         survivalButton.onClick.AddListener(() =>
         {
