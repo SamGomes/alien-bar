@@ -172,33 +172,50 @@ public class FoodProcessor
     
     public void ADDUtensil(Ingredient utensilToAdd)
     {
-        if (AddedUtencils.Count >= MaxNumUtensils)
+        List<IngredientAttr> utensilToAddCpy = new List<IngredientAttr>(utensilToAdd.Attributes);
+        utensilToAddCpy.Remove(IngredientAttr.UTENSIL);
+        if (AddedUtencils.Count >= MaxNumUtensils || 
+            !ValidUtensil(utensilToAddCpy))
         {
             Object.Destroy(utensilToAdd.GameObject);
             return;
         }
-//        List<IngredientAttr> utensilAttrsToAdd = 
-//            utensilToAdd.Attributes.Except(AddedUtensilAttrs).ToList();
-        List<IngredientAttr> utensilToAddCpy = new List<IngredientAttr>(utensilToAdd.Attributes);
-        utensilToAddCpy.Remove(IngredientAttr.UTENSIL);
         AddedUtensilAttrs.AddRange(utensilToAddCpy);
         AddedUtencils.Add(utensilToAdd);
+        var audioSources = GameObject.GetComponents<AudioSource>();
+        if (audioSources.Length > 1)
+        {
+            AudioSource sound = audioSources[1];
+            sound.pitch = Random.Range(0.8f, 1.2f);
+            sound.Play();
+        }
     }
 
-    public bool HasUtensils()
+    public bool ValidUtensil(List<IngredientAttr> utensilAttrsToTest)
     {
-        if (RequiredUtensilAttrs.Count > 0)
+        bool isValid = false;
+        if (RequiredUtensilAttrs.Count == utensilAttrsToTest.Count)
         {
             foreach (var utensil in RequiredUtensilAttrs)
             {
-                if (!AddedUtensilAttrs.Contains(utensil))
+                if (!utensilAttrsToTest.Contains(utensil))
                 {
-                    return false;
+                    isValid = false;
                 }
             }
+            isValid = true;
         }
 
-        return true;
+//        foreach (var foodProc in GameObject.GetComponents<FoodProcessorObjectEvents>())
+//        {
+//            if (foodProc == this._foodProcEvents)
+//            {
+//                continue;
+//            }
+//            isValid = isValid || foodProc.logic.ValidUtensil(utensilAttrsToTest);
+//        }
+
+        return isValid;
     }
 
     public bool IsCurrIngrAccepted()
@@ -217,7 +234,7 @@ public class FoodProcessor
     {
         IsOn = ProcessUnitState.ON;
 
-        if (IngredientInProcess != null && HasUtensils())
+        if (IngredientInProcess != null && ValidUtensil(AddedUtensilAttrs))
         {
             if (IsCurrIngrAccepted())
             {

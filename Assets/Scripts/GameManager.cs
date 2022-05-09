@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -25,6 +26,9 @@ public class TrashBinObjectEvents : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        AudioSource sound = GetComponent<AudioSource>();
+        sound.pitch = Random.Range(0.8f, 1.2f);
+        sound.Play();
         transform.localScale = 1.1f * _baseScale;
         var ingEvents = other.GetComponent<RecipeObjectEvents>();
         var ingEvents2 = other.GetComponent<IngredientObjectEvents>();
