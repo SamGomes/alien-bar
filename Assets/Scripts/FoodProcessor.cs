@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Object = UnityEngine.Object;
+using Vector3 = UnityEngine.Vector3;
 
 public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
 {
@@ -11,6 +13,7 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
     private Vector3 baseScale;
 
     public List<IngredientAttr> _addedUtensilAttrs;
+    public bool IngredientInProcess;
     
     public bool isIngProcessed;
     
@@ -47,25 +50,53 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
             Ingredient otherIng = ingEvents.logic;
             if (otherIng.Attributes.Contains(IngredientAttr.UTENSIL))
             {
+                if (logic.AddedUtencils.Contains(otherIng))
+                {
+                    return;
+                }
+                
                 logic.ADDUtensil(otherIng);
+                Destroy(otherIng.GameObject.GetComponent<IngredientObjectEvents>());
+                Vector3 pos = gameObject.transform.position;
+                otherIng.GameObject.transform.position = new Vector3(pos.x,0,pos.z)
+                                                         + logic.AddedUtencils.Count*(Vector3.up*3.0f)
+                                                         + Vector3.back*20.0f 
+                                                         + Vector3.left*10.0f;
             }
             else
             {
                 logic.IngredientInProcess = otherIng;
+                IngredientInProcess = true;
+                otherIng.GameObject.transform.position = gameObject.transform.position;
             }
         }
         
     }
     private void OnTriggerExit(Collider other)
-    {
-        logic.IngredientInProcess = null;
-        if (isIngProcessed)
+    { 
+        var ingEvents = other.GetComponent<IngredientObjectEvents>();
+        if (ingEvents != null)
         {
-            logic.TakeUtensilOff(logic.RequiredUtensilAttrs);
+            Ingredient otherIng = ingEvents.logic;
+            if (!otherIng.Attributes.Contains(IngredientAttr.UTENSIL))
+//            {
+//                logic.TakeUtensilOff(logic.RequiredUtensilAttrs);
+//            }
+//            else
+            {
+                _isOn = false;
+                StartCoroutine(logic.TurnOff());
+                transform.localScale = baseScale;
+                
+                logic.IngredientInProcess = null;
+                IngredientInProcess = false;
+                if (isIngProcessed)
+                {
+                    logic.TakeUtensilOff(logic.RequiredUtensilAttrs);
+                }
+
+            }
         }
-        _isOn = false;
-        StartCoroutine(logic.TurnOff());
-        transform.localScale = baseScale;
     }
 
 
@@ -90,6 +121,8 @@ public class FoodProcessor
     public List<IngredientAttr> OutputAttrs { get; set; }
 
     public Ingredient IngredientInProcess { get; set; }
+    
+    public List<Ingredient> AddedUtencils{ get; set; }
 
     public List<IngredientAttr> RequiredUtensilAttrs { get; set; }
 
@@ -103,6 +136,8 @@ public class FoodProcessor
 
     public List<FoodProcessor> LinkedProcessors { get; set; }
     
+    public int MaxNumUtensils { get; set; }
+    
     public FoodProcessor(
         GameObject gameObject, 
         List<IngredientAttr> acceptedAttrs, 
@@ -110,7 +145,8 @@ public class FoodProcessor
         List<IngredientAttr> outputAttrs, 
         List<IngredientAttr> requiredUtensilAttrs,
         int processingDelay,
-        List<FoodProcessor> linkedProcessors)
+        List<FoodProcessor> linkedProcessors,
+        int maxNumUtensils)
     {
         GameObject = gameObject;
         _foodProcEvents = GameObject.AddComponent<FoodProcessorObjectEvents>();
@@ -123,21 +159,30 @@ public class FoodProcessor
             
         IngredientInProcess = null;
         
+        AddedUtencils = new List<Ingredient>();
+        
         AddedUtensilAttrs = new List<IngredientAttr>();
         RequiredUtensilAttrs = requiredUtensilAttrs;
 
         LinkedProcessors = linkedProcessors;
+
+        MaxNumUtensils = maxNumUtensils;
     }
     
     
     public void ADDUtensil(Ingredient utensilToAdd)
     {
+        if (AddedUtencils.Count >= MaxNumUtensils)
+        {
+            Object.Destroy(utensilToAdd.GameObject);
+            return;
+        }
 //        List<IngredientAttr> utensilAttrsToAdd = 
 //            utensilToAdd.Attributes.Except(AddedUtensilAttrs).ToList();
         List<IngredientAttr> utensilToAddCpy = new List<IngredientAttr>(utensilToAdd.Attributes);
         utensilToAddCpy.Remove(IngredientAttr.UTENSIL);
         AddedUtensilAttrs.AddRange(utensilToAddCpy);
-        Object.Destroy(utensilToAdd.GameObject);
+        AddedUtencils.Add(utensilToAdd);
     }
 
     public bool HasUtensils()
@@ -181,7 +226,13 @@ public class FoodProcessor
                         IngredientInProcess.Process(ProcessingDelay,
                             InputAttrs, OutputAttrs)
                     ));
-
+                
+                if (AddedUtencils.Count > 0)
+                {
+                    Object.Destroy(AddedUtencils[AddedUtencils.Count - 1].GameObject);
+                    AddedUtencils.RemoveAt(AddedUtencils.Count - 1);
+                }
+                
                 _foodProcEvents.GetComponent<AudioSource>().Play();
                 _foodProcEvents.isIngProcessed = true;
             }
@@ -208,7 +259,7 @@ public class FoodProcessor
         {
             AddedUtensilAttrs.Remove(utensilAttr);
         }
-
+        
         foreach (FoodProcessor processor in LinkedProcessors)
         {
             processor.TakeUtensilOff(ingredsToTake);

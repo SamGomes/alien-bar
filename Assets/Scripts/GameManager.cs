@@ -367,9 +367,9 @@ public class GameManager : MonoBehaviour
             MockedStartScene();
         }
 
-        resetButton.gameObject.SetActive(GameGlobals.HasControls);
+        resetButton.gameObject.SetActive(GameGlobals.IsTutorial);
 //        quitButton.gameObject.SetActive(GameGlobals.HasControls);
-        if (GameGlobals.HasControls)
+        if (GameGlobals.IsTutorial)
         {
             resetButton.onClick.AddListener(delegate
             {
@@ -383,14 +383,16 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.DRINK},
             new List<IngredientAttr> {IngredientAttr.CUP},
             1,
-            new List<FoodProcessor>());
+            new List<FoodProcessor>(),
+            3);
         new FoodProcessor(juiceKnifeObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.WHOLE},
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
             1,
-            new List<FoodProcessor>());
+            new List<FoodProcessor>(),
+            0);
 
         
         new FoodProcessor(dessertBlenderObj,
@@ -399,7 +401,8 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
             1,
-            new List<FoodProcessor>());
+            new List<FoodProcessor>(),
+            0);
         
         foreach (GameObject coleffMachineTube in coleffMachineTubes)
         {
@@ -409,14 +412,16 @@ public class GameManager : MonoBehaviour
                 new List<IngredientAttr> {IngredientAttr.MEDIUM},
                 new List<IngredientAttr>(),
                 1,
-                new List<FoodProcessor>());
+                new List<FoodProcessor>(),
+                5);
             FoodProcessor coleffProc2 = new  FoodProcessor(coleffMachineTube,
                 new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.MEDIUM},
                 new List<IngredientAttr> {IngredientAttr.MEDIUM},
                 new List<IngredientAttr> {IngredientAttr.LARGE},
                 new List<IngredientAttr>(),
                 1,
-                new List<FoodProcessor>());
+                new List<FoodProcessor>(),
+                5);
             
             new FoodProcessor(coleffMachineTube,
                 new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.CUT},
@@ -424,7 +429,8 @@ public class GameManager : MonoBehaviour
                 new List<IngredientAttr> {IngredientAttr.DRINK, IngredientAttr.SMALL},
                 new List<IngredientAttr> {IngredientAttr.DESSERT, IngredientAttr.CUP},
                 1,
-                new List<FoodProcessor>(){coleffProc1, coleffProc2});
+                new List<FoodProcessor>(){coleffProc1, coleffProc2},
+                5);
         }
         
         new FoodProcessor(dessertKnifeObj,
@@ -433,7 +439,8 @@ public class GameManager : MonoBehaviour
             new List<IngredientAttr> {IngredientAttr.CUT},
             new List<IngredientAttr>(),
             1,
-            new List<FoodProcessor>());
+            new List<FoodProcessor>(),
+            0);
         
         
         currOrders = new List<Order>();
