@@ -5148,6 +5148,26 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5241900345761735081, guid: 84c99011bea82cc4fa05294a960e27b6, type: 3}
   m_PrefabInstance: {fileID: 8391647360286527568}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &2132103237
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1461978759}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e3c271b5c7062c5a0b2a7083f7906f92, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2132775302
 GameObject:
   m_ObjectHideFlags: 0
@@ -5606,6 +5626,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 0058dbb4d893fe1e5ae959ea2bdb1bc7, type: 2}
+    - target: {fileID: 5063168222102493599, guid: afe9f6ce4fcb8368b918cc7277157612, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5521753307056796770, guid: afe9f6ce4fcb8368b918cc7277157612, type: 3}
       propertyPath: m_Name
       value: Blender
@@ -6031,6 +6055,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 286383518}
     m_Modifications:
+    - target: {fileID: 659744158179026051, guid: 84c99011bea82cc4fa05294a960e27b6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.69
+      objectReference: {fileID: 0}
     - target: {fileID: 1480243393238161370, guid: 84c99011bea82cc4fa05294a960e27b6, type: 3}
       propertyPath: m_Name
       value: Knife

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5241900345761735081}
   - component: {fileID: 5899719697535161928}
   - component: {fileID: 5054870645003089581}
+  - component: {fileID: 1950392299031609733}
   m_Layer: 0
   m_Name: Knife
   m_TagString: Untagged
@@ -143,6 +144,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &1950392299031609733
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480243393238161370}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e3c271b5c7062c5a0b2a7083f7906f92, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1057598989707969384
 PrefabInstance:
   m_ObjectHideFlags: 0

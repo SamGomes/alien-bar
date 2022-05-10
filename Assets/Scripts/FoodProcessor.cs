@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Object = UnityEngine.Object;
@@ -10,27 +11,36 @@ using Vector3 = UnityEngine.Vector3;
 public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public FoodProcessor logic;
-    private Vector3 baseScale;
 
     public List<IngredientAttr> _addedUtensilAttrs;
 
+    private Animator _animator;
     public void Start()
     {
-        baseScale = transform.localScale;
+        _animator = GetComponent<Animator>();
+        _animator.enabled = false;
     }
 
     
     public void Update()
     {
         _addedUtensilAttrs = logic.AddedUtensilAttrs;
-        
-        if (transform.localScale == baseScale && (logic.IsOn == ProcessUnitState.ON))
+
+        if (_animator == null)
         {
-            transform.localScale = baseScale * 1.2f;
+            return;
         }
-        else if(transform.localScale != baseScale && (logic.IsOn == ProcessUnitState.OFF))
+
+        if (!_animator.enabled && logic.IsOn == ProcessUnitState.ON)
         {
-            transform.localScale = baseScale;
+            _animator.Play(0);
+            _animator.enabled = true;
+        }
+        else if(_animator.enabled && logic.IsOn == ProcessUnitState.OFF)
+        {
+            _animator.enabled = false;
+            _animator.Rebind();
+            _animator.Update(0.0f);
         }
 
     }
