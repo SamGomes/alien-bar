@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,17 +10,29 @@ using Vector3 = UnityEngine.Vector3;
 public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
 {
     public FoodProcessor logic;
-    private bool _isOn;
     private Vector3 baseScale;
 
     public List<IngredientAttr> _addedUtensilAttrs;
-    public bool IngredientInProcess;
-    
-    public bool isIngProcessed;
-    
+
     public void Start()
     {
         baseScale = transform.localScale;
+    }
+
+    
+    public void Update()
+    {
+        _addedUtensilAttrs = logic.AddedUtensilAttrs;
+        
+        if (transform.localScale == baseScale && (logic.IsOn == ProcessUnitState.ON))
+        {
+            transform.localScale = baseScale * 1.2f;
+        }
+        else if(transform.localScale != baseScale && (logic.IsOn == ProcessUnitState.OFF))
+        {
+            transform.localScale = baseScale;
+        }
+
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
@@ -27,22 +40,15 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
         //Use this to tell when the user left-clicks on the Button
         if (pointerEventData.button == PointerEventData.InputButton.Left)
         {
-            _isOn = !_isOn;
-            
-            if (_isOn)
-            {
-                transform.localScale = baseScale * 1.2f;
-                StartCoroutine(logic.TurnOn());
-            }else{
-                transform.localScale = baseScale;
+            if (logic.IsOn == ProcessUnitState.ON)
                 StartCoroutine(logic.TurnOff());
-            }
+            else
+                StartCoroutine(logic.TurnOn());
         }
     }
     
     private void OnTriggerEnter(Collider other)
     {
-        transform.localScale = 1.1f * baseScale;
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
@@ -50,12 +56,10 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
             Ingredient otherIng = ingEvents.logic;
             if (otherIng.Attributes.Contains(IngredientAttr.UTENSIL))
             {
-                if (logic.AddedUtencils.Contains(otherIng))
+                if (logic.AddedUtencils.Contains(otherIng) || !logic.ADDUtensil(otherIng))
                 {
                     return;
                 }
-                
-                logic.ADDUtensil(otherIng);
                 Destroy(otherIng.GameObject.GetComponent<IngredientObjectEvents>());
                 Vector3 pos = gameObject.transform.position;
                 otherIng.GameObject.transform.position = new Vector3(pos.x,0,pos.z)
@@ -66,7 +70,6 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
             else
             {
                 logic.IngredientInProcess = otherIng;
-                IngredientInProcess = true;
                 otherIng.GameObject.transform.position = gameObject.transform.position;
             }
         }
@@ -84,26 +87,13 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
 //            }
 //            else
             {
-                _isOn = false;
                 StartCoroutine(logic.TurnOff());
-                transform.localScale = baseScale;
-                
                 logic.IngredientInProcess = null;
-                IngredientInProcess = false;
-                if (isIngProcessed)
-                {
-                    logic.TakeUtensilOff(logic.RequiredUtensilAttrs);
-                }
-
             }
         }
     }
 
 
-    public void Update()
-    {
-        _addedUtensilAttrs = logic.AddedUtensilAttrs;
-    }
 }
     
 public enum ProcessUnitState{
@@ -170,15 +160,14 @@ public class FoodProcessor
     }
     
     
-    public void ADDUtensil(Ingredient utensilToAdd)
+    public bool ADDUtensil(Ingredient utensilToAdd)
     {
         List<IngredientAttr> utensilToAddCpy = new List<IngredientAttr>(utensilToAdd.Attributes);
         utensilToAddCpy.Remove(IngredientAttr.UTENSIL);
         if (AddedUtencils.Count >= MaxNumUtensils || 
             !ValidUtensil(utensilToAddCpy))
         {
-            Object.Destroy(utensilToAdd.GameObject);
-            return;
+            return false;
         }
         AddedUtensilAttrs.AddRange(utensilToAddCpy);
         AddedUtencils.Add(utensilToAdd);
@@ -189,33 +178,26 @@ public class FoodProcessor
             sound.pitch = Random.Range(0.8f, 1.2f);
             sound.Play();
         }
+        return true;
     }
 
     public bool ValidUtensil(List<IngredientAttr> utensilAttrsToTest)
     {
-        bool isValid = false;
-        if (RequiredUtensilAttrs.Count == utensilAttrsToTest.Count)
-        {
-            foreach (var utensil in RequiredUtensilAttrs)
-            {
-                if (!utensilAttrsToTest.Contains(utensil))
-                {
-                    isValid = false;
-                }
-            }
-            isValid = true;
-        }
-
-//        foreach (var foodProc in GameObject.GetComponents<FoodProcessorObjectEvents>())
+        return Enumerable.SequenceEqual<IngredientAttr>(RequiredUtensilAttrs, utensilAttrsToTest);
+//        bool isValid = false;
+//        if (RequiredUtensilAttrs.Count == utensilAttrsToTest.Count)
 //        {
-//            if (foodProc == this._foodProcEvents)
+//            isValid = true;
+//            foreach (var utensil in RequiredUtensilAttrs)
 //            {
-//                continue;
+//                if (!utensilAttrsToTest.Contains(utensil))
+//                {
+//                    isValid = false;
+//                    break;
+//                }
 //            }
-//            isValid = isValid || foodProc.logic.ValidUtensil(utensilAttrsToTest);
 //        }
-
-        return isValid;
+//        return isValid;
     }
 
     public bool IsCurrIngrAccepted()
@@ -234,7 +216,9 @@ public class FoodProcessor
     {
         IsOn = ProcessUnitState.ON;
 
-        if (IngredientInProcess != null && ValidUtensil(AddedUtensilAttrs))
+        if (IngredientInProcess != null && 
+            RequiredUtensilAttrs.Count == 0 || 
+            (RequiredUtensilAttrs.Count > 0 && AddedUtencils.Count > 0))
         {
             if (IsCurrIngrAccepted())
             {
@@ -251,7 +235,8 @@ public class FoodProcessor
                 }
                 
                 _foodProcEvents.GetComponent<AudioSource>().Play();
-                _foodProcEvents.isIngProcessed = true;
+                IsOn = ProcessUnitState.OFF;
+                TakeUtensilOff(RequiredUtensilAttrs);
             }
             yield return null;
         }
@@ -261,7 +246,6 @@ public class FoodProcessor
     public IEnumerator TurnOff()
     {
         IsOn = ProcessUnitState.OFF;
-        _foodProcEvents.isIngProcessed = false;
         yield return null;
     }
 
