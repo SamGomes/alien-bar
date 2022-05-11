@@ -17,19 +17,22 @@ using Random = UnityEngine.Random;
 
 public class TrashBinObjectEvents : MonoBehaviour
 {
-    private Vector3 _baseScale;
-
+    private Animator _animator;
+    private AudioSource _sound;
     public void Start()
     {
-        _baseScale = transform.localScale;
+        _sound = GetComponent<AudioSource>();
+        _animator = GetComponent<Animator>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        AudioSource sound = GetComponent<AudioSource>();
-        sound.pitch = Random.Range(0.8f, 1.2f);
-        sound.Play();
-        transform.localScale = 1.1f * _baseScale;
+        _animator.Play(0);
+        _animator.Rebind();
+        _animator.Update(0.0f);
+        
+        _sound.pitch = Random.Range(0.8f, 1.2f);
+        _sound.Play();
         var ingEvents = other.GetComponent<RecipeObjectEvents>();
         var ingEvents2 = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null || ingEvents2 != null)
@@ -79,14 +82,10 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 {
     public GameManager gm;
     private List<RecipeObjectEvents> _recipes;
-    private Vector3 _baseScale;
-
-    public string recipesStr;
 
     public void Start()
     {
         _recipes = new List<RecipeObjectEvents>();   
-        _baseScale = transform.localScale;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -119,7 +118,8 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
                 foreach (var targetRecipe in order.Recipes)
                 {
                     gm.scoreValueObj.text =
-                        (int.Parse(gm.scoreValueObj.text) + GameGlobals.GameConfigs.ScoreMultiplier * targetRecipe.Level).ToString();
+                        (int.Parse(gm.scoreValueObj.text) + 
+                         GameGlobals.GameConfigs.ScoreMultiplier).ToString();
                 }
                 
                 foreach (var recipe in validRecipes)
@@ -139,11 +139,6 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
         {
             gm.currOrders = gm.currOrders.Except(ordersToRemove).ToList();
         }
-    }
-
-    void Update()
-    {
-        recipesStr = _recipes.Count.ToString();
     }
     
 }
@@ -449,26 +444,6 @@ public class GameManager : MonoBehaviour
         
         currOrders = new List<Order>();
         
-        
-        // _gameConfig.MINOrderTime = 1;
-        // _gameConfig.MAXOrderTime = 1;
-        // _gameConfig.CurrOrderLevel = 4;
-        // _gameConfig.MAXPendingOrders = 5;
-        //
-        // // string path = "Assets/StreamingAssets/recipes.cfg";
-        // // StreamReader reader = new StreamReader(path);
-        // // string json = reader.ReadToEnd();
-        // _gameConfig.OrderRecipesByLevel = JsonConvert.DeserializeObject<List<List<Recipe>>>(json);
-       
-        // path = "Assets/StreamingAssets/configs.cfg";
-        // json = JsonConvert.SerializeObject(_gameConfig);
-        // StreamWriter writer = new StreamWriter(path, true);
-        //
-        // writer.WriteLine(json);
-        // writer.Close();
-        //
-
-//        scoreMultiplier = 1000;
 
         foreach (var trashBin in trashBins)
         {

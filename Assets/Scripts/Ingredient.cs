@@ -17,10 +17,8 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
     public Camera cam;
     private LineRenderer _lineRenderer;
 
-    public void Start()
+    public void Awake()
     {
-//        GameObject newLine = new GameObject("Line");
-//        _lineRenderer = newLine.AddComponent<LineRenderer>();
         isBeingHeld = true;
     }
 
@@ -37,6 +35,7 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
     {
         if (isBeingHeld)
         {
+            Debug.Log("IsBeingHeld");
             Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
             RaycastHit hit;
     
@@ -120,7 +119,6 @@ public class Ingredient
         //only instantiate if it is not a template
         if (!isTemplate)
         {
-            Debug.Log(spawnPos);
             GameObject = Object.Instantiate(
                 Resources.Load<GameObject>(StateObjectPaths[0]), 
                 spawnPos, Quaternion.identity);
@@ -148,6 +146,7 @@ public class Ingredient
             Quaternion.identity);
         var events = GameObject.AddComponent<IngredientObjectEvents>();
         events.cam = Cam;
+        events.isBeingHeld = false;
         events.logic = this;
     }
 

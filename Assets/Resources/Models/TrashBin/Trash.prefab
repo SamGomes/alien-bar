@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6417145064897418108}
   - component: {fileID: 6145619974331874246}
   m_Layer: 0
-  m_Name: recycle-symbol-1432841051JY9
+  m_Name: symbol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 6695899649226766091}
   - component: {fileID: 6695899649226766092}
   - component: {fileID: 1715034661830987177}
+  - component: {fileID: 3210100385056512882}
   m_Layer: 0
   m_Name: Trash
   m_TagString: Untagged
@@ -401,6 +402,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &3210100385056512882
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6695899649226766090}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 98d9f57572fa753a0a92e5eb441aa9ce, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &3408916401631308608
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -507,6 +528,42 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
       propertyPath: m_Name
       value: customTrash
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.9718361
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0126602175
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.59220153
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.59220153
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.38639018
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.38639018
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 23.754
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083501151425157549, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 7339356831882890532, guid: bc4c7fd4f3573da33bd37125ef7ed593, type: 3}
       propertyPath: m_Materials.Array.data[0]

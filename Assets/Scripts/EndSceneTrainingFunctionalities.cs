@@ -18,8 +18,9 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
 
         if (GameGlobals.IsTutorial)
         {
-            string path = "Assets/StreamingAssets/Results/AlienBarExperiment/TrainingAttempts/"+
-                          GameGlobals.GameId+".csv";
+            string path = Application.streamingAssetsPath 
+                          + "/Results/AlienBarExperiment/TrainingAttempts/"
+                          + GameGlobals.GameId + ".csv";
 
             string attemptEntry = "";
             if (!File.Exists(path))

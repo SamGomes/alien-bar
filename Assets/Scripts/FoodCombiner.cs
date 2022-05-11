@@ -9,22 +9,30 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
     public Camera cam;
 
     public List<IngredientObjectEvents> objectsToComb;
-       
+
+    private ParticleSystem _particleSystem;
+    private AudioSource _sound;
+    
+    public void Start()
+    {
+        _sound = GetComponent<AudioSource>();
+        _baseScale = transform.localScale;
+        _particleSystem = GetComponentInChildren<ParticleSystem>();
+    }
+    
     public void Update()
     {
         objectsToComb = logic.IngredientsToCombine;
     }
     
-    public void Start()
-    {
-        _baseScale = transform.localScale;
-    }
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         //Use this to tell when the user left-clicks on the Button
         if (pointerEventData.button == PointerEventData.InputButton.Left && logic.IngredientsToCombine.Count > 0)
         {
+            _particleSystem.Play();
+            _sound.Play();
             Recipe userRec = logic.Combine();
             GameObject newDevBag = Instantiate(logic.DeliveryBagPrefab);
             newDevBag.transform.position = transform.position;
@@ -39,26 +47,28 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
             logic.IngredientsToCombine.Clear();
         }
     }
+    
     private void OnTriggerEnter(Collider other)
     {
-        transform.localScale = 1.1f * _baseScale;
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
             logic.IngredientsToCombine.Add(ingEvents);
         }
-        
+        if(logic.IngredientsToCombine.Count > 0)
+            transform.localScale = 1.1f * _baseScale;
     }
     
     private void OnTriggerExit(Collider other)
     {
-        transform.localScale = _baseScale;
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
             logic.IngredientsToCombine.Remove(ingEvents);
         }
         
+        if(logic.IngredientsToCombine.Count < 1)
+            transform.localScale = _baseScale;
     }
 }
 
