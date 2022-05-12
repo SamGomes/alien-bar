@@ -35,13 +35,12 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
     {
         if (isBeingHeld)
         {
-            Debug.Log("IsBeingHeld");
             Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
             RaycastHit hit;
     
             if (Physics.Raycast(ray, out hit))
             {
-                transform.position = new Vector3(hit.point.x, 5, hit.point.z);
+                transform.position = new Vector3(hit.point.x, 3, hit.point.z);
             }
             
         }
@@ -53,14 +52,10 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
 public enum IngredientAttr
 {
     UTENSIL,
-    CUP,
-    PLATE,
-    TOOL,
+    THIRPUNASOREC,
     
-    WHOLE,
-    CUT,
-    COLD,
-    HOT,
+    LUAHH,
+    HEFTT,
     
     FRUIT,
     ORGEINE,
@@ -74,9 +69,9 @@ public enum IngredientAttr
     
     DESSERT,
     COLEFF,
-    SMALL,
-    MEDIUM,
-    LARGE,
+    WUDIF,
+    KREW,
+    FRUB,
     
     CAKE,
     DRUPPI_CAKE,
@@ -89,7 +84,7 @@ public enum IngredientAttr
     RYNUMIDEC_LEG,
     
     
-    DRINK,
+    AMERM,
     AKWA,
     ALOC
 }

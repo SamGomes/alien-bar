@@ -54,6 +54,10 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
         if (ingEvents != null)
         {
             logic.IngredientsToCombine.Add(ingEvents);
+            ingEvents.isBeingHeld = false;
+            float translation = logic.IngredientsToCombine.Count* 10.0f;
+            ingEvents.gameObject.transform.position = gameObject.transform.position + 
+                                                      new Vector3( translation - 30.0f, 0, 0);
         }
         if(logic.IngredientsToCombine.Count > 0)
             transform.localScale = 1.1f * _baseScale;

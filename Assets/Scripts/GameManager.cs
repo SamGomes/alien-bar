@@ -15,6 +15,7 @@ using Random = UnityEngine.Random;
 
 
 
+
 public class TrashBinObjectEvents : MonoBehaviour
 {
     private Animator _animator;
@@ -115,13 +116,13 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
                 gm.EvaluateOrder(order, _recipes);
             if (validRecipes.Count == order.Recipes.Count)
             {
-                foreach (var targetRecipe in order.Recipes)
+                for (int i=0; i<order.Recipes.Count; i++)
                 {
                     gm.scoreValueObj.text =
                         (int.Parse(gm.scoreValueObj.text) + 
                          GameGlobals.GameConfigs.ScoreMultiplier).ToString();
                 }
-                
+
                 foreach (var recipe in validRecipes)
                 {
                     Destroy(recipe.gameObject);
@@ -131,30 +132,49 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
 
                 ordersToRemove.Add(order);
                 
-                gm.orderDeliveredSound.Play();
             }
         }
-
+    
+        Animator anim = gm.orderContainer.GetComponent<Animator>();
         if (ordersToRemove.Count > 0)
         {
+            anim.Update(0.0f);
+            anim.Play("Warn");
+            
             gm.currOrders = gm.currOrders.Except(ordersToRemove).ToList();
+            gm.orderValidScreen
+                .GetComponent<Animator>().Play("Warn");
+            gm.orderDeliveredSound.Play();
         }
+        else if(_recipes.Count > 0)
+        {
+            anim.Update(0.0f);
+            anim.Play("Warn");
+            
+            gm.orderNotFoundScreen
+                .GetComponent<Animator>().Play("Warn");
+            gm.orderNotFoundSound.Play();
+            
+        }
+        
     }
     
 }
 
 public class GameManager : MonoBehaviour
 {
-    
     public AudioSource orderReceivedSound;
     public AudioSource orderDeliveredSound;
+    public AudioSource orderNotFoundSound;
     
     
     public TextMeshPro scoreValueObj;
 
     public GameObject orderPrefab;
     public GameObject orderContainer;
-    
+    public GameObject orderValidScreen;
+    public GameObject orderNotFoundScreen;
+
     public List<Order> currOrders;
     
     
@@ -232,7 +252,8 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(repeatRate);
             StartCoroutine(GenerateOrder());
         }
-        else{
+        else
+        {
             Order newOrder = new Order();
             int numRecipes = GameGlobals.GameConfigs.OrderDifficulty
                              / Random.Range(1, GameGlobals.GameConfigs.OrderDifficulty + 1);
@@ -245,7 +266,8 @@ public class GameManager : MonoBehaviour
             }
 
             currOrders.Add(newOrder);
-            newOrder.PrintOrder(orderPrefab, cam, orderContainer);
+            newOrder.PrintOrder(orderPrefab, cam, 
+                orderContainer.transform.GetChild(0).gameObject);
 
             //decrement repeatRate on survival
             if (!GameGlobals.IsTraining)
@@ -265,7 +287,6 @@ public class GameManager : MonoBehaviour
     public List<RecipeObjectEvents> EvaluateOrder(Order selectedOrder, List<RecipeObjectEvents> userRecipes)
     {
         List<RecipeObjectEvents> validRecipes = new List<RecipeObjectEvents>();
-        
         
         foreach (var orderRecipe in selectedOrder.Recipes)
         {
@@ -377,17 +398,17 @@ public class GameManager : MonoBehaviour
         }
 
         new FoodProcessor(juiceBlenderObj,
-            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.CUT},
-            new List<IngredientAttr> {IngredientAttr.DRINK},
-            new List<IngredientAttr> {IngredientAttr.CUP},
+            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.HEFTT},
+            new List<IngredientAttr> {IngredientAttr.HEFTT},
+            new List<IngredientAttr> {IngredientAttr.AMERM},
+            new List<IngredientAttr> {IngredientAttr.THIRPUNASOREC},
             1,
             new List<FoodProcessor>(),
             3);
         new FoodProcessor(juiceKnifeObj,
-            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.WHOLE},
-            new List<IngredientAttr> {IngredientAttr.WHOLE},
-            new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.LUAHH},
+            new List<IngredientAttr> {IngredientAttr.LUAHH},
+            new List<IngredientAttr> {IngredientAttr.HEFTT},
             new List<IngredientAttr>(),
             1,
             new List<FoodProcessor>(),
@@ -395,9 +416,9 @@ public class GameManager : MonoBehaviour
 
         
         new FoodProcessor(dessertBlenderObj,
-            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.WHOLE},
-            new List<IngredientAttr> {IngredientAttr.WHOLE},
-            new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr> {IngredientAttr.COLEFF,IngredientAttr.LUAHH},
+            new List<IngredientAttr> {IngredientAttr.LUAHH},
+            new List<IngredientAttr> {IngredientAttr.HEFTT},
             new List<IngredientAttr>(),
             1,
             new List<FoodProcessor>(),
@@ -406,36 +427,36 @@ public class GameManager : MonoBehaviour
         foreach (GameObject coleffMachineTube in coleffMachineTubes)
         {
             FoodProcessor coleffProc1 = new FoodProcessor(coleffMachineTube,
-                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.SMALL},
-                new List<IngredientAttr> {IngredientAttr.SMALL},
-                new List<IngredientAttr> {IngredientAttr.MEDIUM},
+                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.AMERM, IngredientAttr.WUDIF},
+                new List<IngredientAttr> {IngredientAttr.WUDIF},
+                new List<IngredientAttr> {IngredientAttr.KREW},
                 new List<IngredientAttr>(),
                 1,
                 new List<FoodProcessor>(),
                 5);
             FoodProcessor coleffProc2 = new  FoodProcessor(coleffMachineTube,
-                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.DRINK, IngredientAttr.MEDIUM},
-                new List<IngredientAttr> {IngredientAttr.MEDIUM},
-                new List<IngredientAttr> {IngredientAttr.LARGE},
+                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.AMERM, IngredientAttr.KREW},
+                new List<IngredientAttr> {IngredientAttr.KREW},
+                new List<IngredientAttr> {IngredientAttr.FRUB},
                 new List<IngredientAttr>(),
                 1,
                 new List<FoodProcessor>(),
                 5);
             
             new FoodProcessor(coleffMachineTube,
-                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.CUT},
-                new List<IngredientAttr> {IngredientAttr.CUT},
-                new List<IngredientAttr> {IngredientAttr.DRINK, IngredientAttr.SMALL},
-                new List<IngredientAttr> {IngredientAttr.DESSERT, IngredientAttr.CUP},
+                new List<IngredientAttr> {IngredientAttr.COLEFF, IngredientAttr.HEFTT},
+                new List<IngredientAttr> {IngredientAttr.HEFTT},
+                new List<IngredientAttr> {IngredientAttr.AMERM, IngredientAttr.WUDIF},
+                new List<IngredientAttr> {IngredientAttr.DESSERT, IngredientAttr.THIRPUNASOREC},
                 1,
                 new List<FoodProcessor>(){coleffProc1, coleffProc2},
                 5);
         }
         
         new FoodProcessor(dessertKnifeObj,
-            new List<IngredientAttr> {IngredientAttr.CAKE,IngredientAttr.WHOLE},
-            new List<IngredientAttr> {IngredientAttr.WHOLE},
-            new List<IngredientAttr> {IngredientAttr.CUT},
+            new List<IngredientAttr> {IngredientAttr.CAKE,IngredientAttr.LUAHH},
+            new List<IngredientAttr> {IngredientAttr.LUAHH},
+            new List<IngredientAttr> {IngredientAttr.HEFTT},
             new List<IngredientAttr>(),
             1,
             new List<FoodProcessor>(),
@@ -475,7 +496,6 @@ public class GameManager : MonoBehaviour
         cam.transform.parent = cameraPositioners[0].transform;
         cameraChangeButtons[0].onClick.AddListener(() => IncreaseCameraSection(cameraChangeButtons[0]));
         cameraChangeButtons[1].onClick.AddListener(() => DecreaseCameraSection(cameraChangeButtons[1]));
-
     }
 
     public void QuitMainScene()
