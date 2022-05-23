@@ -10,25 +10,50 @@ using Object = UnityEngine.Object;
 
 
 
-public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
+public class IngredientObjectEvents : 
+    MonoBehaviour, 
+    IPointerDownHandler, 
+    IPointerUpHandler,
+    IPointerEnterHandler,
+    IPointerExitHandler
 {
     public Ingredient logic;
     public bool isBeingHeld;
     public Camera cam;
     private LineRenderer _lineRenderer;
 
-    public void Awake()
+    public void Start()
     {
-        isBeingHeld = true;
+        isBeingHeld = false;
     }
 
-    public void OnPointerClick(PointerEventData pointerEventData)
+    public void OnPointerDown(PointerEventData pointerEventData)
     {
         //Use this to tell when the user right-clicks on the Button
         if (pointerEventData.button == PointerEventData.InputButton.Left)
         {
-            isBeingHeld = !isBeingHeld;
+            GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureDrag);
+            isBeingHeld = true;
         }
+    }
+    public void OnPointerUp(PointerEventData pointerEventData)
+    {
+        if (pointerEventData.button == PointerEventData.InputButton.Left)
+        {
+            GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureDrag);
+            isBeingHeld = false;
+        }
+    }
+    
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        if(!isBeingHeld)
+            GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTexturePicking);
+    }
+    public void OnPointerExit(PointerEventData pointerEventData)
+    {
+        if(!isBeingHeld)
+            GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
     }
 
     public void FixedUpdate()
@@ -40,7 +65,7 @@ public class IngredientObjectEvents : MonoBehaviour, IPointerClickHandler
     
             if (Physics.Raycast(ray, out hit))
             {
-                transform.position = new Vector3(hit.point.x, 3, hit.point.z);
+                transform.position = new Vector3(hit.point.x, 5, hit.point.z);
             }
             
         }

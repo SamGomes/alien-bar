@@ -13,20 +13,74 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 
+public class DirectionalButtonEvents : MonoBehaviour
+{
+    private void OnMouseEnter()
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureDrag);
+    }
+    
+    private void OnMouseExit()
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureDrag);
+    }
+}
 
 
-
-public class TrashBinObjectEvents : MonoBehaviour
+public class TrashBinObjectEvents : 
+    MonoBehaviour, 
+    IPointerClickHandler, 
+    IPointerEnterHandler, 
+    IPointerExitHandler
 {
     private Animator _animator;
     private AudioSource _sound;
+
+    private List<GameObject> objsToDestroy;
+    
     public void Start()
     {
+        objsToDestroy = new List<GameObject>();
         _sound = GetComponent<AudioSource>();
         _animator = GetComponent<Animator>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureTrashing);
+    }
+    public void OnPointerExit(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureTrashing);
+    }
+    
+    
+    public void OnTriggerEnter(Collider other)
+    {
+        GameObject otherGO = other.gameObject;
+        var ingEvents = otherGO.GetComponent<RecipeObjectEvents>();
+        var ingEvents2 = otherGO.GetComponent<IngredientObjectEvents>();
+        if (ingEvents != null || ingEvents2 != null)
+        {
+            objsToDestroy.Add(otherGO);
+            Vector3 pos = gameObject.transform.position;
+            otherGO.transform.position = new Vector3(pos.x,0,pos.z)
+                                                 + Vector3.back*20.0f 
+                                                 + Vector3.left*10.0f;
+        }
+    }
+    
+    public void OnTriggerExit(Collider other)
+    {
+        var ingEvents = other.GetComponent<RecipeObjectEvents>();
+        var ingEvents2 = other.GetComponent<IngredientObjectEvents>();
+        if (ingEvents != null || ingEvents2 != null)
+        {
+            objsToDestroy.Remove(other.gameObject);
+        }
+    }
+    
+    public void OnPointerClick(PointerEventData pointerEventData)
     {
         _animator.Play(0);
         _animator.Rebind();
@@ -34,26 +88,33 @@ public class TrashBinObjectEvents : MonoBehaviour
         
         _sound.pitch = Random.Range(0.8f, 1.2f);
         _sound.Play();
-        var ingEvents = other.GetComponent<RecipeObjectEvents>();
-        var ingEvents2 = other.GetComponent<IngredientObjectEvents>();
-        if (ingEvents != null || ingEvents2 != null)
+        foreach (var obj in objsToDestroy)
         {
-            Destroy(other.gameObject);
+            Destroy(obj);
         }
+        
     }
 
 }
 
-public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
+public class IngredientSpawner : 
+    MonoBehaviour, 
+    IPointerClickHandler, 
+    IPointerEnterHandler, 
+    IPointerExitHandler
 {
     public Camera cam;
     public Ingredient template;
-    
-//    public void Start()
-//    {
-//        gameObject.GetComponentInChildren<TextMeshPro>().text = JsonConvert.SerializeObject(template.Attributes);
-//    }
 
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTexturePicking);
+    }
+    public void OnPointerExit(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+    }
+    
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         //Use this to tell when the user right-clicks on the Button
@@ -64,24 +125,28 @@ public class IngredientSpawner : MonoBehaviour, IPointerClickHandler
 
             if (Physics.Raycast(ray, out hit))
             {
-                new Ingredient(
+                Ingredient newIng = new Ingredient(
                      false, 
                      cam, 
                      new Vector3( 350, 
-                        0 + template.GameObject.transform.position.y, 
+                        5 + template.GameObject.transform.position.y, 
                         100),
                      template.StateObjectPaths,
                      template.Attributes,
                      template.TimeToProcess
                      );
+                newIng.GameObject.transform.position = transform.position + Vector3.back*25.0f;
             }
         }
     }
 }
 
-public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
+public class DeliveryBoardEvents : 
+    MonoBehaviour, 
+    IPointerClickHandler, 
+    IPointerEnterHandler, 
+    IPointerExitHandler
 {
-    public GameManager gm;
     private List<RecipeObjectEvents> _recipes;
 
     public void Start()
@@ -89,6 +154,15 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
         _recipes = new List<RecipeObjectEvents>();   
     }
 
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureDelivering);
+    }
+    public void OnPointerExit(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureDelivering);
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
         var recEvents = other.GetComponent<RecipeObjectEvents>();
@@ -110,6 +184,7 @@ public class DeliveryBoardEvents : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         List<Order> ordersToRemove = new List<Order>();
+        GameManager gm = GameGlobals.gameManager;
         foreach (Order order in gm.currOrders)
         {
             List<RecipeObjectEvents> validRecipes = 
@@ -210,6 +285,20 @@ public class GameManager : MonoBehaviour
 
     private float _playingTime;
     private float _initialPlayingTime;
+
+
+    public List<Texture2D> cursorOverlapBuffer;
+    public Texture2D cursorTextureFinger;
+    public Texture2D cursorTextureStop;
+    public Texture2D cursorTextureDrag;
+    public Texture2D cursorTextureProcess;
+    public Texture2D cursorTextureWand; 
+    public Texture2D cursorTexturePicking;
+    public Texture2D cursorTextureTrashing;
+    public Texture2D cursorTextureDelivering;
+    public CursorMode cursorMode = CursorMode.Auto;
+    public Vector2 cursorHotSpot = Vector2.zero;
+    
     
     void InitSpawner(GameObject spawnerObj, Ingredient template)
     {
@@ -387,6 +476,9 @@ public class GameManager : MonoBehaviour
             MockedStartScene();
         }
 
+        GameGlobals.gameManager = this;
+        cursorOverlapBuffer.Add(cursorTextureFinger);
+        
         resetButton.gameObject.SetActive(GameGlobals.IsTutorial);
 //        quitButton.gameObject.SetActive(GameGlobals.HasControls);
         if (GameGlobals.IsTutorial)
@@ -471,9 +563,8 @@ public class GameManager : MonoBehaviour
             trashBin.AddComponent<TrashBinObjectEvents>();
         }
         
-        DeliveryBoardEvents delBoardEvents = deliveryBoardObj.AddComponent<DeliveryBoardEvents>();
-        delBoardEvents.gm = this;
-
+        deliveryBoardObj.AddComponent<DeliveryBoardEvents>();
+        
         foreach (var combinerObj in foodCombinerObjs)
         {
             new FoodCombiner(combinerObj, deliveryBagPrefab, cam);
@@ -494,6 +585,11 @@ public class GameManager : MonoBehaviour
 
         _currCameraSection = 0;
         cam.transform.parent = cameraPositioners[0].transform;
+
+        foreach (var button in cameraChangeButtons)
+        {
+            button.gameObject.AddComponent<DirectionalButtonEvents>();
+        }
         cameraChangeButtons[0].onClick.AddListener(() => IncreaseCameraSection(cameraChangeButtons[0]));
         cameraChangeButtons[1].onClick.AddListener(() => DecreaseCameraSection(cameraChangeButtons[1]));
     }
@@ -514,6 +610,10 @@ public class GameManager : MonoBehaviour
     }
     public void Update()
     {
+        Cursor.SetCursor(cursorOverlapBuffer[cursorOverlapBuffer.Count - 1],
+            cursorHotSpot,
+            cursorMode);
+        
         _playingTime = Time.time - _initialPlayingTime;
         if(GameGlobals.IsTraining && _playingTime >= GameGlobals.GameConfigs.TrainingTimeMinutes*60.0f ||
            !GameGlobals.IsTraining && currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders ||

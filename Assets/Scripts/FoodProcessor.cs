@@ -8,12 +8,22 @@ using UnityEngine.EventSystems;
 using Object = UnityEngine.Object;
 using Vector3 = UnityEngine.Vector3;
 
-public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
+public class FoodProcessorObjectEvents : 
+    MonoBehaviour, 
+    IPointerClickHandler, 
+    IPointerEnterHandler, 
+    IPointerExitHandler
 {
     public FoodProcessor logic;
 
-    public List<IngredientAttr> _addedUtensilAttrs;
-
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureProcess);
+    }
+    public void OnPointerExit(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureProcess);
+    }
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
@@ -36,6 +46,8 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
             if (otherIng.Attributes.Contains(IngredientAttr.UTENSIL))
             {
                 ingEvents.isBeingHeld = false;
+                GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+                
                 if (logic.AddedUtencils.Contains(otherIng) || !logic.ADDUtensil(otherIng))
                 {
                     return;
@@ -50,6 +62,8 @@ public class FoodProcessorObjectEvents : MonoBehaviour, IPointerClickHandler
             else if(logic.IngredientInProcess == null)
             {
                 ingEvents.isBeingHeld = false;
+                GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+                
                 logic.IngredientInProcess = otherIng;
                 otherIng.GameObject.transform.position = gameObject.transform.position;
             }

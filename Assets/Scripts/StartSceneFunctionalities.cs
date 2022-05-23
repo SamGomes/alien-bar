@@ -52,6 +52,7 @@ public static class GameGlobals
     public static string GameId;
     public static float Score;
     public static GameConfigurations GameConfigs;
+    public static GameManager gameManager;
 }
 
 

@@ -2,7 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
+public class FoodCombinerObjectEvents : 
+    MonoBehaviour, 
+    IPointerClickHandler,
+    IPointerEnterHandler, 
+    IPointerExitHandler
 {
     public FoodCombiner logic;
     private Vector3 _baseScale;
@@ -25,6 +29,14 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
         objectsToComb = logic.IngredientsToCombine;
     }
     
+    public void OnPointerEnter(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureWand);
+    }
+    public void OnPointerExit(PointerEventData pointerEventData)
+    {
+        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureWand);
+    }
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
@@ -54,10 +66,10 @@ public class FoodCombinerObjectEvents : MonoBehaviour, IPointerClickHandler
         if (ingEvents != null)
         {
             logic.IngredientsToCombine.Add(ingEvents);
-            ingEvents.isBeingHeld = false;
-            float translation = logic.IngredientsToCombine.Count* 10.0f;
-            ingEvents.gameObject.transform.position = gameObject.transform.position + 
-                                                      new Vector3( translation - 30.0f, 0, 0);
+//            ingEvents.isBeingHeld = false;
+//            float translation = logic.IngredientsToCombine.Count* 10.0f;
+//            ingEvents.gameObject.transform.position = gameObject.transform.position + 
+//                                                      new Vector3( translation - 30.0f, 0, 0);
         }
         if(logic.IngredientsToCombine.Count > 0)
             transform.localScale = 1.1f * _baseScale;
