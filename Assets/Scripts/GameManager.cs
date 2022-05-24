@@ -29,14 +29,14 @@ public class DirectionalButtonEvents : MonoBehaviour
 
 public class TrashBinObjectEvents : 
     MonoBehaviour, 
-    IPointerClickHandler, 
+//    IPointerClickHandler, 
     IPointerEnterHandler, 
     IPointerExitHandler
 {
     private Animator _animator;
     private AudioSource _sound;
 
-    private List<GameObject> objsToDestroy;
+    public List<GameObject> objsToDestroy;
     
     public void Start()
     {
@@ -60,13 +60,13 @@ public class TrashBinObjectEvents :
         GameObject otherGO = other.gameObject;
         var ingEvents = otherGO.GetComponent<RecipeObjectEvents>();
         var ingEvents2 = otherGO.GetComponent<IngredientObjectEvents>();
-        if (ingEvents != null || ingEvents2 != null)
+        if (ingEvents != null  || ingEvents2 != null)
         {
             objsToDestroy.Add(otherGO);
             Vector3 pos = gameObject.transform.position;
-            otherGO.transform.position = new Vector3(pos.x,0,pos.z)
-                                                 + Vector3.back*20.0f 
-                                                 + Vector3.left*10.0f;
+            otherGO.transform.position = new Vector3(pos.x, 0, pos.z)
+                                         + Vector3.back * 20.0f
+                                         + Vector3.left * 10.0f;
         }
     }
     
@@ -80,21 +80,52 @@ public class TrashBinObjectEvents :
         }
     }
     
-    public void OnPointerClick(PointerEventData pointerEventData)
+//    public void OnPointerClick(PointerEventData pointerEventData)
+//    {
+//        _animator.Play(0);
+//        _animator.Rebind();
+//        _animator.Update(0.0f);
+//        
+//        _sound.pitch = Random.Range(0.8f, 1.2f);
+//        _sound.Play();
+//        foreach (var obj in objsToDestroy)
+//        {
+//            Destroy(obj);
+//        }
+//        
+//    }
+
+    public void Update()
     {
-        _animator.Play(0);
-        _animator.Rebind();
-        _animator.Update(0.0f);
-        
-        _sound.pitch = Random.Range(0.8f, 1.2f);
-        _sound.Play();
+        if (objsToDestroy.Count == 0)
+        {
+            return;
+        }
+
+        var auxObjsToDestroy = new List<GameObject>();
         foreach (var obj in objsToDestroy)
         {
+            var ingEvents = obj.GetComponent<RecipeObjectEvents>();
+            var ingEvents2 = obj.GetComponent<IngredientObjectEvents>();
+            if ((ingEvents != null && !ingEvents.isBeingHeld) || (ingEvents2 != null && !ingEvents2.isBeingHeld))
+            {
+                _animator.Play(0);
+                _animator.Rebind();
+                _animator.Update(0.0f);
+
+                _sound.pitch = Random.Range(0.8f, 1.2f);
+                _sound.Play();
+                
+                auxObjsToDestroy.Add(obj);
+            }
+        }
+
+        foreach (var obj in auxObjsToDestroy)
+        {
+            objsToDestroy.Remove(obj);
             Destroy(obj);
         }
-        
     }
-
 }
 
 public class IngredientSpawner : 
@@ -129,7 +160,7 @@ public class IngredientSpawner :
                      false, 
                      cam, 
                      new Vector3( 350, 
-                        5 + template.GameObject.transform.position.y, 
+                        3 + template.GameObject.transform.position.y, 
                         100),
                      template.StateObjectPaths,
                      template.Attributes,

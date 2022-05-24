@@ -42,12 +42,38 @@ public class FoodProcessorObjectEvents :
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null)
         {
+            logic.IngredientInProcess = ingEvents.logic;
+        }
+        
+    }
+    private void OnTriggerExit(Collider other)
+    { 
+        var ingEvents = other.GetComponent<IngredientObjectEvents>();
+        if (ingEvents != null)
+        {
+            logic.IngredientInProcess = null;
+        }
+    }
+    
+    
+    public void Update()
+    {
+        if (logic.IngredientInProcess == null)
+        {
+            return;
+        }
+
+        var ingEvents = logic.IngredientInProcess.GameObject.GetComponent<IngredientObjectEvents>();
+        if (ingEvents != null)
+        {
+            if (ingEvents.isBeingHeld)
+            {
+                return;
+            }
             Ingredient otherIng = ingEvents.logic;
             if (otherIng.Attributes.Contains(IngredientAttr.UTENSIL))
             {
-                ingEvents.isBeingHeld = false;
                 GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
-                
                 if (logic.AddedUtencils.Contains(otherIng) || !logic.ADDUtensil(otherIng))
                 {
                     return;
@@ -59,31 +85,11 @@ public class FoodProcessorObjectEvents :
                                                          + Vector3.back*20.0f 
                                                          + Vector3.left*10.0f;
             }
-            else if(logic.IngredientInProcess == null)
+            else
             {
-                ingEvents.isBeingHeld = false;
                 GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
-                
                 logic.IngredientInProcess = otherIng;
                 otherIng.GameObject.transform.position = gameObject.transform.position;
-            }
-        }
-        
-    }
-    private void OnTriggerExit(Collider other)
-    { 
-        var ingEvents = other.GetComponent<IngredientObjectEvents>();
-        if (ingEvents != null)
-        {
-            Ingredient otherIng = ingEvents.logic;
-            if (otherIng != logic.IngredientInProcess)
-            {
-                return;
-            }
-            if (!otherIng.Attributes.Contains(IngredientAttr.UTENSIL))
-            {
-                StartCoroutine(logic.TurnOff());
-                logic.IngredientInProcess = null;
             }
         }
     }
