@@ -450,7 +450,12 @@ public class GameManager : MonoBehaviour
 
     public void IncreaseCameraSection(Button invoker)
     {
+        cursorOverlapBuffer.Add(cursorTextureFinger);
+        cameraChangeButtons[0].gameObject.SetActive(true);
+        cameraChangeButtons[1].gameObject.SetActive(true);
+        
         invoker.gameObject.GetComponent<AudioSource>().Play();
+        invoker.gameObject.SetActive(_currCameraSection < (cameraPositioners.Count - 2));
         _currCameraSection =
             (_currCameraSection < (cameraPositioners.Count - 1)) ? _currCameraSection + 1 : _currCameraSection;
         cam.transform.parent = cameraPositioners[_currCameraSection].transform;
@@ -458,14 +463,17 @@ public class GameManager : MonoBehaviour
     }
     public void DecreaseCameraSection(Button invoker)
     {
+        cursorOverlapBuffer.Add(cursorTextureFinger);
+        cameraChangeButtons[0].gameObject.SetActive(true);
+        cameraChangeButtons[1].gameObject.SetActive(true);
+        
         invoker.gameObject.GetComponent<AudioSource>().Play();
+        invoker.gameObject.SetActive(_currCameraSection > 1);
         _currCameraSection =
             (_currCameraSection > 0) ? _currCameraSection - 1 : _currCameraSection;
         cam.transform.parent = cameraPositioners[_currCameraSection].transform;
         cam.transform.localPosition = new Vector3();
-
     }
-    
     
     
     // public void Awake()
@@ -612,8 +620,8 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(IncreaseOrderDifficulty());
         }
-        
 
+        
         _currCameraSection = 0;
         cam.transform.parent = cameraPositioners[0].transform;
 
@@ -623,7 +631,10 @@ public class GameManager : MonoBehaviour
         }
         cameraChangeButtons[0].onClick.AddListener(() => IncreaseCameraSection(cameraChangeButtons[0]));
         cameraChangeButtons[1].onClick.AddListener(() => DecreaseCameraSection(cameraChangeButtons[1]));
+
+        DecreaseCameraSection(cameraChangeButtons[1]);
     }
+
 
     public void QuitMainScene()
     {
