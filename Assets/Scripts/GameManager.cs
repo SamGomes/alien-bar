@@ -166,7 +166,9 @@ public class IngredientSpawner :
                      template.Attributes,
                      template.TimeToProcess
                      );
-                newIng.GameObject.transform.position = transform.position + Vector3.back*25.0f;
+                newIng.GameObject.transform.position = transform.position 
+                                                       + Vector3.left*Random.Range(-10,10)
+                                                       + Vector3.back*Random.Range(15,35);
             }
         }
     }
