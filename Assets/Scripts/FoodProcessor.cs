@@ -97,6 +97,16 @@ public class FoodProcessorObjectEvents :
             var ing = ingEvents.logic;
             if (ing.Attributes.Contains(IngredientAttr.UTENSIL))
             {
+                ingBuffer.Remove(ingEvents.logic);
+                if (ingBuffer.Count > 0)
+                {
+                    logic.IngredientInProcess = ingBuffer[0];
+                }
+                else
+                {
+                    logic.IngredientInProcess = null;
+                }
+                
                 GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
                 if (logic.AddedUtencils.Contains(ing) || !logic.ADDUtensil(ing))
                 {
@@ -104,7 +114,7 @@ public class FoodProcessorObjectEvents :
                 }
 
                 Destroy(ing.GameObject.GetComponent<IngredientObjectEvents>());
-                OnTriggerExit(ing.GameObject.GetComponent<Collider>());
+
                 Vector3 pos = gameObject.transform.position;
                 ing.GameObject.transform.position = new Vector3(pos.x, 0, pos.z)
                                                     + logic.AddedUtencils.Count * (Vector3.up * 3.0f)
