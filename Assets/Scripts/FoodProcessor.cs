@@ -50,22 +50,7 @@ public class FoodProcessorObjectEvents :
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
         if (ingEvents != null && !ingBuffer.Contains(ingEvents.logic))
         {
-            var ing = ingEvents.logic;
-            if (ing.Attributes.Contains(IngredientAttr.UTENSIL))
-            {
-                GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
-                if (logic.AddedUtencils.Contains(ing) || !logic.ADDUtensil(ing))
-                {
-                    return;
-                }
-                Destroy(ing.GameObject.GetComponent<IngredientObjectEvents>());
-                Vector3 pos = gameObject.transform.position;
-                ing.GameObject.transform.position = new Vector3(pos.x,0,pos.z)
-                                                         + logic.AddedUtencils.Count*(Vector3.up*3.0f)
-                                                         + Vector3.back*20.0f 
-                                                         + Vector3.left*10.0f;
-            }
-            else
+            if (!ingEvents.logic.Attributes.Contains(IngredientAttr.UTENSIL))
             {
                 ingBuffer.Add(ingEvents.logic);
                 if (ingBuffer.Count > 0)
@@ -73,13 +58,18 @@ public class FoodProcessorObjectEvents :
                     logic.IngredientInProcess = ingBuffer[0];
                 }
             }
+            else
+            {
+                logic.IngredientInProcess = ingEvents.logic;
+            }
         }
-        
     }
+    
     private void OnTriggerExit(Collider other)
-    { 
+    {
         var ingEvents = other.GetComponent<IngredientObjectEvents>();
-        if (ingEvents != null)
+        if (ingEvents != null && 
+            !ingEvents.logic.Attributes.Contains(IngredientAttr.UTENSIL))
         {
             ingBuffer.Remove(ingEvents.logic);
             if (ingBuffer.Count > 0)
@@ -99,16 +89,36 @@ public class FoodProcessorObjectEvents :
         if (logic.IngredientInProcess == null){
             return;
         }
-        
+
         var ingEvents = logic.IngredientInProcess.
             GameObject.GetComponent<IngredientObjectEvents>();
         if (!ingEvents.isBeingHeld)
         {
-            Ingredient otherIng = ingEvents.logic;
-            GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
-            otherIng.GameObject.transform.position = gameObject.transform.position;
+            var ing = ingEvents.logic;
+            if (ing.Attributes.Contains(IngredientAttr.UTENSIL))
+            {
+                GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+                if (logic.AddedUtencils.Contains(ing) || !logic.ADDUtensil(ing))
+                {
+                    return;
+                }
+
+                Destroy(ing.GameObject.GetComponent<IngredientObjectEvents>());
+                OnTriggerExit(ing.GameObject.GetComponent<Collider>());
+                Vector3 pos = gameObject.transform.position;
+                ing.GameObject.transform.position = new Vector3(pos.x, 0, pos.z)
+                                                    + logic.AddedUtencils.Count * (Vector3.up * 3.0f)
+                                                    + Vector3.back * 20.0f
+                                                    + Vector3.left * 10.0f;
+            }
+            else
+            {
+
+                Ingredient otherIng = ingEvents.logic;
+                GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+                otherIng.GameObject.transform.position = gameObject.transform.position;
+            }
         }
-        
     }
 }
     
