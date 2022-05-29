@@ -53,6 +53,10 @@ public static class GameGlobals
     public static float Score;
     public static GameConfigurations GameConfigs;
     public static GameManager gameManager;
+    
+    
+    public static bool hasPlayedTutorial = false;
+    public static bool hasPlayedTraining = false;
 }
 
 
@@ -87,6 +91,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         exitButton.gameObject.AddComponent<ButtonObjectEvents>();
 
         GameGlobals.IsTutorial = false;
+        
 
         if (GameGlobals.GameId != "")
         {
@@ -98,12 +103,16 @@ public class StartSceneFunctionalities: MonoBehaviour
             Application.Quit();
         });
         
+        tutorialButton.interactable = !GameGlobals.hasPlayedTutorial;
         tutorialButton.onClick.AddListener(() =>
         {
             GameGlobals.PlayerId = playerIdInput.text;
             GameGlobals.IsTraining = true;
             SceneManager.LoadScene("MainScene");
         });
+        
+        
+        trainingButton.interactable = GameGlobals.hasPlayedTutorial;
         trainingButton.onClick.AddListener(() =>
         {
             if (gameIdInput.text != "")
@@ -121,6 +130,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         });
         
         
+        survivalButton.interactable = GameGlobals.hasPlayedTraining;
         survivalButton.onClick.AddListener(() =>
         {
 //            if (playerIdInput.text != "")

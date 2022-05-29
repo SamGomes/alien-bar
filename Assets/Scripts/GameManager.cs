@@ -137,6 +137,13 @@ public class IngredientSpawner :
     public Camera cam;
     public Ingredient template;
 
+    public AudioSource audioSource;
+    
+    public void Start()
+    {
+        audioSource = gameObject.GetComponent<AudioSource>();
+    }
+
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
         GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTexturePicking);
@@ -148,6 +155,7 @@ public class IngredientSpawner :
     
     public void OnPointerClick(PointerEventData pointerEventData)
     {
+        audioSource.Play();
         //Use this to tell when the user right-clicks on the Button
         if (pointerEventData.button == PointerEventData.InputButton.Left)
         {
@@ -297,7 +305,6 @@ public class GameManager : MonoBehaviour
     public GameObject juiceKnifeObj;
 
     public GameObject dessertBlenderObj;
-    public GameObject dessertKnifeObj;
     public List<GameObject> coleffMachineTubes;
     
     
@@ -585,17 +592,8 @@ public class GameManager : MonoBehaviour
                 new List<FoodProcessor>(){coleffProc1, coleffProc2},
                 5);
         }
-        
-        new FoodProcessor(dessertKnifeObj,
-            new List<IngredientAttr> {IngredientAttr.CAKE,IngredientAttr.LUAHH},
-            new List<IngredientAttr> {IngredientAttr.LUAHH},
-            new List<IngredientAttr> {IngredientAttr.HEFTT},
-            new List<IngredientAttr>(),
-            1,
-            new List<FoodProcessor>(),
-            0);
-        
-        
+
+
         currOrders = new List<Order>();
         
 
@@ -659,7 +657,8 @@ public class GameManager : MonoBehaviour
             cursorMode);
         
         _playingTime = Time.time - _initialPlayingTime;
-        if(GameGlobals.IsTraining && _playingTime >= GameGlobals.GameConfigs.TrainingTimeMinutes*60.0f ||
+        if(GameGlobals.IsTraining && !GameGlobals.IsTutorial &&
+           _playingTime >= GameGlobals.GameConfigs.TrainingTimeMinutes*60.0f ||
            !GameGlobals.IsTraining && currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders ||
            !GameGlobals.IsTraining && _playingTime > GameGlobals.GameConfigs.MAXSurvivalTimeMinutes*60.0f)
         { 

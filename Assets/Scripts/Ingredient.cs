@@ -19,12 +19,14 @@ public class IngredientObjectEvents :
 {
     public Ingredient logic;
     public bool isBeingHeld;
+    public bool isLocked;
     public Camera cam;
     private LineRenderer _lineRenderer;
 
     public void Start()
     {
         isBeingHeld = false;
+        isLocked = false;
     }
 
     public void OnPointerDown(PointerEventData pointerEventData)
@@ -58,7 +60,7 @@ public class IngredientObjectEvents :
 
     public void FixedUpdate()
     {
-        if (isBeingHeld)
+        if (!isLocked && isBeingHeld)
         {
             Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
             RaycastHit hit;
@@ -168,6 +170,17 @@ public class Ingredient
         events.cam = Cam;
         events.isBeingHeld = false;
         events.logic = this;
+    }
+
+
+    public void Lock()
+    {
+        GameObject.GetComponent<IngredientObjectEvents>().isLocked = true;
+    }
+
+    public void Unlock()
+    {
+        GameObject.GetComponent<IngredientObjectEvents>().isLocked = false;
     }
 
 }

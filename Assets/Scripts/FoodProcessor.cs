@@ -273,11 +273,14 @@ public class FoodProcessor
                 {
                     _animator.Play("Process");
                 }
+
+                IngredientInProcess.Lock();
                 yield return (GameObject.GetComponent<MonoBehaviour>()
                     .StartCoroutine(
                         IngredientInProcess.Process(ProcessingDelay,
                             InputAttrs, OutputAttrs)
                     ));
+                IngredientInProcess.Unlock();
                 
                 if (AddedUtencils.Count > 0)
                 {

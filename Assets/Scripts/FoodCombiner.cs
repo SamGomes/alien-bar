@@ -16,6 +16,7 @@ public class FoodCombinerObjectEvents :
 
     private ParticleSystem _particleSystem;
     private AudioSource _sound;
+
     
     public void Start()
     {
@@ -54,7 +55,8 @@ public class FoodCombinerObjectEvents :
 
             foreach (var ing in logic.IngredientsToCombine)
             {
-                Destroy(ing.gameObject);
+                if(ing != null)
+                    Destroy(ing.gameObject);
             }
             logic.IngredientsToCombine.Clear();
         }
