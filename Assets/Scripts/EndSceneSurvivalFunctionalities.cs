@@ -8,8 +8,7 @@ using UnityEngine.UI;
 
 public class EndSceneSurvivalFunctionalities: MonoBehaviour
 {
-    public TextMeshProUGUI scoreDisplay;
-    public TextMeshProUGUI trainingTimeDisplay;
+    public TextMeshProUGUI resultsDisplay;
     
     public GameObject thankYouObj;
     public GameObject engQuestionnaire;
@@ -20,8 +19,17 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
     
     public void Start()
     {
-        scoreDisplay.text = "Final Score: "+ GameGlobals.Score;
-        trainingTimeDisplay.text = "Training Time (s): "+ Math.Round(GameGlobals.PlayingTime, 3);
+        resultsDisplay.text = "Final Score: " +
+                              GameGlobals.Score;
+        
+        resultsDisplay.text += "\nDelivered Orders: " +
+                               JsonConvert.SerializeObject(GameGlobals.NumDeliveredOrdersByLevel) +
+                               "\n";
+        resultsDisplay.text += "Failed Orders: " +
+                               JsonConvert.SerializeObject(GameGlobals.NumFailedOrdersByLevel) +
+                               "\n"; 
+        
+        resultsDisplay.text += "Training Time (s): "+ Math.Round(GameGlobals.PlayingTime, 3);
         
         engQuestionsSliders = engQuestionnaire.GetComponentsInChildren<Slider>();
         engQuestions = GameObject.FindGameObjectsWithTag("Question");

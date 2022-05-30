@@ -35,17 +35,6 @@
         </e>
         <e p="StreamingAssets" t="Include">
           <e p="Results" t="Include">
-            <e p="AlienBarExperiment" t="Include">
-              <e p="DeliveriesLog" t="Include">
-                <e p="TUTORIAL" t="Include">
-                  <e p="xcvx_vxdvdx.json" t="Include" />
-                </e>
-              </e>
-              <e p="TrainingAttempts" t="Include">
-                <e p="GameId_PlayerId.json" t="Include" />
-                <e p="s_c.json" t="Include" />
-              </e>
-            </e>
             <e p="GroupResults" t="Include">
               <e p="OthersResults" t="Include">
                 <e p="s2 - Copy (2).txt" t="Include" />

@@ -57,7 +57,7 @@ public static class GameGlobals
     public static GameMode CurrGameMode; //0 - tutorial; 1 - training; 2 - survival
     
     public static string PlayerId;
-    public static string GameId;
+    public static string ExperimentId;
     
     public static int AttemptId;
     public static float PlayingTime;
@@ -86,7 +86,7 @@ public class StartSceneFunctionalities: MonoBehaviour
     public Slider trainingLevelInput;
     
     public TMP_InputField playerIdInput;
-    public TMP_InputField gameIdInput;
+    public TMP_InputField experimentIdInput;
     public Button tutorialButton;
     public Button trainingButton;
     public Button survivalButton;
@@ -111,9 +111,9 @@ public class StartSceneFunctionalities: MonoBehaviour
         GameGlobals.CurrGameMode = GameMode.TUTORIAL;
         
 
-        if (GameGlobals.GameId != "")
+        if (GameGlobals.ExperimentId != "")
         {
-            gameIdInput.text = GameGlobals.GameId;
+            experimentIdInput.text = GameGlobals.ExperimentId;
         }
         if (GameGlobals.PlayerId != "")
         {
@@ -129,18 +129,18 @@ public class StartSceneFunctionalities: MonoBehaviour
         tutorialButton.interactable = !GameGlobals.hasPlayedTutorial;
         tutorialButton.onClick.AddListener(() =>
         {
-            if (gameIdInput.text != "" && playerIdInput.text != "")
+            if (experimentIdInput.text != "" && playerIdInput.text != "")
             {
                 GameGlobals.PlayerId = playerIdInput.text;
-                GameGlobals.GameId = gameIdInput.text;
+                GameGlobals.ExperimentId = experimentIdInput.text;
                 GameGlobals.AttemptId = 0;
 
                 GameGlobals.CurrGameMode = GameMode.TUTORIAL;
                 SceneManager.LoadScene("MainScene");
             }else
             {
-                gameIdInput.transform.
-                    GetChild(0).gameObject.SetActive(gameIdInput.text == "");
+                experimentIdInput.transform.
+                    GetChild(0).gameObject.SetActive(experimentIdInput.text == "");
                 playerIdInput.transform.
                     GetChild(0).gameObject.SetActive(playerIdInput.text == "");
             }
@@ -150,7 +150,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         trainingButton.interactable = GameGlobals.hasPlayedTutorial && !GameGlobals.hasPlayedTraining;
         trainingButton.onClick.AddListener(() =>
         {
-            if (gameIdInput.text != "" && playerIdInput.text != "")
+            if (experimentIdInput.text != "" && playerIdInput.text != "")
             {
                 GameGlobals.AttemptId++;
                 
@@ -164,21 +164,21 @@ public class StartSceneFunctionalities: MonoBehaviour
                 }
             }else
             {
-                gameIdInput.transform.
-                    GetChild(0).gameObject.SetActive(gameIdInput.text == "");
+                experimentIdInput.transform.
+                    GetChild(0).gameObject.SetActive(experimentIdInput.text == "");
                 playerIdInput.transform.
                     GetChild(0).gameObject.SetActive(playerIdInput.text == "");
             }
         });
         
         
-        survivalButton.interactable = GameGlobals.hasPlayedTutorial;
+        survivalButton.interactable = GameGlobals.hasPlayedTraining;
         survivalButton.onClick.AddListener(() =>
         {
-            if (gameIdInput.text != "" && playerIdInput.text != "")
+            if (experimentIdInput.text != "" && playerIdInput.text != "")
             {
                 GameGlobals.PlayerId = playerIdInput.text;
-                GameGlobals.GameId = gameIdInput.text;
+                GameGlobals.ExperimentId = experimentIdInput.text;
                 GameGlobals.AttemptId = 0;
                 
                 GameGlobals.CurrGameMode = GameMode.SURVIVAL;
@@ -186,8 +186,8 @@ public class StartSceneFunctionalities: MonoBehaviour
             }
             else
             {
-                gameIdInput.transform.
-                    GetChild(0).gameObject.SetActive(gameIdInput.text == "");
+                experimentIdInput.transform.
+                    GetChild(0).gameObject.SetActive(experimentIdInput.text == "");
                 playerIdInput.transform.
                     GetChild(0).gameObject.SetActive(playerIdInput.text == "");
             }

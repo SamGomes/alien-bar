@@ -853,7 +853,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter Player Email
+  m_text: Player Email
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2060,7 +2060,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trainingLevelInput: {fileID: 846432449}
   playerIdInput: {fileID: 1059986872}
-  gameIdInput: {fileID: 1951088303}
+  experimentIdInput: {fileID: 1951088303}
   tutorialButton: {fileID: 1194751587}
   trainingButton: {fileID: 991541663}
   survivalButton: {fileID: 1883321007}
@@ -4940,7 +4940,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enter Game Id
+  m_text: Experiment  Id
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

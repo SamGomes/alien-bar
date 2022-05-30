@@ -38,11 +38,11 @@ public abstract class LogManager
 
             if (isHeader)
             {
-                result += " " + key;
+                result += key;
             }
             else
             {
-                result += " "+ dict[key];
+                result += dict[key];
             }
             if(keyI < dictKeys.Count - 1)
             {

@@ -278,7 +278,7 @@ public class DeliveryBoardEvents :
                 //log deliveries
                 Dictionary<string, string> logEntry = new Dictionary<string, string>()
                 {
-                    {"GameId", GameGlobals.GameId},
+                    {"ExperimentId", GameGlobals.ExperimentId},
                     {"PlayerId", GameGlobals.PlayerId},
                     {"GameMode", GameGlobals.CurrGameMode.ToString()},
                     {"AttemptId", GameGlobals.AttemptId.ToString()},
@@ -293,7 +293,7 @@ public class DeliveryBoardEvents :
                 };
                 StartCoroutine(GameGlobals.LogManager.WriteToLog(
                     "AlienBarExperiment/DeliveriesLog/"+GameGlobals.CurrGameMode,
-                GameGlobals.GameId + "_" + GameGlobals.PlayerId, logEntry));
+                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
                 
                 
                 //prepare for logging results
@@ -318,7 +318,7 @@ public class DeliveryBoardEvents :
             //log deliveries
             Dictionary<string, string> logEntry = new Dictionary<string, string>()
             {
-                {"GameId", GameGlobals.GameId},
+                {"GameId", GameGlobals.ExperimentId},
                 {"PlayerId", GameGlobals.PlayerId},
                 {"GameMode", GameGlobals.CurrGameMode.ToString()},
                 {"AttemptId", GameGlobals.AttemptId.ToString()},
@@ -333,7 +333,7 @@ public class DeliveryBoardEvents :
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog(
                 "AlienBarExperiment/DeliveriesLog/" + GameGlobals.CurrGameMode + "/",
-                GameGlobals.GameId + "_" + GameGlobals.PlayerId, logEntry));
+                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
 
             //prepare for logging results
             GameGlobals.NumFailedOrdersByLevel[GameGlobals.GameConfigs.OrderDifficulty - 1]++;

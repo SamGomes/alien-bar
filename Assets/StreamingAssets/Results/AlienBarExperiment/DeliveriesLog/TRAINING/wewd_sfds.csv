@@ -1,0 +1,5 @@
+GameId,PlayerId,GameMode,AttemptId,OrderDifficulty,NumLvl1Recipes,NumLvl2Recipes,NumLvl3Recipes,NumLvl4Recipes,NumLvl5Recipes,WasDelivered,PlayingTime
+wewd,sfds,TRAINING,1,2,-1,-1,-1,-1,-1,NO,5.199108
+wewd,sfds,TRAINING,1,2,-1,-1,-1,-1,-1,NO,6.740059
+wewd,sfds,TRAINING,1,2,-1,-1,-1,-1,-1,NO,7.717594
+wewd,sfds,TRAINING,1,2,-1,-1,-1,-1,-1,NO,8.550705
