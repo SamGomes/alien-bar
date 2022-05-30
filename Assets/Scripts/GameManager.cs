@@ -376,7 +376,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GenerateOrder()
     {
-        if (GameGlobals.IsTraining && currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
+        if ((GameGlobals.IsTutorial || GameGlobals.IsTraining) && currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
         {
             yield return new WaitForSeconds(repeatRate);
             StartCoroutine(GenerateOrder());
@@ -518,7 +518,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _initialPlayingTime = Time.time;
+        
         if (GameGlobals.GameConfigs == null)
         {
             MockedStartScene();
@@ -527,14 +527,18 @@ public class GameManager : MonoBehaviour
         GameGlobals.gameManager = this;
         cursorOverlapBuffer.Add(cursorTextureFinger);
         
-        resetButton.gameObject.SetActive(GameGlobals.IsTutorial);
+        resetButton.gameObject.SetActive(GameGlobals.IsTraining);
 //        quitButton.gameObject.SetActive(GameGlobals.HasControls);
-        if (GameGlobals.IsTutorial)
+        if (GameGlobals.IsTraining)
         {
             resetButton.onClick.AddListener(delegate
             {
                 QuitMainScene();
             });
+        }
+        else
+        {
+            _initialPlayingTime = Time.time;
         }
 
         new FoodProcessor(juiceBlenderObj,
@@ -611,12 +615,12 @@ public class GameManager : MonoBehaviour
         
         InitFruitSectionSpawners();
 
-        repeatRate = (GameGlobals.IsTraining) ? 0.25f: GameGlobals.GameConfigs.MAXOrderTime;
+        repeatRate = (GameGlobals.IsTutorial || GameGlobals.IsTraining) ? 0.25f: GameGlobals.GameConfigs.MAXOrderTime;
         
         StartCoroutine(GenerateOrder()); //Random.Range(gameConfig.MINOrderTime, gameConfig.MAXOrderTime));
         
         //increase difficulty on survival
-        if (!GameGlobals.IsTraining)
+        if (!GameGlobals.IsTutorial && !GameGlobals.IsTraining)
         {
             StartCoroutine(IncreaseOrderDifficulty());
         }
@@ -641,7 +645,7 @@ public class GameManager : MonoBehaviour
         GameGlobals.PlayingTime = _playingTime;
         GameGlobals.Score = float.Parse(scoreValueObj.text);
             
-        if (GameGlobals.IsTraining)
+        if (GameGlobals.IsTutorial || GameGlobals.IsTraining)
         {
             SceneManager.LoadScene("EndSceneTraining");
         }
@@ -657,10 +661,24 @@ public class GameManager : MonoBehaviour
             cursorMode);
         
         _playingTime = Time.time - _initialPlayingTime;
-        if(GameGlobals.IsTraining && !GameGlobals.IsTutorial &&
-           _playingTime >= GameGlobals.GameConfigs.TrainingTimeMinutes*60.0f ||
-           !GameGlobals.IsTraining && currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders ||
-           !GameGlobals.IsTraining && _playingTime > GameGlobals.GameConfigs.MAXSurvivalTimeMinutes*60.0f)
+       
+        if (GameGlobals.IsTutorial &&
+            _playingTime >= GameGlobals.GameConfigs.TutorialTimeMinutes * 60.0f)
+        {
+            GameGlobals.hasPlayedTutorial = true;
+            QuitMainScene();
+        }
+        
+        if (GameGlobals.IsTraining &&
+                  _playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
+        {
+            GameGlobals.hasPlayedTraining = true;
+            QuitMainScene();
+        }
+        
+        if(
+           !(GameGlobals.IsTutorial || GameGlobals.IsTraining) && currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders ||
+           !(GameGlobals.IsTutorial || GameGlobals.IsTraining) && _playingTime > GameGlobals.GameConfigs.MAXSurvivalTimeMinutes*60.0f)
         { 
             QuitMainScene();
         }

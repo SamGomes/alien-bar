@@ -32,7 +32,8 @@ public class GameConfigurations
     public float MAXOrderTime;
     public int MAXPendingOrders;
  
-    public float TrainingTimeMinutes;
+    public float TutorialTimeMinutes;
+    public float MAXTrainingTimeMinutes;
     public float MAXSurvivalTimeMinutes;
     
     public int SurvivalIncreaseDifficultyDelay;
@@ -107,12 +108,13 @@ public class StartSceneFunctionalities: MonoBehaviour
         tutorialButton.onClick.AddListener(() =>
         {
             GameGlobals.PlayerId = playerIdInput.text;
-            GameGlobals.IsTraining = true;
+            GameGlobals.IsTraining = false;
+            GameGlobals.IsTutorial = true;
             SceneManager.LoadScene("MainScene");
         });
         
         
-        trainingButton.interactable = GameGlobals.hasPlayedTutorial;
+        trainingButton.interactable = GameGlobals.hasPlayedTutorial && !GameGlobals.hasPlayedTraining;
         trainingButton.onClick.AddListener(() =>
         {
             if (gameIdInput.text != "")
@@ -120,7 +122,7 @@ public class StartSceneFunctionalities: MonoBehaviour
                 GameGlobals.GameConfigs.OrderDifficulty = (int) trainingLevelInput.value;
                 GameGlobals.GameId = gameIdInput.text;
                 GameGlobals.IsTraining = true;
-                GameGlobals.IsTutorial = true;
+                GameGlobals.IsTutorial = false;
                 SceneManager.LoadScene("MainScene");
             }else
             {
