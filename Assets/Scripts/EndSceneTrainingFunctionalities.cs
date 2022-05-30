@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using TMPro;
@@ -13,32 +14,35 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
     public Button restartButton;
     public void Start()
     {
-        scoreDisplay.text = "Final Score: "+ 
-                            GameGlobals.Score + " ( "+GameGlobals.NumDeliveredOrdersByLevel+" delivered orders)";
+        scoreDisplay.text = "Final Score: " +
+                            GameGlobals.Score;
+        if (GameGlobals.CurrGameMode == GameMode.TUTORIAL)
+        {
+            scoreDisplay.text += "\nDelivered Orders: " +
+                                 JsonConvert.SerializeObject(GameGlobals.NumDeliveredOrdersByLevel) +
+                                 "\n";
+            scoreDisplay.text += "Failed Orders: " +
+                                 JsonConvert.SerializeObject(GameGlobals.NumFailedOrdersByLevel); 
+        }
+
         trainingTimeDisplay.text = "Training Time (s): "+ Math.Round(GameGlobals.PlayingTime, 3);
 
-        if (GameGlobals.IsTraining)
+        if (GameGlobals.CurrGameMode == GameMode.TRAINING)
         {
-            string path = Application.streamingAssetsPath 
-                          + "/Results/AlienBarExperiment/TrainingAttempts/"
-                          + GameGlobals.GameId + ".csv";
-
-            string attemptEntry = "";
-            if (!File.Exists(path))
+            Dictionary<string, string> logEntry = new Dictionary<string, string>()
             {
-                StreamWriter writer = new StreamWriter(path, true);
-                attemptEntry = "\"Lvl\";\"FinalScore\";\"NumDeliveredOrders\";\"TimeSpent\"";
-                writer.WriteLine(attemptEntry);
-                writer.Close();
-            }
-            
-            StreamWriter secondWriter = new StreamWriter(path, true);
-            attemptEntry = GameGlobals.GameConfigs.OrderDifficulty +
-                           ";"+GameGlobals.Score +
-                           ";"+GameGlobals.NumDeliveredOrdersByLevel +
-                           ";"+GameGlobals.PlayingTime;
-            secondWriter.WriteLine(attemptEntry);
-            secondWriter.Close();
+                {"GameId", GameGlobals.GameId},
+                {"PlayerId", GameGlobals.PlayerId},
+                {"GameMode", GameGlobals.CurrGameMode.ToString()},
+                {"AttemptId", GameGlobals.AttemptId.ToString()},
+                {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                {"Score", GameGlobals.Score.ToString()},
+                {"NumDeliveredOrdersByLevel", JsonConvert.SerializeObject(GameGlobals.NumDeliveredOrdersByLevel)},
+                {"NumFailedOrdersByLevel", JsonConvert.SerializeObject(GameGlobals.NumFailedOrdersByLevel)},
+                {"PlayingTime", GameGlobals.PlayingTime.ToString()}
+            };
+            StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/TrainingAttempts",
+                GameGlobals.GameId + "_" + GameGlobals.PlayerId, logEntry));
         }
 
         restartButton.onClick.AddListener(() => {

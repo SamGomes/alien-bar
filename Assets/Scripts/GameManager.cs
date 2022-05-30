@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -247,8 +248,6 @@ public class DeliveryBoardEvents :
                 Destroy(order.GameObject);
 
                 ordersToRemove.Add(order);
-
-                GameGlobals.NumDeliveredOrdersByLevel[order.Level-1]++;
             }
         }
     
@@ -262,6 +261,45 @@ public class DeliveryBoardEvents :
             gm.orderValidScreen
                 .GetComponent<Animator>().Play("Warn");
             gm.orderDeliveredSound.Play();
+            
+            
+            
+            //-------------- log stuff ------------------------
+            foreach(Order order in ordersToRemove)
+            {
+                
+                
+                List<int> numRecipesByLevel = new List<int>(){0,0,0,0,0};
+                foreach (Recipe recipe in order.Recipes)
+                {
+                    numRecipesByLevel[recipe.Level - 1]++;
+                }
+                
+                //log deliveries
+                Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                {
+                    {"GameId", GameGlobals.GameId},
+                    {"PlayerId", GameGlobals.PlayerId},
+                    {"GameMode", GameGlobals.CurrGameMode.ToString()},
+                    {"AttemptId", GameGlobals.AttemptId.ToString()},
+                    {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                    {"NumLvl1Recipes", numRecipesByLevel[0].ToString()},
+                    {"NumLvl2Recipes", numRecipesByLevel[1].ToString()},
+                    {"NumLvl3Recipes", numRecipesByLevel[2].ToString()},
+                    {"NumLvl4Recipes", numRecipesByLevel[3].ToString()},
+                    {"NumLvl5Recipes", numRecipesByLevel[4].ToString()},
+                    {"WasDelivered","YES"},
+                    {"PlayingTime", GameGlobals.PlayingTime.ToString()}
+                };
+                StartCoroutine(GameGlobals.LogManager.WriteToLog(
+                    "AlienBarExperiment/DeliveriesLog/"+GameGlobals.CurrGameMode,
+                GameGlobals.GameId + "_" + GameGlobals.PlayerId, logEntry));
+                
+                
+                //prepare for logging results
+                GameGlobals.NumDeliveredOrdersByLevel[GameGlobals.GameConfigs.OrderDifficulty - 1]++;
+            }
+            
         }
         else if(_recipes.Count > 0)
         {
@@ -271,6 +309,35 @@ public class DeliveryBoardEvents :
             gm.orderNotFoundScreen
                 .GetComponent<Animator>().Play("Warn");
             gm.orderNotFoundSound.Play();
+            
+            
+            
+            //-------------- log stuff ------------------------
+            
+            
+            //log deliveries
+            Dictionary<string, string> logEntry = new Dictionary<string, string>()
+            {
+                {"GameId", GameGlobals.GameId},
+                {"PlayerId", GameGlobals.PlayerId},
+                {"GameMode", GameGlobals.CurrGameMode.ToString()},
+                {"AttemptId", GameGlobals.AttemptId.ToString()},
+                {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                {"NumLvl1Recipes", "-1"},
+                {"NumLvl2Recipes", "-1"},
+                {"NumLvl3Recipes", "-1"},
+                {"NumLvl4Recipes", "-1"},
+                {"NumLvl5Recipes", "-1"},
+                {"WasDelivered", "NO"},
+                {"PlayingTime", GameGlobals.PlayingTime.ToString()}
+            };
+            StartCoroutine(GameGlobals.LogManager.WriteToLog(
+                "AlienBarExperiment/DeliveriesLog/" + GameGlobals.CurrGameMode + "/",
+                GameGlobals.GameId + "_" + GameGlobals.PlayerId, logEntry));
+
+            //prepare for logging results
+            GameGlobals.NumFailedOrdersByLevel[GameGlobals.GameConfigs.OrderDifficulty - 1]++;
+            
             
         }
         
@@ -324,7 +391,6 @@ public class GameManager : MonoBehaviour
     public Button resetButton;
 //    public Button quitButton;
 
-    private float _playingTime;
     public float _initialPlayingTime;
 
 
@@ -377,7 +443,9 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GenerateOrder()
     {
-        if ((GameGlobals.IsTutorial || GameGlobals.IsTraining) && currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
+        if ((GameGlobals.CurrGameMode == GameMode.TUTORIAL || 
+             GameGlobals.CurrGameMode == GameMode.TRAINING) 
+            && currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
         {
             yield return new WaitForSeconds(repeatRate);
             StartCoroutine(GenerateOrder());
@@ -399,8 +467,8 @@ public class GameManager : MonoBehaviour
             newOrder.PrintOrder(orderPrefab, cam, 
                 orderContainer.transform.GetChild(0).gameObject);
 
-            //decrement repeatRate on survival
-            if (!GameGlobals.IsTraining)
+            //dynamically change repeatRate on survival
+            if (GameGlobals.CurrGameMode == GameMode.SURVIVAL)
             {
                 repeatRate =
                     (repeatRate > GameGlobals.GameConfigs.MINOrderTime) ? 
@@ -512,15 +580,16 @@ public class GameManager : MonoBehaviour
             JsonConvert.DeserializeObject<GameConfigurations>(json);
         reader.Close();
         
-        GameGlobals.IsTraining = true;
+        GameGlobals.CurrGameMode = GameMode.TRAINING;
     }
     
 
     // Start is called before the first frame update
     void Start()
     {
-        GameGlobals.NumDeliveredOrdersByLevel = new List<int>(5);
-        
+        GameGlobals.NumDeliveredOrdersByLevel = new List<int>{ 0,0,0,0,0 };
+        GameGlobals.NumFailedOrdersByLevel = new List<int>{ 0,0,0,0,0 };
+
         cursorOverlapBuffer.Clear();
         Cursor.visible = true;
         
@@ -532,9 +601,9 @@ public class GameManager : MonoBehaviour
         GameGlobals.gameManager = this;
         cursorOverlapBuffer.Add(cursorTextureFinger);
         
-        resetButton.gameObject.SetActive(GameGlobals.IsTraining);
+        resetButton.gameObject.SetActive(GameGlobals.CurrGameMode == GameMode.TRAINING);
 //        quitButton.gameObject.SetActive(GameGlobals.HasControls);
-        if (GameGlobals.IsTraining)
+        if (GameGlobals.CurrGameMode == GameMode.TRAINING)
         {
             resetButton.onClick.AddListener(delegate
             {
@@ -621,12 +690,13 @@ public class GameManager : MonoBehaviour
         
         InitFruitSectionSpawners();
 
-        repeatRate = (GameGlobals.IsTutorial || GameGlobals.IsTraining) ? 0.25f: GameGlobals.GameConfigs.MAXOrderTime;
+        repeatRate = (GameGlobals.CurrGameMode == GameMode.SURVIVAL) ? 
+            GameGlobals.GameConfigs.MAXOrderTime: 0.25f;
         
         StartCoroutine(GenerateOrder()); //Random.Range(gameConfig.MINOrderTime, gameConfig.MAXOrderTime));
         
         //increase difficulty on survival
-        if (!GameGlobals.IsTutorial && !GameGlobals.IsTraining)
+        if (GameGlobals.CurrGameMode == GameMode.SURVIVAL)
         {
             StartCoroutine(IncreaseOrderDifficulty());
         }
@@ -649,46 +719,48 @@ public class GameManager : MonoBehaviour
     public void QuitMainScene()
     {
         cursorOverlapBuffer.Clear();
-        Cursor.visible = false;
+        Cursor.SetCursor(null, cursorHotSpot, cursorMode);
         
-        GameGlobals.PlayingTime = _playingTime;
         GameGlobals.Score = float.Parse(scoreValueObj.text);
         
-            
-        if (GameGlobals.IsTutorial || GameGlobals.IsTraining)
-        {
-            SceneManager.LoadScene("EndSceneTraining");
-        }
-        else
+        if (GameGlobals.CurrGameMode == GameMode.SURVIVAL)
         {
             SceneManager.LoadScene("EndSceneSurvival");
         }
+        else
+        {
+            SceneManager.LoadScene("EndSceneTraining");
+        }
     }
+
     public void Update()
     {
-        Cursor.SetCursor(cursorOverlapBuffer[cursorOverlapBuffer.Count - 1],
-            cursorHotSpot,
-            cursorMode);
-        
-        _playingTime = Time.time - _initialPlayingTime;
+        if (cursorOverlapBuffer.Count > 0)
+        {
+            Cursor.SetCursor(cursorOverlapBuffer[cursorOverlapBuffer.Count - 1],
+                cursorHotSpot,
+                cursorMode);
+        }
+
+        GameGlobals.PlayingTime = Time.time - _initialPlayingTime;
        
-        if (GameGlobals.IsTutorial &&
-            _playingTime >= GameGlobals.GameConfigs.TutorialTimeMinutes * 60.0f)
+        if (GameGlobals.CurrGameMode == GameMode.TUTORIAL &&
+            GameGlobals.PlayingTime >= GameGlobals.GameConfigs.TutorialTimeMinutes * 60.0f)
         {
             GameGlobals.hasPlayedTutorial = true;
             QuitMainScene();
         }
         
-        if (GameGlobals.IsTraining &&
-                  _playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
+        if (GameGlobals.CurrGameMode == GameMode.TRAINING &&
+            GameGlobals.PlayingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
         {
             GameGlobals.hasPlayedTraining = true;
             QuitMainScene();
         }
         
         if(
-           !(GameGlobals.IsTutorial || GameGlobals.IsTraining) && currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders ||
-           !(GameGlobals.IsTutorial || GameGlobals.IsTraining) && _playingTime > GameGlobals.GameConfigs.MAXSurvivalTimeMinutes*60.0f)
+            GameGlobals.CurrGameMode == GameMode.SURVIVAL && currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders ||
+            GameGlobals.CurrGameMode == GameMode.SURVIVAL && GameGlobals.PlayingTime > GameGlobals.GameConfigs.MAXSurvivalTimeMinutes*60.0f)
         { 
             QuitMainScene();
         }

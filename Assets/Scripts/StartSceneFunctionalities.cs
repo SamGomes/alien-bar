@@ -43,16 +43,27 @@ public class GameConfigurations
     public List<List<Recipe>> OrderRecipesByLevel;
 }
 
+public enum GameMode{
+    TUTORIAL = 0,
+    TRAINING = 1,
+    SURVIVAL = 2
+}
+
 
 public static class GameGlobals
 {
-    public static bool IsTraining;
-    public static float PlayingTime;
-    public static bool IsTutorial;
+    public static LogManager LogManager = new FileLogManager();
+    
+    public static GameMode CurrGameMode; //0 - tutorial; 1 - training; 2 - survival
+    
     public static string PlayerId;
     public static string GameId;
+    
+    public static int AttemptId;
+    public static float PlayingTime;
     public static float Score;
     public static List<int> NumDeliveredOrdersByLevel;
+    public static List<int> NumFailedOrdersByLevel;
     
     public static GameConfigurations GameConfigs;
     public static GameManager gameManager;
@@ -97,12 +108,16 @@ public class StartSceneFunctionalities: MonoBehaviour
         survivalButton.gameObject.AddComponent<ButtonObjectEvents>();
         exitButton.gameObject.AddComponent<ButtonObjectEvents>();
 
-        GameGlobals.IsTutorial = false;
+        GameGlobals.CurrGameMode = GameMode.TUTORIAL;
         
 
         if (GameGlobals.GameId != "")
         {
             gameIdInput.text = GameGlobals.GameId;
+        }
+        if (GameGlobals.PlayerId != "")
+        {
+            playerIdInput.text = GameGlobals.PlayerId;
         }
 
         exitButton.interactable = false;
@@ -114,22 +129,33 @@ public class StartSceneFunctionalities: MonoBehaviour
         tutorialButton.interactable = !GameGlobals.hasPlayedTutorial;
         tutorialButton.onClick.AddListener(() =>
         {
-            GameGlobals.PlayerId = playerIdInput.text;
-            GameGlobals.IsTraining = false;
-            GameGlobals.IsTutorial = true;
-            SceneManager.LoadScene("MainScene");
+            if (gameIdInput.text != "" && playerIdInput.text != "")
+            {
+                GameGlobals.PlayerId = playerIdInput.text;
+                GameGlobals.GameId = gameIdInput.text;
+                GameGlobals.AttemptId = 0;
+
+                GameGlobals.CurrGameMode = GameMode.TUTORIAL;
+                SceneManager.LoadScene("MainScene");
+            }else
+            {
+                gameIdInput.transform.
+                    GetChild(0).gameObject.SetActive(gameIdInput.text == "");
+                playerIdInput.transform.
+                    GetChild(0).gameObject.SetActive(playerIdInput.text == "");
+            }
         });
         
         
         trainingButton.interactable = GameGlobals.hasPlayedTutorial && !GameGlobals.hasPlayedTraining;
         trainingButton.onClick.AddListener(() =>
         {
-            if (gameIdInput.text != "")
+            if (gameIdInput.text != "" && playerIdInput.text != "")
             {
+                GameGlobals.AttemptId++;
+                
                 GameGlobals.GameConfigs.OrderDifficulty = (int) trainingLevelInput.value;
-                GameGlobals.GameId = gameIdInput.text;
-                GameGlobals.IsTraining = true;
-                GameGlobals.IsTutorial = false;
+                GameGlobals.CurrGameMode = GameMode.TRAINING;
                 SceneManager.LoadScene("MainScene");
 
                 if (GameGlobals.initialTrainingTime < 0)
@@ -139,25 +165,32 @@ public class StartSceneFunctionalities: MonoBehaviour
             }else
             {
                 gameIdInput.transform.
-                    GetChild(0).gameObject.SetActive(true);
+                    GetChild(0).gameObject.SetActive(gameIdInput.text == "");
+                playerIdInput.transform.
+                    GetChild(0).gameObject.SetActive(playerIdInput.text == "");
             }
         });
         
         
-//        survivalButton.interactable = GameGlobals.hasPlayedTraining;
+        survivalButton.interactable = GameGlobals.hasPlayedTutorial;
         survivalButton.onClick.AddListener(() =>
         {
-//            if (playerIdInput.text != "")
-//            {
+            if (gameIdInput.text != "" && playerIdInput.text != "")
+            {
                 GameGlobals.PlayerId = playerIdInput.text;
-                GameGlobals.IsTraining = false;
+                GameGlobals.GameId = gameIdInput.text;
+                GameGlobals.AttemptId = 0;
+                
+                GameGlobals.CurrGameMode = GameMode.SURVIVAL;
                 SceneManager.LoadScene("MainScene");
-//            }
-//            else
-//            {
-//                playerIdInput.transform.
-//                    GetChild(0).gameObject.SetActive(true);
-//            }
+            }
+            else
+            {
+                gameIdInput.transform.
+                    GetChild(0).gameObject.SetActive(gameIdInput.text == "");
+                playerIdInput.transform.
+                    GetChild(0).gameObject.SetActive(playerIdInput.text == "");
+            }
         });
         
         
@@ -165,7 +198,7 @@ public class StartSceneFunctionalities: MonoBehaviour
     public void Update()
     {
         float _playingTime = Time.time - GameGlobals.initialTrainingTime;
-        if (GameGlobals.IsTraining &&
+        if (GameGlobals.CurrGameMode == GameMode.TRAINING &&
             _playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
         {
             GameGlobals.hasPlayedTraining = true;
