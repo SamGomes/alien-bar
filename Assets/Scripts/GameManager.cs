@@ -17,12 +17,12 @@ public class DirectionalButtonEvents : MonoBehaviour
 {
     private void OnMouseEnter()
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureDrag);
+        GameGlobals.GameManager.cursorOverlapBuffer.Add(GameGlobals.GameManager.cursorTextureDrag);
     }
     
     private void OnMouseExit()
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureDrag);
+        GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTextureDrag);
     }
 }
 
@@ -47,11 +47,11 @@ public class TrashBinObjectEvents :
 
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureTrashing);
+        GameGlobals.GameManager.cursorOverlapBuffer.Add(GameGlobals.GameManager.cursorTextureTrashing);
     }
     public void OnPointerExit(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureTrashing);
+        GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTextureTrashing);
     }
     
     
@@ -146,11 +146,11 @@ public class IngredientSpawner :
 
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTexturePicking);
+        GameGlobals.GameManager.cursorOverlapBuffer.Add(GameGlobals.GameManager.cursorTexturePicking);
     }
     public void OnPointerExit(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+        GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTexturePicking);
     }
     
     public void OnPointerClick(PointerEventData pointerEventData)
@@ -197,11 +197,11 @@ public class DeliveryBoardEvents :
 
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureDelivering);
+        GameGlobals.GameManager.cursorOverlapBuffer.Add(GameGlobals.GameManager.cursorTextureDelivering);
     }
     public void OnPointerExit(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureDelivering);
+        GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTextureDelivering);
     }
     
     private void OnTriggerEnter(Collider other)
@@ -225,7 +225,7 @@ public class DeliveryBoardEvents :
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         List<Order> ordersToRemove = new List<Order>();
-        GameManager gm = GameGlobals.gameManager;
+        GameManager gm = GameGlobals.GameManager;
         foreach (Order order in gm.currOrders)
         {
             List<RecipeObjectEvents> validRecipes = 
@@ -598,7 +598,7 @@ public class GameManager : MonoBehaviour
             MockedStartScene();
         }
 
-        GameGlobals.gameManager = this;
+        GameGlobals.GameManager = this;
         cursorOverlapBuffer.Add(cursorTextureFinger);
         
         resetButton.gameObject.SetActive(GameGlobals.CurrGameMode == GameMode.TRAINING);
@@ -609,7 +609,8 @@ public class GameManager : MonoBehaviour
             {
                 QuitMainScene();
             });
-            _initialPlayingTime = GameGlobals.initialTrainingTime;
+            
+            _initialPlayingTime = GameGlobals.InitialTrainingTime;
         }
         else
         {
@@ -747,14 +748,14 @@ public class GameManager : MonoBehaviour
         if (GameGlobals.CurrGameMode == GameMode.TUTORIAL &&
             GameGlobals.PlayingTime >= GameGlobals.GameConfigs.TutorialTimeMinutes * 60.0f)
         {
-            GameGlobals.hasPlayedTutorial = true;
+            GameGlobals.HasPlayedTutorial = true;
             QuitMainScene();
         }
         
         if (GameGlobals.CurrGameMode == GameMode.TRAINING &&
             GameGlobals.PlayingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
         {
-            GameGlobals.hasPlayedTraining = true;
+            GameGlobals.HasPlayedTraining = true;
             QuitMainScene();
         }
         

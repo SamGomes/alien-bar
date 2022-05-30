@@ -1,0 +1,2 @@
+GameId,PlayerId,GameMode,AttemptId,OrderDifficulty,Score,NumDeliveredOrdersByLevel,NumFailedOrdersByLevel,PlayingTime
+sda,weq,TRAINING,1,1,0,[0,0,0,0,0],[0,0,0,0,0],1.652041

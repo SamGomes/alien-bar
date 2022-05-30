@@ -32,11 +32,11 @@ public class FoodCombinerObjectEvents :
     
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureWand);
+        GameGlobals.GameManager.cursorOverlapBuffer.Add(GameGlobals.GameManager.cursorTextureWand);
     }
     public void OnPointerExit(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureWand);
+        GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTextureWand);
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)

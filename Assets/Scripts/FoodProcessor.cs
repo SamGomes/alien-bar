@@ -26,11 +26,11 @@ public class FoodProcessorObjectEvents :
 
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureProcess);
+        GameGlobals.GameManager.cursorOverlapBuffer.Add(GameGlobals.GameManager.cursorTextureProcess);
     }
     public void OnPointerExit(PointerEventData pointerEventData)
     {
-        GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureProcess);
+        GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTextureProcess);
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
@@ -107,7 +107,7 @@ public class FoodProcessorObjectEvents :
                     logic.IngredientInProcess = null;
                 }
                 
-                GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+                GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTexturePicking);
                 if (logic.AddedUtencils.Contains(ing) || !logic.ADDUtensil(ing))
                 {
                     return;
@@ -125,7 +125,7 @@ public class FoodProcessorObjectEvents :
             {
 
                 Ingredient otherIng = ingEvents.logic;
-                GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+                GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTexturePicking);
                 otherIng.GameObject.transform.position = gameObject.transform.position;
             }
         }

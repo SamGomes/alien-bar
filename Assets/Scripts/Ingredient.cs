@@ -34,7 +34,7 @@ public class IngredientObjectEvents :
         //Use this to tell when the user right-clicks on the Button
         if (pointerEventData.button == PointerEventData.InputButton.Left)
         {
-            GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTextureDrag);
+            GameGlobals.GameManager.cursorOverlapBuffer.Add(GameGlobals.GameManager.cursorTextureDrag);
             isBeingHeld = true;
         }
     }
@@ -42,7 +42,7 @@ public class IngredientObjectEvents :
     {
         if (pointerEventData.button == PointerEventData.InputButton.Left)
         {
-            GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTextureDrag);
+            GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTextureDrag);
             isBeingHeld = false;
         }
     }
@@ -50,12 +50,12 @@ public class IngredientObjectEvents :
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
         if(!isBeingHeld)
-            GameGlobals.gameManager.cursorOverlapBuffer.Add(GameGlobals.gameManager.cursorTexturePicking);
+            GameGlobals.GameManager.cursorOverlapBuffer.Add(GameGlobals.GameManager.cursorTexturePicking);
     }
     public void OnPointerExit(PointerEventData pointerEventData)
     {
         if(!isBeingHeld)
-            GameGlobals.gameManager.cursorOverlapBuffer.Remove(GameGlobals.gameManager.cursorTexturePicking);
+            GameGlobals.GameManager.cursorOverlapBuffer.Remove(GameGlobals.GameManager.cursorTexturePicking);
     }
 
     public void FixedUpdate()

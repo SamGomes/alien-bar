@@ -44,6 +44,7 @@ public class GameConfigurations
 }
 
 public enum GameMode{
+    NONE = 3,
     TUTORIAL = 0,
     TRAINING = 1,
     SURVIVAL = 2
@@ -54,7 +55,7 @@ public static class GameGlobals
 {
     public static LogManager LogManager = new FileLogManager();
     
-    public static GameMode CurrGameMode; //0 - tutorial; 1 - training; 2 - survival
+    public static GameMode CurrGameMode = GameMode.NONE; //0 - none; 1 - tutorial; 2 - training; 3 - survival
     
     public static string PlayerId;
     public static string ExperimentId;
@@ -66,15 +67,15 @@ public static class GameGlobals
     public static List<int> NumFailedOrdersByLevel;
     
     public static GameConfigurations GameConfigs;
-    public static GameManager gameManager;
+    public static GameManager GameManager;
     
     
-    public static bool hasPlayedTutorial = false;
-    public static bool hasPlayedTraining = false;
+    public static bool HasPlayedTutorial = false;
+    public static bool HasPlayedTraining = false;
     
     
     
-    public static float initialTrainingTime = -1.0f;
+    public static float InitialTrainingTime = -1.0f;
 }
 
 
@@ -107,8 +108,6 @@ public class StartSceneFunctionalities: MonoBehaviour
         trainingButton.gameObject.AddComponent<ButtonObjectEvents>();
         survivalButton.gameObject.AddComponent<ButtonObjectEvents>();
         exitButton.gameObject.AddComponent<ButtonObjectEvents>();
-
-        GameGlobals.CurrGameMode = GameMode.TUTORIAL;
         
 
         if (GameGlobals.ExperimentId != "")
@@ -126,7 +125,7 @@ public class StartSceneFunctionalities: MonoBehaviour
             Application.Quit();
         });
         
-        tutorialButton.interactable = !GameGlobals.hasPlayedTutorial;
+        tutorialButton.interactable = !GameGlobals.HasPlayedTutorial;
         tutorialButton.onClick.AddListener(() =>
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
@@ -147,21 +146,21 @@ public class StartSceneFunctionalities: MonoBehaviour
         });
         
         
-        trainingButton.interactable = GameGlobals.hasPlayedTutorial && !GameGlobals.hasPlayedTraining;
+        trainingButton.interactable = GameGlobals.HasPlayedTutorial && !GameGlobals.HasPlayedTraining;
         trainingButton.onClick.AddListener(() =>
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
             {
                 GameGlobals.AttemptId++;
-                
                 GameGlobals.GameConfigs.OrderDifficulty = (int) trainingLevelInput.value;
+                
+                if (GameGlobals.InitialTrainingTime < 0)
+                {
+                    GameGlobals.InitialTrainingTime = Time.time;
+                }
+                
                 GameGlobals.CurrGameMode = GameMode.TRAINING;
                 SceneManager.LoadScene("MainScene");
-
-                if (GameGlobals.initialTrainingTime < 0)
-                {
-                    GameGlobals.initialTrainingTime = Time.time;
-                }
             }else
             {
                 experimentIdInput.transform.
@@ -172,7 +171,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         });
         
         
-        survivalButton.interactable = GameGlobals.hasPlayedTraining;
+        survivalButton.interactable = GameGlobals.HasPlayedTraining;
         survivalButton.onClick.AddListener(() =>
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
@@ -197,13 +196,18 @@ public class StartSceneFunctionalities: MonoBehaviour
     }
     public void Update()
     {
-        float _playingTime = Time.time - GameGlobals.initialTrainingTime;
+        if (GameGlobals.InitialTrainingTime < 0)
+        {
+            return;
+        }
+        
+        float _playingTime = Time.time - GameGlobals.InitialTrainingTime;
         if (GameGlobals.CurrGameMode == GameMode.TRAINING &&
             _playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
         {
-            GameGlobals.hasPlayedTraining = true;
-            trainingButton.interactable = GameGlobals.hasPlayedTutorial && !GameGlobals.hasPlayedTraining;
-            survivalButton.interactable = GameGlobals.hasPlayedTraining;
+            GameGlobals.HasPlayedTraining = true;
+            trainingButton.interactable = false;
+            survivalButton.interactable = true;
         }
     }
 }

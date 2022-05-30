@@ -1,0 +1,2 @@
+GameId,PlayerId,GameMode,AttemptId,OrderDifficulty,Score,NumDeliveredOrdersByLevel,NumFailedOrdersByLevel,PlayingTime
+ssa,fdsf,TRAINING,1,1,0,[0,0,0,0,0],[0,0,0,0,0],0.8812571
