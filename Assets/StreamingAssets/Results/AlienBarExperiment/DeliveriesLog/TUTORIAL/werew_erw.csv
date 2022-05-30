@@ -1,0 +1,2 @@
+ExperimentId,PlayerId,GameMode,AttemptId,OrderDifficulty,NumLvl1Recipes,NumLvl2Recipes,NumLvl3Recipes,NumLvl4Recipes,NumLvl5Recipes,WasDelivered,AttemptTime
+werew,erw,TUTORIAL,0,1,1,0,0,0,0,YES,7.482063

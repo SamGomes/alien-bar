@@ -1,0 +1,5 @@
+GameId,PlayerId,GameMode,AttemptId,OrderDifficulty,Score,NumDeliveredOrdersByLevel,NumFailedOrdersByLevel,TimeSpent
+sda,sad,TRAINING,1,1,3000,[6,0,0,0,0],[3,0,0,0,0],52.57282
+sda,sad,TRAINING,2,2,6000,[0,8,0,0,0],[0,2,0,0,0],89.0832
+sda,sad,TRAINING,3,3,1000,[0,0,2,0,0],[0,0,1,0,0],48.77133
+sda,sad,TRAINING,4,4,2500,[0,0,0,4,0],[0,0,0,2,0],138.9041

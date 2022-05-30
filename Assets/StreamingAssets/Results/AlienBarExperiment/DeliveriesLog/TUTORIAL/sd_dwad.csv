@@ -1,0 +1,6 @@
+GameId,PlayerId,GameMode,AttemptId,OrderDifficulty,NumLvl1Recipes,NumLvl2Recipes,NumLvl3Recipes,NumLvl4Recipes,NumLvl5Recipes,WasDelivered,PlayingTime
+sd,dwad,TUTORIAL,0,1,-1,-1,-1,-1,-1,NO,6.970909
+sd,dwad,TUTORIAL,0,1,-1,-1,-1,-1,-1,NO,14.9856
+sd,dwad,TUTORIAL,0,1,1,0,0,0,0,YES,24.96981
+sd,dwad,TUTORIAL,0,1,1,0,0,0,0,YES,33.45474
+sd,dwad,TUTORIAL,0,1,1,0,0,0,0,YES,39.68957

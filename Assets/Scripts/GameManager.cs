@@ -514,7 +514,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (var userIng in userRecipe.IngredientAttrs)
             {
-                bool isEqual = !orderIng.Except(userIng).Any();
+                bool isEqual = (orderIng.Count == userIng.Count) && !orderIng.Except(userIng).Any();
                 if (isEqual)
                 {
                     numValidIngs++;

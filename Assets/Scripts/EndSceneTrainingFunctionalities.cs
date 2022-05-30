@@ -13,7 +13,7 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
     public Button restartButton;
     public void Start()
     {
-        resultsDisplay.text = "Final Score: " +
+        resultsDisplay.text = "Score: " +
                             GameGlobals.Score;
         
         resultsDisplay.text += "\nDelivered Orders: " +
