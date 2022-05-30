@@ -52,12 +52,18 @@ public static class GameGlobals
     public static string PlayerId;
     public static string GameId;
     public static float Score;
+    public static List<int> NumDeliveredOrdersByLevel;
+    
     public static GameConfigurations GameConfigs;
     public static GameManager gameManager;
     
     
     public static bool hasPlayedTutorial = false;
     public static bool hasPlayedTraining = false;
+    
+    
+    
+    public static float initialTrainingTime = -1.0f;
 }
 
 
@@ -99,6 +105,7 @@ public class StartSceneFunctionalities: MonoBehaviour
             gameIdInput.text = GameGlobals.GameId;
         }
 
+        exitButton.interactable = false;
         exitButton.onClick.AddListener(() =>
         {
             Application.Quit();
@@ -124,6 +131,11 @@ public class StartSceneFunctionalities: MonoBehaviour
                 GameGlobals.IsTraining = true;
                 GameGlobals.IsTutorial = false;
                 SceneManager.LoadScene("MainScene");
+
+                if (GameGlobals.initialTrainingTime < 0)
+                {
+                    GameGlobals.initialTrainingTime = Time.time;
+                }
             }else
             {
                 gameIdInput.transform.
@@ -132,7 +144,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         });
         
         
-        survivalButton.interactable = GameGlobals.hasPlayedTraining;
+//        survivalButton.interactable = GameGlobals.hasPlayedTraining;
         survivalButton.onClick.AddListener(() =>
         {
 //            if (playerIdInput.text != "")
@@ -147,5 +159,18 @@ public class StartSceneFunctionalities: MonoBehaviour
 //                    GetChild(0).gameObject.SetActive(true);
 //            }
         });
+        
+        
+    }
+    public void Update()
+    {
+        float _playingTime = Time.time - GameGlobals.initialTrainingTime;
+        if (GameGlobals.IsTraining &&
+            _playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
+        {
+            GameGlobals.hasPlayedTraining = true;
+            trainingButton.interactable = GameGlobals.hasPlayedTutorial && !GameGlobals.hasPlayedTraining;
+            survivalButton.interactable = GameGlobals.hasPlayedTraining;
+        }
     }
 }

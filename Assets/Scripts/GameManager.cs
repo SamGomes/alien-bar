@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -230,6 +229,7 @@ public class DeliveryBoardEvents :
         {
             List<RecipeObjectEvents> validRecipes = 
                 gm.EvaluateOrder(order, _recipes);
+            //check if order is valid
             if (validRecipes.Count == order.Recipes.Count)
             {
                 for (int i=0; i<order.Recipes.Count; i++)
@@ -247,7 +247,8 @@ public class DeliveryBoardEvents :
                 Destroy(order.GameObject);
 
                 ordersToRemove.Add(order);
-                
+
+                GameGlobals.NumDeliveredOrdersByLevel[order.Level-1]++;
             }
         }
     
@@ -324,7 +325,7 @@ public class GameManager : MonoBehaviour
 //    public Button quitButton;
 
     private float _playingTime;
-    private float _initialPlayingTime;
+    public float _initialPlayingTime;
 
 
     public List<Texture2D> cursorOverlapBuffer;
@@ -518,6 +519,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameGlobals.NumDeliveredOrdersByLevel = new List<int>(5);
+        
+        cursorOverlapBuffer.Clear();
+        Cursor.visible = true;
         
         if (GameGlobals.GameConfigs == null)
         {
@@ -535,6 +540,7 @@ public class GameManager : MonoBehaviour
             {
                 QuitMainScene();
             });
+            _initialPlayingTime = GameGlobals.initialTrainingTime;
         }
         else
         {
@@ -642,8 +648,12 @@ public class GameManager : MonoBehaviour
 
     public void QuitMainScene()
     {
+        cursorOverlapBuffer.Clear();
+        Cursor.visible = false;
+        
         GameGlobals.PlayingTime = _playingTime;
         GameGlobals.Score = float.Parse(scoreValueObj.text);
+        
             
         if (GameGlobals.IsTutorial || GameGlobals.IsTraining)
         {

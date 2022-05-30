@@ -13,10 +13,11 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
     public Button restartButton;
     public void Start()
     {
-        scoreDisplay.text = "Final Score: "+ GameGlobals.Score;
+        scoreDisplay.text = "Final Score: "+ 
+                            GameGlobals.Score + " ( "+GameGlobals.NumDeliveredOrdersByLevel+" delivered orders)";
         trainingTimeDisplay.text = "Training Time (s): "+ Math.Round(GameGlobals.PlayingTime, 3);
 
-        if (GameGlobals.IsTutorial)
+        if (GameGlobals.IsTraining)
         {
             string path = Application.streamingAssetsPath 
                           + "/Results/AlienBarExperiment/TrainingAttempts/"
@@ -26,14 +27,15 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
             if (!File.Exists(path))
             {
                 StreamWriter writer = new StreamWriter(path, true);
-                attemptEntry = "\"Lvl\";\"FinalScore\";\"TimeSpent\"";
+                attemptEntry = "\"Lvl\";\"FinalScore\";\"NumDeliveredOrders\";\"TimeSpent\"";
                 writer.WriteLine(attemptEntry);
                 writer.Close();
             }
             
             StreamWriter secondWriter = new StreamWriter(path, true);
-            attemptEntry = GameGlobals.GameConfigs.OrderDifficulty+
-                           ";"+GameGlobals.Score+
+            attemptEntry = GameGlobals.GameConfigs.OrderDifficulty +
+                           ";"+GameGlobals.Score +
+                           ";"+GameGlobals.NumDeliveredOrdersByLevel +
                            ";"+GameGlobals.PlayingTime;
             secondWriter.WriteLine(attemptEntry);
             secondWriter.Close();
