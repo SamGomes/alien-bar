@@ -289,7 +289,7 @@ public class DeliveryBoardEvents :
                     {"NumLvl4Recipes", numRecipesByLevel[3].ToString()},
                     {"NumLvl5Recipes", numRecipesByLevel[4].ToString()},
                     {"WasDelivered","YES"},
-                    {"PlayingTime", GameGlobals.PlayingTime.ToString()}
+                    {"AttemptTime", GameGlobals.GameModeTimeSpent.ToString()}
                 };
                 StartCoroutine(GameGlobals.LogManager.WriteToLog(
                     "AlienBarExperiment/DeliveriesLog/"+GameGlobals.CurrGameMode,
@@ -329,7 +329,7 @@ public class DeliveryBoardEvents :
                 {"NumLvl4Recipes", "-1"},
                 {"NumLvl5Recipes", "-1"},
                 {"WasDelivered", "NO"},
-                {"PlayingTime", GameGlobals.PlayingTime.ToString()}
+                {"PlayingTime", GameGlobals.GameModeTimeSpent.ToString()}
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog(
                 "AlienBarExperiment/DeliveriesLog/" + GameGlobals.CurrGameMode + "/",
@@ -391,7 +391,8 @@ public class GameManager : MonoBehaviour
     public Button resetButton;
 //    public Button quitButton;
 
-    public float _initialPlayingTime;
+    private float _initialGameModeTime;
+    private float _initialSessionTime;
 
 
     public List<Texture2D> cursorOverlapBuffer;
@@ -603,6 +604,8 @@ public class GameManager : MonoBehaviour
         
         resetButton.gameObject.SetActive(GameGlobals.CurrGameMode == GameMode.TRAINING);
 //        quitButton.gameObject.SetActive(GameGlobals.HasControls);
+        
+        float now = Time.time;
         if (GameGlobals.CurrGameMode == GameMode.TRAINING)
         {
             resetButton.onClick.AddListener(delegate
@@ -610,12 +613,13 @@ public class GameManager : MonoBehaviour
                 QuitMainScene();
             });
             
-            _initialPlayingTime = GameGlobals.InitialTrainingTime;
+            _initialGameModeTime = GameGlobals.InitialTrainingTime;
         }
         else
         {
-            _initialPlayingTime = Time.time;
+            _initialGameModeTime = now;
         }
+        _initialSessionTime = now;
 
         new FoodProcessor(juiceBlenderObj,
             new List<IngredientAttr> {IngredientAttr.FRUIT,IngredientAttr.HEFTT},
@@ -724,6 +728,9 @@ public class GameManager : MonoBehaviour
         
         GameGlobals.Score = float.Parse(scoreValueObj.text);
         
+        GameGlobals.SessionTimeSpent = Time.time - _initialSessionTime;
+
+
         if (GameGlobals.CurrGameMode == GameMode.SURVIVAL)
         {
             SceneManager.LoadScene("EndSceneSurvival");
@@ -743,17 +750,17 @@ public class GameManager : MonoBehaviour
                 cursorMode);
         }
 
-        GameGlobals.PlayingTime = Time.time - _initialPlayingTime;
+        GameGlobals.GameModeTimeSpent = Time.time - _initialGameModeTime;
        
         if (GameGlobals.CurrGameMode == GameMode.TUTORIAL &&
-            GameGlobals.PlayingTime >= GameGlobals.GameConfigs.TutorialTimeMinutes * 60.0f)
+            GameGlobals.GameModeTimeSpent >= GameGlobals.GameConfigs.TutorialTimeMinutes * 60.0f)
         {
             GameGlobals.HasPlayedTutorial = true;
             QuitMainScene();
         }
         
         if (GameGlobals.CurrGameMode == GameMode.TRAINING &&
-            GameGlobals.PlayingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
+            GameGlobals.GameModeTimeSpent >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
         {
             GameGlobals.HasPlayedTraining = true;
             QuitMainScene();
@@ -761,7 +768,7 @@ public class GameManager : MonoBehaviour
         
         if(
             GameGlobals.CurrGameMode == GameMode.SURVIVAL && currOrders.Count > GameGlobals.GameConfigs.MAXPendingOrders ||
-            GameGlobals.CurrGameMode == GameMode.SURVIVAL && GameGlobals.PlayingTime > GameGlobals.GameConfigs.MAXSurvivalTimeMinutes*60.0f)
+            GameGlobals.CurrGameMode == GameMode.SURVIVAL && GameGlobals.GameModeTimeSpent > GameGlobals.GameConfigs.MAXSurvivalTimeMinutes*60.0f)
         { 
             QuitMainScene();
         }

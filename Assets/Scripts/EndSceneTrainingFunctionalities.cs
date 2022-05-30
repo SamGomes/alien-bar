@@ -23,7 +23,7 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
                              JsonConvert.SerializeObject(GameGlobals.NumFailedOrdersByLevel) +
                             "\n"; 
         
-        resultsDisplay.text += "Training Time (s): "+ Math.Round(GameGlobals.PlayingTime, 3);
+        resultsDisplay.text += "Time Spent (s): "+ Math.Round(GameGlobals.SessionTimeSpent, 3);
 
         if (GameGlobals.CurrGameMode == GameMode.TRAINING)
         {
@@ -37,7 +37,7 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
                 {"Score", GameGlobals.Score.ToString()},
                 {"NumDeliveredOrdersByLevel", JsonConvert.SerializeObject(GameGlobals.NumDeliveredOrdersByLevel)},
                 {"NumFailedOrdersByLevel", JsonConvert.SerializeObject(GameGlobals.NumFailedOrdersByLevel)},
-                {"PlayingTime", GameGlobals.PlayingTime.ToString()}
+                {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/TrainingAttempts",
                 GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));

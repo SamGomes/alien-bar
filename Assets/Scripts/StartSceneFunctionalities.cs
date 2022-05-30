@@ -61,7 +61,9 @@ public static class GameGlobals
     public static string ExperimentId;
     
     public static int AttemptId;
-    public static float PlayingTime;
+    public static float SessionTimeSpent;
+    public static float GameModeTimeSpent;
+    
     public static float Score;
     public static List<int> NumDeliveredOrdersByLevel;
     public static List<int> NumFailedOrdersByLevel;

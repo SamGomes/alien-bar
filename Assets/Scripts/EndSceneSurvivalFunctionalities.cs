@@ -29,7 +29,7 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
                                JsonConvert.SerializeObject(GameGlobals.NumFailedOrdersByLevel) +
                                "\n"; 
         
-        resultsDisplay.text += "Training Time (s): "+ Math.Round(GameGlobals.PlayingTime, 3);
+        resultsDisplay.text += "Time Spent(s): "+ Math.Round(GameGlobals.SessionTimeSpent, 3);
         
         engQuestionsSliders = engQuestionnaire.GetComponentsInChildren<Slider>();
         engQuestions = GameObject.FindGameObjectsWithTag("Question");
