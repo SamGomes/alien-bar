@@ -276,26 +276,30 @@ public class DeliveryBoardEvents :
                 }
                 
                 //log deliveries
-                Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                if (GameGlobals.CurrGameMode != GameMode.DEMO)
                 {
-                    {"ExperimentId", GameGlobals.ExperimentId},
-                    {"PlayerId", GameGlobals.PlayerId},
-                    {"GameMode", GameGlobals.CurrGameMode.ToString()},
-                    {"AttemptId", GameGlobals.AttemptId.ToString()},
-                    {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
-                    {"NumLvl1Recipes", numRecipesByLevel[0].ToString()},
-                    {"NumLvl2Recipes", numRecipesByLevel[1].ToString()},
-                    {"NumLvl3Recipes", numRecipesByLevel[2].ToString()},
-                    {"NumLvl4Recipes", numRecipesByLevel[3].ToString()},
-                    {"NumLvl5Recipes", numRecipesByLevel[4].ToString()},
-                    {"WasDelivered","YES"},
-                    {"AttemptTime", GameGlobals.GameModeTimeSpent.ToString()}
-                };
-                StartCoroutine(GameGlobals.LogManager.WriteToLog(
-                    "AlienBarExperiment/DeliveriesLog/"+GameGlobals.CurrGameMode,
-                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
-                
-                
+                    Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                    {
+                        {"ExperimentId", GameGlobals.ExperimentId},
+                        {"PlayerId", GameGlobals.PlayerId},
+                        {"GameMode", GameGlobals.CurrGameMode.ToString()},
+                        {"AttemptId", GameGlobals.AttemptId.ToString()},
+                        {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                        
+                        {"NumLvl1Recipes", numRecipesByLevel[0].ToString()},
+                        {"NumLvl2Recipes", numRecipesByLevel[1].ToString()},
+                        {"NumLvl3Recipes", numRecipesByLevel[2].ToString()},
+                        {"NumLvl4Recipes", numRecipesByLevel[3].ToString()},
+                        {"NumLvl5Recipes", numRecipesByLevel[4].ToString()},
+                        
+                        {"WasDelivered", "YES"},
+                        {"AttemptTime", GameGlobals.GameModeTimeSpent.ToString()}
+                    };
+                    StartCoroutine(GameGlobals.LogManager.WriteToLog(
+                        "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
+                        GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
+                }
+
                 //prepare for logging results
                 GameGlobals.NumDeliveredOrdersByLevel[GameGlobals.GameConfigs.OrderDifficulty - 1]++;
             }
@@ -316,24 +320,29 @@ public class DeliveryBoardEvents :
             
             
             //log deliveries
-            Dictionary<string, string> logEntry = new Dictionary<string, string>()
+            if (GameGlobals.CurrGameMode != GameMode.DEMO)
             {
-                {"GameId", GameGlobals.ExperimentId},
-                {"PlayerId", GameGlobals.PlayerId},
-                {"GameMode", GameGlobals.CurrGameMode.ToString()},
-                {"AttemptId", GameGlobals.AttemptId.ToString()},
-                {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
-                {"NumLvl1Recipes", "-1"},
-                {"NumLvl2Recipes", "-1"},
-                {"NumLvl3Recipes", "-1"},
-                {"NumLvl4Recipes", "-1"},
-                {"NumLvl5Recipes", "-1"},
-                {"WasDelivered", "NO"},
-                {"PlayingTime", GameGlobals.GameModeTimeSpent.ToString()}
-            };
-            StartCoroutine(GameGlobals.LogManager.WriteToLog(
-                "AlienBarExperiment/DeliveriesLog/" + GameGlobals.CurrGameMode + "/",
-                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
+                Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                {
+                    {"GameId", GameGlobals.ExperimentId},
+                    {"PlayerId", GameGlobals.PlayerId},
+                    {"GameMode", GameGlobals.CurrGameMode.ToString()},
+                    {"AttemptId", GameGlobals.AttemptId.ToString()},
+                    {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                    
+                    {"NumLvl1Recipes", "-1"},
+                    {"NumLvl2Recipes", "-1"},
+                    {"NumLvl3Recipes", "-1"},
+                    {"NumLvl4Recipes", "-1"},
+                    {"NumLvl5Recipes", "-1"},
+                    
+                    {"WasDelivered", "NO"},
+                    {"PlayingTime", GameGlobals.GameModeTimeSpent.ToString()}
+                };
+                StartCoroutine(GameGlobals.LogManager.WriteToLog(
+                    "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
+                    GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
+            }
 
             //prepare for logging results
             GameGlobals.NumFailedOrdersByLevel[GameGlobals.GameConfigs.OrderDifficulty - 1]++;
@@ -444,8 +453,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GenerateOrder()
     {
-        if ((GameGlobals.CurrGameMode == GameMode.TUTORIAL || 
-             GameGlobals.CurrGameMode == GameMode.TRAINING) 
+        if (GameGlobals.CurrGameMode != GameMode.SURVIVAL 
             && currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
         {
             yield return new WaitForSeconds(repeatRate);
@@ -602,12 +610,11 @@ public class GameManager : MonoBehaviour
         GameGlobals.GameManager = this;
         cursorOverlapBuffer.Add(cursorTextureFinger);
         
-        resetButton.gameObject.SetActive(GameGlobals.CurrGameMode == GameMode.TRAINING);
-//        quitButton.gameObject.SetActive(GameGlobals.HasControls);
-        
+        resetButton.gameObject.SetActive(false);
         float now = Time.time;
-        if (GameGlobals.CurrGameMode == GameMode.TRAINING)
+        if (GameGlobals.CurrGameMode == GameMode.TRAINING || GameGlobals.CurrGameMode == GameMode.DEMO)
         {
+            resetButton.gameObject.SetActive(true);
             resetButton.onClick.AddListener(delegate
             {
                 QuitMainScene();
@@ -731,6 +738,11 @@ public class GameManager : MonoBehaviour
         GameGlobals.SessionTimeSpent = Time.time - _initialSessionTime;
 
 
+        if(GameGlobals.CurrGameMode == GameMode.DEMO)
+        {
+            GameGlobals.HasPlayedDemo = true;
+        }
+        
         if (GameGlobals.CurrGameMode == GameMode.SURVIVAL)
         {
             SceneManager.LoadScene("EndSceneSurvival");

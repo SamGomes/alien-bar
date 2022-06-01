@@ -1,3 +1,0 @@
-GameId,PlayerId,GameMode,AttemptId,OrderDifficulty,Score,NumDeliveredOrdersByLevel,NumFailedOrdersByLevel,PlayingTime
-gdf,fdgd,TRAINING,1,1,0,[0,0,0,0,0],[0,0,0,0,0],0.8123093
-gdf,fdgd,TRAINING,2,1,0,[0,0,0,0,0],[0,0,0,0,0],24.89589

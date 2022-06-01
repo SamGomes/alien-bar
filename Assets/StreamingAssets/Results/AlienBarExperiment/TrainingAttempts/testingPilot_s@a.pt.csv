@@ -1,6 +1,0 @@
-GameId,PlayerId,GameMode,AttemptId,OrderDifficulty,Score,NumDeliveredOrdersByLevel,NumFailedOrdersByLevel,PlayingTime
-testingPilot,s@a.pt,TRAINING,1,1,1500,[3,0,0,0,0],[1,0,0,0,0],33.54874
-testingPilot,s@a.pt,TRAINING,2,2,500,[0,1,0,0,0],[0,4,0,0,0],88.0307
-testingPilot,s@a.pt,TRAINING,3,2,4000,[0,5,0,0,0],[0,0,0,0,0],162.4355
-testingPilot,s@a.pt,TRAINING,4,2,3500,[0,5,0,0,0],[0,2,0,0,0],255.5992
-testingPilot,s@a.pt,TRAINING,5,1,0,[0,0,0,0,0],[0,0,0,0,0],286.4532
