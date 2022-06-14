@@ -1,0 +1,6 @@
+ExperimentId,ParticipantId,GameMode,AttemptId,OrderDifficulty,NumLvl1Recipes,NumLvl2Recipes,NumLvl3Recipes,NumLvl4Recipes,NumLvl5Recipes,WasDelivered,AttemptTime
+
+fdsf,dsf,TUTORIAL,0,1,-1,-1,-1,-1,-1,NO,13.98537
+fdsf,dsf,TUTORIAL,0,1,-1,-1,-1,-1,-1,NO,49.23443
+fdsf,dsf,TUTORIAL,0,1,1,0,0,0,0,YES,58.81982
+fdsf,dsf,TUTORIAL,0,1,-1,-1,-1,-1,-1,NO,93.348
