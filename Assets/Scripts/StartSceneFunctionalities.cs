@@ -52,6 +52,7 @@ public enum GameMode{
 }
 
 
+
 public static class GameGlobals
 {
     public static LogManager LogManager = new FileLogManager();
@@ -73,7 +74,8 @@ public static class GameGlobals
     public static GameManager GameManager;
     
     
-    public static bool HasPlayedDemo = false;
+    public static bool HasPlayedDemo = true;
+    //public static bool HasPlayedDemo = false; to include demo functionality 
     public static bool HasPlayedTutorial = false;
     public static bool HasPlayedTraining = false;
     
@@ -84,10 +86,19 @@ public static class GameGlobals
 
 
 
+public class WaitBoardEvents : MonoBehaviour, IPointerClickHandler
+{
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        gameObject.SetActive(false);
+    }
+}
 
 
 public class StartSceneFunctionalities: MonoBehaviour
 {
+    public GameObject waitBoard;
+    
     public Slider trainingLevelInput;
     
     public TMP_InputField playerIdInput;
@@ -101,7 +112,9 @@ public class StartSceneFunctionalities: MonoBehaviour
 
     public void Start()
     {
-
+        waitBoard.AddComponent<WaitBoardEvents>();
+        waitBoard.SetActive(GameGlobals.HasPlayedDemo);
+        
         string path = Application.streamingAssetsPath + "/configs.cfg";
         StreamReader reader = new StreamReader(path);
         string json = reader.ReadToEnd();

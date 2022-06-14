@@ -10,7 +10,9 @@ public class DebugLogManager : LogManager
     {
         Debug.Log("Log Initialzed.");
     }
-    public override IEnumerator WriteToLog(string database, string table, Dictionary<string, string> argsNValues) {
+    public override IEnumerator WriteToLog(string database, string table, 
+        Dictionary<string, string> argsNValues, bool justHeaders) {
+        
         Debug.Log("database: " + database + " ; " + table + " ; " + argsNValues.ToString());
         yield return null;
     }

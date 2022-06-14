@@ -32,8 +32,10 @@ public class MongoAtlasLogManager : LogManager
     }
     
 
-    public override IEnumerator WriteToLog(string database, string table, Dictionary<string,string> argsNValues)
+    public override IEnumerator WriteToLog(string database, string table, 
+        Dictionary<string,string> argsNValues, bool justHeaders)
     {
+        //"justHeaders" functionality not implemented!
         var databaseObj = client.GetDatabase(database);
         var document = BsonDocument.Parse(StringifyDictionaryForJsonLogs(argsNValues));
         databaseObj.GetCollection<BsonDocument>(table).InsertOne(document);

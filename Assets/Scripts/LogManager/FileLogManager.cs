@@ -12,7 +12,8 @@ public class FileLogManager : LogManager
         return;
     }
     
-    public override IEnumerator WriteToLog(string database, string table, Dictionary<string, string> argsNValues) {
+    public override IEnumerator WriteToLog(string database, string table, 
+        Dictionary<string, string> argsNValues, bool justHeaders) {
         string path = Application.streamingAssetsPath 
                       + "/Results/"+database+"/"+table+".csv";
         
@@ -21,7 +22,11 @@ public class FileLogManager : LogManager
         {
             strToWrite += StringifyDictionaryForCSVLogs(argsNValues,true)+"\n";
         }
-        strToWrite += StringifyDictionaryForCSVLogs(argsNValues,false);
+
+        if (!justHeaders)
+        {
+            strToWrite += StringifyDictionaryForCSVLogs(argsNValues, false);
+        }
 
         StreamWriter writer = new StreamWriter(path, true);
         writer.WriteLine(strToWrite);

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -193,6 +192,32 @@ public class DeliveryBoardEvents :
     public void Start()
     {
         _recipes = new List<RecipeObjectEvents>();   
+        
+        
+        //init deliveries log
+        if (GameGlobals.CurrGameMode != GameMode.DEMO)
+        {
+            Dictionary<string, string> logEntry = new Dictionary<string, string>()
+            {
+                {"ExperimentId", ""},
+                {"PlayerId", ""},
+                {"GameMode", ""},
+                {"AttemptId", ""},
+                {"OrderDifficulty", ""},
+                        
+                {"NumLvl1Recipes", ""},
+                {"NumLvl2Recipes", ""},
+                {"NumLvl3Recipes", ""},
+                {"NumLvl4Recipes", ""},
+                {"NumLvl5Recipes", ""},
+                        
+                {"WasDelivered", ""},
+                {"AttemptTime", ""}
+            };
+            StartCoroutine(GameGlobals.LogManager.WriteToLog(
+                "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
+                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, true));
+        }
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
@@ -297,7 +322,7 @@ public class DeliveryBoardEvents :
                     };
                     StartCoroutine(GameGlobals.LogManager.WriteToLog(
                         "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
-                        GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
+                        GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
                 }
 
                 //prepare for logging results
@@ -341,7 +366,7 @@ public class DeliveryBoardEvents :
                 };
                 StartCoroutine(GameGlobals.LogManager.WriteToLog(
                     "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
-                    GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
+                    GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
             }
 
             //prepare for logging results

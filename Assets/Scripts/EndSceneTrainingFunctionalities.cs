@@ -9,10 +9,14 @@ using UnityEngine.UI;
 
 public class EndSceneTrainingFunctionalities: MonoBehaviour
 {
+    public TextMeshProUGUI titleDisplay;
     public TextMeshProUGUI resultsDisplay;
     public Button restartButton;
     public void Start()
     {
+        titleDisplay.text = GameGlobals.CurrGameMode + " Over!";
+        
+        
         resultsDisplay.text = "Score: " +
                             GameGlobals.Score;
         
@@ -52,7 +56,7 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
                 {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/TUTORIAL/Results/",
-                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
+                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
             
         }else 
         if (GameGlobals.CurrGameMode == GameMode.TRAINING)
@@ -81,7 +85,7 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
                 {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/TRAINING/Attempts/",
-                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
+                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
         }
 
         restartButton.onClick.AddListener(() => {

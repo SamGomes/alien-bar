@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Training Game Over!
+  m_text: <Title Placeholder>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8bb4fd16187c12e30bd1ad17e8e7af43, type: 2}
   m_sharedMaterial: {fileID: -1082963778906140674, guid: 8bb4fd16187c12e30bd1ad17e8e7af43, type: 2}
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 67.9
+  m_fontSize: 66.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1119,5 +1119,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffb2f2ab0a97b3f408962a91ce1cabb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  titleDisplay: {fileID: 69688654}
   resultsDisplay: {fileID: 134265920}
   restartButton: {fileID: 1751271564}

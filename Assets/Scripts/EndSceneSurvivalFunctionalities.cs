@@ -57,7 +57,7 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
             {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
         };
         StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/SURVIVAL/Results/",
-            GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry));
+            GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
         
         
         
