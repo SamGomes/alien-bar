@@ -1,3 +1,0 @@
-ExperimentId,ParticipantId,GameMode,AttemptId,OrderDifficulty,NumLvl1Recipes,NumLvl2Recipes,NumLvl3Recipes,NumLvl4Recipes,NumLvl5Recipes,WasDelivered,AttemptTime
-
-dfs,dsf,TUTORIAL,0,1,-1,-1,-1,-1,-1,NO,16.4815
