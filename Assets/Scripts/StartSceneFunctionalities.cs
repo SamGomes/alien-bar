@@ -59,7 +59,7 @@ public static class GameGlobals
     
     public static GameMode CurrGameMode = GameMode.NONE; 
         
-    public static string PlayerId;
+    public static string ParticipantId;
     public static string ExperimentId;
     
     public static int AttemptId;
@@ -113,7 +113,8 @@ public class StartSceneFunctionalities: MonoBehaviour
     public void Start()
     {
         waitBoard.AddComponent<WaitBoardEvents>();
-        waitBoard.SetActive(GameGlobals.HasPlayedDemo);
+        waitBoard.SetActive(GameGlobals.CurrGameMode != GameMode.TRAINING || 
+                            GameGlobals.HasPlayedTraining);
         
         string path = Application.streamingAssetsPath + "/configs.cfg";
         StreamReader reader = new StreamReader(path);
@@ -132,9 +133,9 @@ public class StartSceneFunctionalities: MonoBehaviour
         {
             experimentIdInput.text = GameGlobals.ExperimentId;
         }
-        if (GameGlobals.PlayerId != "")
+        if (GameGlobals.ParticipantId != "")
         {
-            playerIdInput.text = GameGlobals.PlayerId;
+            playerIdInput.text = GameGlobals.ParticipantId;
         }
 
         exitButton.interactable = false;
@@ -149,7 +150,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
             {
-                GameGlobals.PlayerId = playerIdInput.text;
+                GameGlobals.ParticipantId = playerIdInput.text;
                 GameGlobals.ExperimentId = experimentIdInput.text;
                 GameGlobals.AttemptId = 0;
 
@@ -171,7 +172,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
             {
-                GameGlobals.PlayerId = playerIdInput.text;
+                GameGlobals.ParticipantId = playerIdInput.text;
                 GameGlobals.ExperimentId = experimentIdInput.text;
                 GameGlobals.AttemptId = 0;
 
@@ -217,7 +218,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
             {
-                GameGlobals.PlayerId = playerIdInput.text;
+                GameGlobals.ParticipantId = playerIdInput.text;
                 GameGlobals.ExperimentId = experimentIdInput.text;
                 GameGlobals.AttemptId = 0;
                 

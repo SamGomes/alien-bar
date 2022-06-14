@@ -14,13 +14,13 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
     public Button restartButton;
     public void Start()
     {
-        titleDisplay.text = GameGlobals.CurrGameMode + " Over!";
+        titleDisplay.text = GameGlobals.CurrGameMode + " Game Over!";
         
         
-        resultsDisplay.text = "Score: " +
-                            GameGlobals.Score;
+//        resultsDisplay.text = "Score: " +
+//                            GameGlobals.Score;
         
-        resultsDisplay.text += "\nDelivered Orders: " +
+        resultsDisplay.text = "\nDelivered Orders: " +
                              JsonConvert.SerializeObject(GameGlobals.NumDeliveredOrdersByLevel) +
                              "\n";
         resultsDisplay.text += "Failed Orders: " +
@@ -34,8 +34,8 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
         {
             Dictionary<string, string> logEntry = new Dictionary<string, string>()
             {
-                {"GameId", GameGlobals.ExperimentId},
-                {"PlayerId", GameGlobals.PlayerId},
+                {"ExperimentId", GameGlobals.ExperimentId},
+                {"ParticipantId", GameGlobals.ParticipantId},
                 {"GameMode", GameGlobals.CurrGameMode.ToString()},
                 {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
                 {"Score", GameGlobals.Score.ToString()},
@@ -56,15 +56,15 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
                 {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/TUTORIAL/Results/",
-                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
+                GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, false));
             
         }else 
         if (GameGlobals.CurrGameMode == GameMode.TRAINING)
         {
             Dictionary<string, string> logEntry = new Dictionary<string, string>()
             {
-                {"GameId", GameGlobals.ExperimentId},
-                {"PlayerId", GameGlobals.PlayerId},
+                {"ExperimentId", GameGlobals.ExperimentId},
+                {"ParticipantId", GameGlobals.ParticipantId},
                 {"GameMode", GameGlobals.CurrGameMode.ToString()},
                 {"AttemptId", GameGlobals.AttemptId.ToString()},
                 {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
@@ -85,7 +85,7 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
                 {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/TRAINING/Attempts/",
-                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
+                GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, false));
         }
 
         restartButton.onClick.AddListener(() => {

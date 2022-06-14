@@ -19,10 +19,10 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
     
     public void Start()
     {
-        resultsDisplay.text = "Score: " +
-                              GameGlobals.Score;
+//        resultsDisplay.text = "Score: " +
+//                              GameGlobals.Score;
         
-        resultsDisplay.text += "\nDelivered Orders: " +
+        resultsDisplay.text = "\nDelivered Orders: " +
                                JsonConvert.SerializeObject(GameGlobals.NumDeliveredOrdersByLevel) +
                                "\n";
         resultsDisplay.text += "Failed Orders: " +
@@ -35,8 +35,8 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
         
         Dictionary<string, string> logEntry = new Dictionary<string, string>()
         {
-            {"GameId", GameGlobals.ExperimentId},
-            {"PlayerId", GameGlobals.PlayerId},
+            {"ExperimentId", GameGlobals.ExperimentId},
+            {"ParticipantId", GameGlobals.ParticipantId},
             {"GameMode", GameGlobals.CurrGameMode.ToString()},
             {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
             {"Score", GameGlobals.Score.ToString()},
@@ -57,7 +57,7 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
             {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
         };
         StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/SURVIVAL/Results/",
-            GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
+            GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, false));
         
         
         
@@ -79,7 +79,7 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
                 engQuestionnaireValues.Add(engQuestions[i].GetComponent<TextMeshProUGUI>().text, currSlider.value);
             }
         
-            string path = "Assets/StreamingAssets/Results/GroupResults/"+GameGlobals.PlayerId+".txt";
+            string path = "Assets/StreamingAssets/Results/GroupResults/"+GameGlobals.ParticipantId+".txt";
             string json = "{ \"engAnswers\":" + JsonConvert.SerializeObject(engQuestionnaireValues)+
                           "\"abilityInc\": "+ GameGlobals.Score/ 10000.0f+
                           ",\"engagementInc\": "+engValue+"," +

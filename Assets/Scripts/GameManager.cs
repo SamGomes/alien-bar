@@ -200,7 +200,7 @@ public class DeliveryBoardEvents :
             Dictionary<string, string> logEntry = new Dictionary<string, string>()
             {
                 {"ExperimentId", ""},
-                {"PlayerId", ""},
+                {"ParticipantId", ""},
                 {"GameMode", ""},
                 {"AttemptId", ""},
                 {"OrderDifficulty", ""},
@@ -216,7 +216,7 @@ public class DeliveryBoardEvents :
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog(
                 "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
-                GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, true));
+                GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, true));
         }
     }
 
@@ -306,7 +306,7 @@ public class DeliveryBoardEvents :
                     Dictionary<string, string> logEntry = new Dictionary<string, string>()
                     {
                         {"ExperimentId", GameGlobals.ExperimentId},
-                        {"PlayerId", GameGlobals.PlayerId},
+                        {"ParticipantId", GameGlobals.ParticipantId},
                         {"GameMode", GameGlobals.CurrGameMode.ToString()},
                         {"AttemptId", GameGlobals.AttemptId.ToString()},
                         {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
@@ -322,7 +322,7 @@ public class DeliveryBoardEvents :
                     };
                     StartCoroutine(GameGlobals.LogManager.WriteToLog(
                         "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
-                        GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
+                        GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, false));
                 }
 
                 //prepare for logging results
@@ -349,8 +349,8 @@ public class DeliveryBoardEvents :
             {
                 Dictionary<string, string> logEntry = new Dictionary<string, string>()
                 {
-                    {"GameId", GameGlobals.ExperimentId},
-                    {"PlayerId", GameGlobals.PlayerId},
+                    {"ExperimentId", GameGlobals.ExperimentId},
+                    {"ParticipantId", GameGlobals.ParticipantId},
                     {"GameMode", GameGlobals.CurrGameMode.ToString()},
                     {"AttemptId", GameGlobals.AttemptId.ToString()},
                     {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
@@ -366,7 +366,7 @@ public class DeliveryBoardEvents :
                 };
                 StartCoroutine(GameGlobals.LogManager.WriteToLog(
                     "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
-                    GameGlobals.ExperimentId + "_" + GameGlobals.PlayerId, logEntry, false));
+                    GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, false));
             }
 
             //prepare for logging results
