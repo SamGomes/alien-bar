@@ -475,50 +475,50 @@ public class GameManager : MonoBehaviour
         StartCoroutine(IncreaseOrderDifficulty());
     }
 
-
-    IEnumerator GenerateOrder()
+    void GenerateOrder()
     {
-        if (GameGlobals.CurrGameMode != GameMode.SURVIVAL 
-            && currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
+        if (GameGlobals.CurrGameMode != GameMode.SURVIVAL &&
+            currOrders.Count == GameGlobals.GameConfigs.MAXPendingOrders)
         {
+            return;
+        }
+        
+        Order newOrder = new Order();
+        int numRecipes = GameGlobals.GameConfigs.OrderDifficulty
+                         / Random.Range(1, GameGlobals.GameConfigs.OrderDifficulty + 1);
+        for (int i = 0; i < numRecipes; i++)
+        {
+            List<Recipe> orderRecipes =
+                GameGlobals.GameConfigs.OrderRecipesByLevel[
+                    (GameGlobals.GameConfigs.OrderDifficulty / numRecipes) - 1];
+            newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
+        }
+
+        currOrders.Add(newOrder);
+        newOrder.PrintOrder(orderPrefab, cam,
+            orderContainer.transform.GetChild(0).gameObject);
+
+        //dynamically change repeatRate on survival
+        if (GameGlobals.CurrGameMode == GameMode.SURVIVAL)
+        {
+            repeatRate =
+                (repeatRate >= GameGlobals.GameConfigs.MINOrderTime &&
+                 repeatRate <= GameGlobals.GameConfigs.MAXOrderTime)
+                    ? repeatRate * GameGlobals.GameConfigs.SurvivalTimeChangeRate
+                    : repeatRate;
+        }
+
+        orderReceivedSound.Play();
+    }
+    
+    IEnumerator TimedGenerateOrder()
+    {
+        while (true)
+        {
+            GenerateOrder();
             yield return new WaitForSeconds(repeatRate);
-            StartCoroutine(GenerateOrder());
         }
-        else
-        {
-            while (true)
-            {
-                Order newOrder = new Order();
-                int numRecipes = GameGlobals.GameConfigs.OrderDifficulty
-                                 / Random.Range(1, GameGlobals.GameConfigs.OrderDifficulty + 1);
-                for (int i = 0; i < numRecipes; i++)
-                {
-                    List<Recipe> orderRecipes =
-                        GameGlobals.GameConfigs.OrderRecipesByLevel[
-                            (GameGlobals.GameConfigs.OrderDifficulty / numRecipes) - 1];
-                    newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
-                }
-
-                currOrders.Add(newOrder);
-                newOrder.PrintOrder(orderPrefab, cam,
-                    orderContainer.transform.GetChild(0).gameObject);
-
-                //dynamically change repeatRate on survival
-                if (GameGlobals.CurrGameMode == GameMode.SURVIVAL)
-                {
-                    repeatRate =
-                        (repeatRate >= GameGlobals.GameConfigs.MINOrderTime &&
-                         repeatRate <= GameGlobals.GameConfigs.MAXOrderTime)
-                            ? repeatRate * GameGlobals.GameConfigs.SurvivalTimeChangeRate
-                            : repeatRate;
-                }
-
-                orderReceivedSound.Play();
-
-                Debug.Log("Order Received!!!");
-                yield return new WaitForSeconds(repeatRate);
-            }
-        }
+        
     }
 
     public List<RecipeObjectEvents> EvaluateOrder(Order selectedOrder, List<RecipeObjectEvents> userRecipes)
@@ -626,7 +626,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _generateOrderCourotine = GenerateOrder();
         
         GameGlobals.NumDeliveredOrdersByLevel = new List<int>{ 0,0,0,0,0 };
         GameGlobals.NumFailedOrdersByLevel = new List<int>{ 0,0,0,0,0 };
@@ -737,6 +736,7 @@ public class GameManager : MonoBehaviour
         repeatRate = (GameGlobals.CurrGameMode == GameMode.SURVIVAL) ? 
             GameGlobals.GameConfigs.MAXOrderTime: 0.25f;
         
+        _generateOrderCourotine = TimedGenerateOrder();
         StartCoroutine(_generateOrderCourotine); //Random.Range(gameConfig.MINOrderTime, gameConfig.MAXOrderTime));
         
         //increase difficulty on survival
@@ -821,7 +821,7 @@ public class GameManager : MonoBehaviour
 //          checked that no orders are active, in this case force new order
             StopCoroutine(_generateOrderCourotine);
             
-            _generateOrderCourotine = GenerateOrder();
+            _generateOrderCourotine = TimedGenerateOrder();
             StartCoroutine(_generateOrderCourotine);
         }
     }
