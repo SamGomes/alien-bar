@@ -244,12 +244,14 @@ public class StartSceneFunctionalities: MonoBehaviour
         }
         
         float _playingTime = Time.time - GameGlobals.InitialTrainingTime;
-        if (GameGlobals.CurrGameMode == GameMode.TRAINING &&
+        if (!GameGlobals.HasPlayedTraining && GameGlobals.CurrGameMode == GameMode.TRAINING &&
             _playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
         {
             GameGlobals.HasPlayedTraining = true;
             trainingButton.interactable = false;
             survivalButton.interactable = true;
+            
+            waitBoard.SetActive(true);
         }
     }
 }

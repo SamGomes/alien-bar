@@ -1119,7 +1119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8490566, g: 0.3964934, b: 0.7127034, a: 0.7607843}
+  m_Color: {r: 0.8490566, g: 0.3964934, b: 0.7127034, a: 0.8784314}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4238,8 +4238,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5542362, y: 0.5}
-  m_AnchoredPosition: {x: -23.741, y: 14.41}
-  m_SizeDelta: {x: 390.2328, y: 107.53787}
+  m_AnchoredPosition: {x: -23.741, y: 13.48}
+  m_SizeDelta: {x: 439.1189, y: 107.53787}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1353887324
 MonoBehaviour:
@@ -4253,8 +4253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 2, y: -2}
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
 --- !u!114 &1353887325
 MonoBehaviour:
@@ -4276,7 +4276,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Wait for further instruction...
+  m_text: Please wait for further instruction...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8bb4fd16187c12e30bd1ad17e8e7af43, type: 2}
   m_sharedMaterial: {fileID: -1082963778906140674, guid: 8bb4fd16187c12e30bd1ad17e8e7af43, type: 2}
@@ -4303,7 +4303,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 46
+  m_fontSize: 41.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

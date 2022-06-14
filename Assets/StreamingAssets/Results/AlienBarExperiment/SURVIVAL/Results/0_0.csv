@@ -1,2 +1,0 @@
-GameId,PlayerId,GameMode,OrderDifficulty,Score,NumDeliveredLvl1Recipes,NumDeliveredLvl2Recipes,NumDeliveredLvl3Recipes,NumDeliveredLvl4Recipes,NumDeliveredLvl5Recipes,NumFailedLvl1Recipes,NumFailedLvl2Recipes,NumFailedLvl3Recipes,NumFailedLvl4Recipes,NumFailedLvl5Recipes,TimeSpent
-0,0,SURVIVAL,1,500,1,0,0,0,0,0,0,0,0,0,6.006577
