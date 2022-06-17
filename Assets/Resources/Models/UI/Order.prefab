@@ -113,6 +113,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Section (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6895249113325339050, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895249113325339050, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8813784180232620817, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -214,6 +222,26 @@ PrefabInstance:
     - target: {fileID: 560418848849553959, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
       propertyPath: m_Name
       value: Section
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895249113325339050, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895249113325339050, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
+      propertyPath: m_fontSize
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895249113325339050, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895249113325339050, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895249113325339050, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
+      propertyPath: m_overflowMode
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8813784180232620817, guid: c18eb0a272980d9729e4e9145016e5d7, type: 3}
       propertyPath: m_Pivot.x

@@ -484,8 +484,19 @@ public class GameManager : MonoBehaviour
         }
         
         Order newOrder = new Order();
-        int numRecipes = GameGlobals.GameConfigs.OrderDifficulty
-                         / Random.Range(1, GameGlobals.GameConfigs.OrderDifficulty + 1);
+        
+        bool dextOrIntelect = (Random.Range(0, 2) == 1);
+        int numRecipes;
+        if (dextOrIntelect || GameGlobals.GameConfigs.OrderDifficulty == 1)
+        {
+            numRecipes = GameGlobals.GameConfigs.OrderDifficulty;
+        }
+        else
+        {
+            numRecipes = GameGlobals.GameConfigs.OrderDifficulty
+                         / Random.Range(2, GameGlobals.GameConfigs.OrderDifficulty + 1);
+        }
+        
         for (int i = 0; i < numRecipes; i++)
         {
             List<Recipe> orderRecipes =
