@@ -486,23 +486,26 @@ public class GameManager : MonoBehaviour
         Order newOrder = new Order();
         
         bool dextOrIntelect = (Random.Range(0, 2) == 1);
-        int numRecipes;
+        Debug.Log(dextOrIntelect);
         if (dextOrIntelect || GameGlobals.GameConfigs.OrderDifficulty == 1)
-        {
-            numRecipes = 1;
-        }
-        else
-        {
-            numRecipes = Random.Range(2, GameGlobals.GameConfigs.OrderDifficulty); 
-            // ^^^- caps the possible recipe number to order difficulty - 1
-        }
-        
-        for (int i = 0; i < numRecipes; i++)
         {
             List<Recipe> orderRecipes =
                 GameGlobals.GameConfigs.OrderRecipesByLevel[
-                    (int) (Math.Ceiling((float) GameGlobals.GameConfigs.OrderDifficulty / numRecipes)) - 1];
+                    GameGlobals.GameConfigs.OrderDifficulty - 1
+                ];
             newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
+        }
+        else
+        {
+            int totalR = GameGlobals.GameConfigs.OrderDifficulty;
+            while (totalR > 0)
+            {
+                int randLvl = Random.Range(1, totalR);
+                totalR -= randLvl;
+                List<Recipe> orderRecipes =
+                    GameGlobals.GameConfigs.OrderRecipesByLevel[randLvl - 1];
+                newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
+            }
         }
 
         currOrders.Add(newOrder);

@@ -193,6 +193,8 @@ public class StartSceneFunctionalities: MonoBehaviour
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
             {
+                GameGlobals.ParticipantId = playerIdInput.text;
+                GameGlobals.ExperimentId = experimentIdInput.text;
                 GameGlobals.AttemptId++;
                 GameGlobals.GameConfigs.OrderDifficulty = (int) trainingLevelInput.value;
                 
