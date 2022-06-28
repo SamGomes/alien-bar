@@ -166,12 +166,13 @@ public class Ingredient
             (GameObject) Resources.Load(StateObjectPaths[++CurrIngState]), 
             GameObject.transform.position, 
             Quaternion.identity);
+        
         var events = GameObject.AddComponent<IngredientObjectEvents>();
         events.cam = Cam;
         events.isBeingHeld = false;
         events.logic = this;
     }
-
+    
 
     public void Lock()
     {

@@ -292,8 +292,6 @@ public class DeliveryBoardEvents :
             //-------------- log stuff ------------------------
             foreach(Order order in ordersToRemove)
             {
-                
-                
                 List<int> numRecipesByLevel = new List<int>(){0,0,0,0,0};
                 foreach (Recipe recipe in order.Recipes)
                 {
@@ -339,10 +337,13 @@ public class DeliveryBoardEvents :
                 .GetComponent<Animator>().Play("Warn");
             gm.orderNotFoundSound.Play();
             
-            
-            
+            //prepare for logging results
+            GameGlobals.NumFailedOrdersByLevel[GameGlobals.GameConfigs.OrderDifficulty - 1]++;
+        }
+
+        foreach (RecipeObjectEvents _ in _recipes)
+        {
             //-------------- log stuff ------------------------
-            
             
             //log deliveries
             if (GameGlobals.CurrGameMode != GameMode.DEMO)
@@ -369,8 +370,6 @@ public class DeliveryBoardEvents :
                     GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, false));
             }
 
-            //prepare for logging results
-            GameGlobals.NumFailedOrdersByLevel[GameGlobals.GameConfigs.OrderDifficulty - 1]++;
         }
         
     }
@@ -489,7 +488,7 @@ public class GameManager : MonoBehaviour
         int numRecipes;
         if (dextOrIntelect || GameGlobals.GameConfigs.OrderDifficulty == 1)
         {
-            numRecipes = GameGlobals.GameConfigs.OrderDifficulty;
+            numRecipes = 1;
         }
         else
         {

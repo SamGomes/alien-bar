@@ -75,7 +75,7 @@ public static class GameGlobals
     
     
     public static bool HasPlayedDemo = true;
-    //public static bool HasPlayedDemo = false; to include demo functionality 
+//    public static bool HasPlayedDemo = false; //to include demo functionality 
     public static bool HasPlayedTutorial = false;
     public static bool HasPlayedTraining = false;
     

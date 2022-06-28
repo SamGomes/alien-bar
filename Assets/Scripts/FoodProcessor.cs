@@ -38,10 +38,10 @@ public class FoodProcessorObjectEvents :
         //Use this to tell when the user left-clicks on the Button
         if (pointerEventData.button == PointerEventData.InputButton.Left)
         {
-            if (logic.IsOn == ProcessUnitState.ON)
-                StartCoroutine(logic.TurnOff());
-            else
-                StartCoroutine(logic.TurnOn());
+//            if (logic.IsOn == ProcessUnitState.ON)
+//                StartCoroutine(logic.TurnOff());
+//            else
+            StartCoroutine(logic.TurnOn());
         }
     }
     
@@ -258,47 +258,38 @@ public class FoodProcessor
     
     public IEnumerator TurnOn()
     {
-        if (IngredientInProcess != null && 
-                (
-                    RequiredUtensilAttrs.Count == 0 || 
-                    (RequiredUtensilAttrs.Count > 0 && AddedUtencils.Count > 0)
-                )
-            )
+        if (IsOn == ProcessUnitState.OFF && 
+            IngredientInProcess != null && 
+            (
+                RequiredUtensilAttrs.Count == 0 || 
+                (RequiredUtensilAttrs.Count > 0 && AddedUtencils.Count > 0)
+            ) &&
+            IsCurrIngrAccepted())
         {
-            if (IsCurrIngrAccepted())
+            IngredientInProcess.Lock();
+            IsOn = ProcessUnitState.ON;
+            _audioSources[0].Play();
+            if (_animator != null)
             {
-                IsOn = ProcessUnitState.ON;
-                _audioSources[0].Play();
-                if (_animator != null)
-                {
-                    _animator.Play("Process");
-                }
-
-                IngredientInProcess.Lock();
-                yield return (GameObject.GetComponent<MonoBehaviour>()
-                    .StartCoroutine(
-                        IngredientInProcess.Process(ProcessingDelay,
-                            InputAttrs, OutputAttrs)
-                    ));
-                IngredientInProcess.Unlock();
-                
-                if (AddedUtencils.Count > 0)
-                {
-                    Object.Destroy(AddedUtencils[AddedUtencils.Count - 1].GameObject);
-                    AddedUtencils.RemoveAt(AddedUtencils.Count - 1);
-                }
-                
-                IsOn = ProcessUnitState.OFF;
-                TakeUtensilOff(RequiredUtensilAttrs);
+                _animator.Play("Process");
             }
-            yield return null;
-        }
-        yield return null;
-    }
 
-    public IEnumerator TurnOff()
-    {
-        IsOn = ProcessUnitState.OFF;
+            yield return (GameObject.GetComponent<MonoBehaviour>()
+                .StartCoroutine(
+                    IngredientInProcess.Process(ProcessingDelay,
+                        InputAttrs, OutputAttrs)
+                ));
+            
+            if (AddedUtencils.Count > 0)
+            {
+                Object.Destroy(AddedUtencils[AddedUtencils.Count - 1].GameObject);
+                AddedUtencils.RemoveAt(AddedUtencils.Count - 1);
+            }
+            
+            IsOn = ProcessUnitState.OFF;
+            TakeUtensilOff(RequiredUtensilAttrs);
+            IngredientInProcess.Unlock();
+        }
         yield return null;
     }
 
