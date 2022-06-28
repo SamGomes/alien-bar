@@ -160,7 +160,7 @@ public class Order
         {
             var tmp = orderSectionPositioner.GetChild((int) recipe.Section).GetChild(1).
                     GetComponent<TextMeshProUGUI>();
-            tmp.text = (tmp.text.Length == 0)? recipe.Name: tmp.text + "," + recipe.Name;
+            tmp.text = (tmp.text.Length == 0)? recipe.Name: tmp.text + ",\n" + recipe.Name;
         }
     }
 
