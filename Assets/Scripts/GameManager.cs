@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -492,15 +493,15 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            numRecipes = GameGlobals.GameConfigs.OrderDifficulty
-                         / Random.Range(2, GameGlobals.GameConfigs.OrderDifficulty + 1);
+            numRecipes = Random.Range(2, GameGlobals.GameConfigs.OrderDifficulty); 
+            // ^^^- caps the possible recipe number to order difficulty - 1
         }
         
         for (int i = 0; i < numRecipes; i++)
         {
             List<Recipe> orderRecipes =
                 GameGlobals.GameConfigs.OrderRecipesByLevel[
-                    (GameGlobals.GameConfigs.OrderDifficulty / numRecipes) - 1];
+                    (int) (Math.Ceiling((float) GameGlobals.GameConfigs.OrderDifficulty / numRecipes)) - 1];
             newOrder.AddRecipe(orderRecipes[Random.Range(0, orderRecipes.Count)]);
         }
 
