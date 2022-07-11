@@ -70,6 +70,8 @@ public static class GameGlobals
     public static List<int> NumDeliveredOrdersByLevel;
     public static List<int> NumFailedOrdersByLevel;
     
+    public static List<int> NumDeliveredRecipesByLevel;
+    
     public static GameConfigurations GameConfigs;
     public static GameManager GameManager;
     

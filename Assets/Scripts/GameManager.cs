@@ -263,7 +263,8 @@ public class DeliveryBoardEvents :
                 {
                     gm.scoreValueObj.text =
                         (int.Parse(gm.scoreValueObj.text) + 
-                         GameGlobals.GameConfigs.ScoreMultiplier).ToString();
+                         GameGlobals.GameConfigs.ScoreMultiplier * order.Recipes[i].Level
+                         ).ToString();
                 }
 
                 foreach (var recipe in validRecipes)
@@ -297,6 +298,7 @@ public class DeliveryBoardEvents :
                 foreach (Recipe recipe in order.Recipes)
                 {
                     numRecipesByLevel[recipe.Level - 1]++;
+                    GameGlobals.NumDeliveredRecipesByLevel[recipe.Level - 1]++;
                 }
                 
                 //log deliveries
@@ -308,7 +310,7 @@ public class DeliveryBoardEvents :
                         {"ParticipantId", GameGlobals.ParticipantId},
                         {"GameMode", GameGlobals.CurrGameMode.ToString()},
                         {"AttemptId", GameGlobals.AttemptId.ToString()},
-                        {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                        {"OrderDifficulty_AtDelivery", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
                         
                         {"NumLvl1Recipes", numRecipesByLevel[0].ToString()},
                         {"NumLvl2Recipes", numRecipesByLevel[1].ToString()},
@@ -355,7 +357,7 @@ public class DeliveryBoardEvents :
                     {"ParticipantId", GameGlobals.ParticipantId},
                     {"GameMode", GameGlobals.CurrGameMode.ToString()},
                     {"AttemptId", GameGlobals.AttemptId.ToString()},
-                    {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                    {"OrderDifficulty_AtDelivery", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
                     
                     {"NumLvl1Recipes", "-1"},
                     {"NumLvl2Recipes", "-1"},
@@ -486,7 +488,6 @@ public class GameManager : MonoBehaviour
         Order newOrder = new Order();
         
         bool dextOrIntelect = (Random.Range(0, 2) == 1);
-        Debug.Log(dextOrIntelect);
         if (dextOrIntelect || GameGlobals.GameConfigs.OrderDifficulty == 1)
         {
             List<Recipe> orderRecipes =
@@ -643,7 +644,8 @@ public class GameManager : MonoBehaviour
         
         GameGlobals.NumDeliveredOrdersByLevel = new List<int>{ 0,0,0,0,0 };
         GameGlobals.NumFailedOrdersByLevel = new List<int>{ 0,0,0,0,0 };
-
+        GameGlobals.NumDeliveredRecipesByLevel = new List<int>{ 0,0,0,0,0 };
+        
         cursorOverlapBuffer.Clear();
         Cursor.visible = true;
         

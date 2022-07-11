@@ -37,22 +37,30 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
                 {"ExperimentId", GameGlobals.ExperimentId},
                 {"ParticipantId", GameGlobals.ParticipantId},
                 {"GameMode", GameGlobals.CurrGameMode.ToString()},
-                {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                {"OrderDifficulty_AtEnd", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
                 {"Score", GameGlobals.Score.ToString()},
                 
                 
-                {"NumDeliveredLvl1Recipes", GameGlobals.NumDeliveredOrdersByLevel[0].ToString()},
-                {"NumDeliveredLvl2Recipes", GameGlobals.NumDeliveredOrdersByLevel[1].ToString()},
-                {"NumDeliveredLvl3Recipes", GameGlobals.NumDeliveredOrdersByLevel[2].ToString()},
-                {"NumDeliveredLvl4Recipes", GameGlobals.NumDeliveredOrdersByLevel[3].ToString()},
-                {"NumDeliveredLvl5Recipes", GameGlobals.NumDeliveredOrdersByLevel[4].ToString()},
+                {"NumDeliveredLvl1Orders", GameGlobals.NumDeliveredOrdersByLevel[0].ToString()},
+                {"NumDeliveredLvl2Orders", GameGlobals.NumDeliveredOrdersByLevel[1].ToString()},
+                {"NumDeliveredLvl3Orders", GameGlobals.NumDeliveredOrdersByLevel[2].ToString()},
+                {"NumDeliveredLvl4Orders", GameGlobals.NumDeliveredOrdersByLevel[3].ToString()},
+                {"NumDeliveredLvl5Orders", GameGlobals.NumDeliveredOrdersByLevel[4].ToString()},
                 
-                {"NumFailedLvl1Recipes", GameGlobals.NumFailedOrdersByLevel[0].ToString()},
-                {"NumFailedLvl2Recipes", GameGlobals.NumFailedOrdersByLevel[1].ToString()},
-                {"NumFailedLvl3Recipes", GameGlobals.NumFailedOrdersByLevel[2].ToString()},
-                {"NumFailedLvl4Recipes", GameGlobals.NumFailedOrdersByLevel[3].ToString()},
-                {"NumFailedLvl5Recipes", GameGlobals.NumFailedOrdersByLevel[4].ToString()},
+                {"NumFailedLvl1Orders", GameGlobals.NumFailedOrdersByLevel[0].ToString()},
+                {"NumFailedLvl2Orders", GameGlobals.NumFailedOrdersByLevel[1].ToString()},
+                {"NumFailedLvl3Orders", GameGlobals.NumFailedOrdersByLevel[2].ToString()},
+                {"NumFailedLvl4Orders", GameGlobals.NumFailedOrdersByLevel[3].ToString()},
+                {"NumFailedLvl5Orders", GameGlobals.NumFailedOrdersByLevel[4].ToString()},
 
+                
+                {"NumDeliveredLvl1Recipes", GameGlobals.NumDeliveredRecipesByLevel[0].ToString()},
+                {"NumDeliveredLvl2Recipes", GameGlobals.NumDeliveredRecipesByLevel[1].ToString()},
+                {"NumDeliveredLvl3Recipes", GameGlobals.NumDeliveredRecipesByLevel[2].ToString()},
+                {"NumDeliveredLvl4Recipes", GameGlobals.NumDeliveredRecipesByLevel[3].ToString()},
+                {"NumDeliveredLvl5Recipes", GameGlobals.NumDeliveredRecipesByLevel[4].ToString()},
+                
+                
                 {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
             };
             StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/TUTORIAL/Results/",
@@ -67,20 +75,27 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
                 {"ParticipantId", GameGlobals.ParticipantId},
                 {"GameMode", GameGlobals.CurrGameMode.ToString()},
                 {"AttemptId", GameGlobals.AttemptId.ToString()},
-                {"OrderDifficulty", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                {"OrderDifficulty_AtEnd", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
                 {"Score", GameGlobals.Score.ToString()},
                 
-                {"NumDeliveredLvl1Recipes", GameGlobals.NumDeliveredOrdersByLevel[0].ToString()},
-                {"NumDeliveredLvl2Recipes", GameGlobals.NumDeliveredOrdersByLevel[1].ToString()},
-                {"NumDeliveredLvl3Recipes", GameGlobals.NumDeliveredOrdersByLevel[2].ToString()},
-                {"NumDeliveredLvl4Recipes", GameGlobals.NumDeliveredOrdersByLevel[3].ToString()},
-                {"NumDeliveredLvl5Recipes", GameGlobals.NumDeliveredOrdersByLevel[4].ToString()},
                 
-                {"NumFailedLvl1Recipes", GameGlobals.NumFailedOrdersByLevel[0].ToString()},
-                {"NumFailedLvl2Recipes", GameGlobals.NumFailedOrdersByLevel[1].ToString()},
-                {"NumFailedLvl3Recipes", GameGlobals.NumFailedOrdersByLevel[2].ToString()},
-                {"NumFailedLvl4Recipes", GameGlobals.NumFailedOrdersByLevel[3].ToString()},
-                {"NumFailedLvl5Recipes", GameGlobals.NumFailedOrdersByLevel[4].ToString()},
+                {"NumDeliveredLvl1Orders", GameGlobals.NumDeliveredOrdersByLevel[0].ToString()},
+                {"NumDeliveredLvl2Orders", GameGlobals.NumDeliveredOrdersByLevel[1].ToString()},
+                {"NumDeliveredLvl3Orders", GameGlobals.NumDeliveredOrdersByLevel[2].ToString()},
+                {"NumDeliveredLvl4Orders", GameGlobals.NumDeliveredOrdersByLevel[3].ToString()},
+                {"NumDeliveredLvl5Orders", GameGlobals.NumDeliveredOrdersByLevel[4].ToString()},
+                
+                {"NumFailedLvl1Orders", GameGlobals.NumFailedOrdersByLevel[0].ToString()},
+                {"NumFailedLvl2Orders", GameGlobals.NumFailedOrdersByLevel[1].ToString()},
+                {"NumFailedLvl3Orders", GameGlobals.NumFailedOrdersByLevel[2].ToString()},
+                {"NumFailedLvl4Orders", GameGlobals.NumFailedOrdersByLevel[3].ToString()},
+                {"NumFailedLvl5Orders", GameGlobals.NumFailedOrdersByLevel[4].ToString()},
+                
+                {"NumDeliveredLvl1Recipes", GameGlobals.NumDeliveredRecipesByLevel[0].ToString()},
+                {"NumDeliveredLvl2Recipes", GameGlobals.NumDeliveredRecipesByLevel[1].ToString()},
+                {"NumDeliveredLvl3Recipes", GameGlobals.NumDeliveredRecipesByLevel[2].ToString()},
+                {"NumDeliveredLvl4Recipes", GameGlobals.NumDeliveredRecipesByLevel[3].ToString()},
+                {"NumDeliveredLvl5Recipes", GameGlobals.NumDeliveredRecipesByLevel[4].ToString()},
                 
                 {"TimeSpent", GameGlobals.SessionTimeSpent.ToString()}
             };
