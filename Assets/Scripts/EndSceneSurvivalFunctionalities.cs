@@ -38,7 +38,7 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
             {"ExperimentId", GameGlobals.ExperimentId},
             {"ParticipantId", GameGlobals.ParticipantId},
             {"GameMode", GameGlobals.CurrGameMode.ToString()},
-            {"OrderDifficulty_AtEnd", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+            {"OrderLevel_AtEnd", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
             {"Score", GameGlobals.Score.ToString()},
             
             
@@ -102,7 +102,5 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
             endButton.gameObject.SetActive(true);
         });
     }
-    
-    
-    }
+}
 

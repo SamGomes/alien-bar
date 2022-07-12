@@ -36,7 +36,7 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
             {"ParticipantId", GameGlobals.ParticipantId},
             {"GameMode", GameGlobals.CurrGameMode.ToString()},
             {"AttemptId", GameGlobals.AttemptId.ToString()},
-            {"OrderDifficulty_AtEnd", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+            {"OrderLevel_AtEnd", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
             {"Score", GameGlobals.Score.ToString()},
             
             

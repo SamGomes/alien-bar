@@ -193,6 +193,29 @@ public class DeliveryBoardEvents :
     public void Start()
     {
         _recipes = new List<RecipeObjectEvents>();
+        
+        Dictionary<string, string> logEntry = new Dictionary<string, string>()
+        {
+            {"ExperimentId", "-"},
+            {"ParticipantId", "-"},
+            {"GameMode", "-"},
+            {"AttemptId", "-"},
+            {"OrderLevel", "-"},
+            {"OrderLevel_AtDelivery", "-"},
+                    
+            {"NumLvl1Recipes", "-"},
+            {"NumLvl2Recipes", "-"},
+            {"NumLvl3Recipes", "-"},
+            {"NumLvl4Recipes", "-"},
+            {"NumLvl5Recipes", "-"},
+                    
+            {"WasDelivered", "-"},
+            {"AttemptTime", "-"}
+        };
+        StartCoroutine(GameGlobals.LogManager.WriteToLog(
+            "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
+            GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, true));
+
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
