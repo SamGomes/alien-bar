@@ -192,33 +192,7 @@ public class DeliveryBoardEvents :
 
     public void Start()
     {
-        _recipes = new List<RecipeObjectEvents>();   
-        
-        
-        //init deliveries log
-        if (GameGlobals.CurrGameMode != GameMode.DEMO)
-        {
-            Dictionary<string, string> logEntry = new Dictionary<string, string>()
-            {
-                {"ExperimentId", ""},
-                {"ParticipantId", ""},
-                {"GameMode", ""},
-                {"AttemptId", ""},
-                {"OrderDifficulty", ""},
-                        
-                {"NumLvl1Recipes", ""},
-                {"NumLvl2Recipes", ""},
-                {"NumLvl3Recipes", ""},
-                {"NumLvl4Recipes", ""},
-                {"NumLvl5Recipes", ""},
-                        
-                {"WasDelivered", ""},
-                {"AttemptTime", ""}
-            };
-            StartCoroutine(GameGlobals.LogManager.WriteToLog(
-                "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
-                GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, true));
-        }
+        _recipes = new List<RecipeObjectEvents>();
     }
 
     public void OnPointerEnter(PointerEventData pointerEventData)
@@ -310,7 +284,8 @@ public class DeliveryBoardEvents :
                         {"ParticipantId", GameGlobals.ParticipantId},
                         {"GameMode", GameGlobals.CurrGameMode.ToString()},
                         {"AttemptId", GameGlobals.AttemptId.ToString()},
-                        {"OrderDifficulty_AtDelivery", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                        {"OrderLevel", order.Level.ToString()},
+                        {"OrderLevel_AtDelivery", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
                         
                         {"NumLvl1Recipes", numRecipesByLevel[0].ToString()},
                         {"NumLvl2Recipes", numRecipesByLevel[1].ToString()},
@@ -327,7 +302,7 @@ public class DeliveryBoardEvents :
                 }
 
                 //prepare for logging results
-                GameGlobals.NumDeliveredOrdersByLevel[GameGlobals.GameConfigs.OrderDifficulty - 1]++;
+                GameGlobals.NumDeliveredOrdersByLevel[order.Level - 1]++;
             }
 
         }
@@ -357,7 +332,8 @@ public class DeliveryBoardEvents :
                     {"ParticipantId", GameGlobals.ParticipantId},
                     {"GameMode", GameGlobals.CurrGameMode.ToString()},
                     {"AttemptId", GameGlobals.AttemptId.ToString()},
-                    {"OrderDifficulty_AtDelivery", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
+                    {"OrderLevel", "-1"},
+                    {"OrderLevel_AtDelivery", GameGlobals.GameConfigs.OrderDifficulty.ToString()},
                     
                     {"NumLvl1Recipes", "-1"},
                     {"NumLvl2Recipes", "-1"},
@@ -366,7 +342,7 @@ public class DeliveryBoardEvents :
                     {"NumLvl5Recipes", "-1"},
                     
                     {"WasDelivered", "NO"},
-                    {"PlayingTime", GameGlobals.GameModeTimeSpent.ToString()}
+                    {"AttemptTime", GameGlobals.GameModeTimeSpent.ToString()}
                 };
                 StartCoroutine(GameGlobals.LogManager.WriteToLog(
                     "AlienBarExperiment/" + GameGlobals.CurrGameMode + "/DeliveriesLog/",
