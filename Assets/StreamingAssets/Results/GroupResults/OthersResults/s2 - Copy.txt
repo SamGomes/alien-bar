@@ -1,0 +1,1 @@
+{ "abilityInc": 0.2,"engagementInc": 0,"gradeInc": 0.5}
