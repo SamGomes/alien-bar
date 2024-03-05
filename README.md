@@ -9,8 +9,8 @@ In total, the game considers five difficulty levels. Yet, the levels considered 
 ## Executing the game
 
 To execute the game (in Windows), only two steps are required:
-- Download the latest version of **Alien Bar** through git pages of this repository: [https://samgomes.github.io/alien-bar/](https://samgomes.github.io/alien-bar/)
-- Extract the folder and click on the executable (AlienBar.exe)
+- Download the latest version of **Alien Bar** through the [git pages](https://samgomes.github.io/alien-bar/) of this repository, or through the [itch.io](https://samgomes.itch.io/alien-bar) page of the game;
+- Extract the folder and click on the executable ```Alien Bar.exe```.
 
 For other platforms, the code can be also downloaded and re-built.
 
