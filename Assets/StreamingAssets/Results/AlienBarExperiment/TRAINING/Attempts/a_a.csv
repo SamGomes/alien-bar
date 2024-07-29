@@ -1,0 +1,3 @@
+ExperimentId,ParticipantId,GameMode,AttemptId,OrderLevel_AtEnd,Score,NumDeliveredLvl1Orders,NumDeliveredLvl2Orders,NumDeliveredLvl3Orders,NumDeliveredLvl4Orders,NumDeliveredLvl5Orders,NumFailedLvl1Orders,NumFailedLvl2Orders,NumFailedLvl3Orders,NumFailedLvl4Orders,NumFailedLvl5Orders,NumDeliveredLvl1Recipes,NumDeliveredLvl2Recipes,NumDeliveredLvl3Recipes,NumDeliveredLvl4Recipes,NumDeliveredLvl5Recipes,TimeSpent
+a,a,TRAINING,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.827049
+a,a,TRAINING,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5.612972

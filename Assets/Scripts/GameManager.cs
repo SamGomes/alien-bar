@@ -79,21 +79,6 @@ public class TrashBinObjectEvents :
             objsToDestroy.Remove(other.gameObject);
         }
     }
-    
-//    public void OnPointerClick(PointerEventData pointerEventData)
-//    {
-//        _animator.Play(0);
-//        _animator.Rebind();
-//        _animator.Update(0.0f);
-//        
-//        _sound.pitch = Random.Range(0.8f, 1.2f);
-//        _sound.Play();
-//        foreach (var obj in objsToDestroy)
-//        {
-//            Destroy(obj);
-//        }
-//        
-//    }
 
     public void Update()
     {

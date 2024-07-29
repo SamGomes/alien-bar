@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -25,6 +26,8 @@ public class IngredientConfigurations
 
 public class GameConfigurations
 {
+    public bool IsDemo;
+    
     public int ScoreMultiplier;
     
     public int OrderDifficulty;
@@ -77,7 +80,6 @@ public static class GameGlobals
     
     
     public static bool HasPlayedDemo = true;
-//    public static bool HasPlayedDemo = false; //to include demo functionality 
     public static bool HasPlayedTutorial = false;
     public static bool HasPlayedTraining = false;
     
@@ -100,6 +102,7 @@ public class WaitBoardEvents : MonoBehaviour, IPointerClickHandler
 public class StartSceneFunctionalities: MonoBehaviour
 {
     public GameObject waitBoard;
+    public GameObject demoBoard;
     
     public Slider trainingLevelInput;
     
@@ -114,10 +117,6 @@ public class StartSceneFunctionalities: MonoBehaviour
 
     public void Start()
     {
-        waitBoard.AddComponent<WaitBoardEvents>();
-        waitBoard.SetActive(GameGlobals.CurrGameMode != GameMode.TRAINING || 
-                            GameGlobals.HasPlayedTraining);
-        
         string path = Application.streamingAssetsPath + "/configs.cfg";
         StreamReader reader = new StreamReader(path);
         string json = reader.ReadToEnd();
@@ -125,11 +124,26 @@ public class StartSceneFunctionalities: MonoBehaviour
             JsonConvert.DeserializeObject<GameConfigurations>(json);
         reader.Close();
 
+        waitBoard.AddComponent<WaitBoardEvents>();
+        bool isWaiting = GameGlobals.CurrGameMode != GameMode.TRAINING ||
+                         GameGlobals.HasPlayedTraining;
+        isWaiting = !GameGlobals.GameConfigs.IsDemo && isWaiting;
+        waitBoard.SetActive(isWaiting);
+        
+        demoBoard.SetActive(GameGlobals.GameConfigs.IsDemo);
+        demoBoard.AddComponent<WaitBoardEvents>();
+        
         tutorialButton.gameObject.AddComponent<ButtonObjectEvents>();
         trainingButton.gameObject.AddComponent<ButtonObjectEvents>();
         survivalButton.gameObject.AddComponent<ButtonObjectEvents>();
         exitButton.gameObject.AddComponent<ButtonObjectEvents>();
-        
+
+        if (GameGlobals.GameConfigs.IsDemo)
+        {
+            GameGlobals.LogManager = new DebugLogManager();
+            GameGlobals.ExperimentId = "Experiment";
+            GameGlobals.ParticipantId = "Participant";
+        }
 
         if (GameGlobals.ExperimentId != "")
         {
@@ -141,6 +155,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         }
 
         exitButton.interactable = false;
+        exitButton.interactable = GameGlobals.GameConfigs.IsDemo || exitButton.interactable;
         exitButton.onClick.AddListener(() =>
         {
             Application.Quit();
@@ -148,6 +163,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         
         
         demoButton.interactable = !GameGlobals.HasPlayedDemo;
+        demoButton.interactable = GameGlobals.GameConfigs.IsDemo || demoButton.interactable;
         demoButton.onClick.AddListener(() =>
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
@@ -170,6 +186,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         
         
         tutorialButton.interactable = GameGlobals.HasPlayedDemo && !GameGlobals.HasPlayedTutorial;
+        tutorialButton.interactable = GameGlobals.GameConfigs.IsDemo || tutorialButton.interactable;
         tutorialButton.onClick.AddListener(() =>
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
@@ -191,6 +208,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         
         
         trainingButton.interactable = GameGlobals.HasPlayedTutorial && !GameGlobals.HasPlayedTraining;
+        trainingButton.interactable = GameGlobals.GameConfigs.IsDemo || trainingButton.interactable;
         trainingButton.onClick.AddListener(() =>
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
@@ -218,6 +236,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         
         
         survivalButton.interactable = GameGlobals.HasPlayedTraining;
+        survivalButton.interactable = GameGlobals.GameConfigs.IsDemo || survivalButton.interactable;
         survivalButton.onClick.AddListener(() =>
         {
             if (experimentIdInput.text != "" && playerIdInput.text != "")
@@ -242,14 +261,14 @@ public class StartSceneFunctionalities: MonoBehaviour
     }
     public void Update()
     {
-        if (GameGlobals.InitialTrainingTime < 0)
+        if (GameGlobals.GameConfigs.IsDemo || GameGlobals.InitialTrainingTime < 0)
         {
             return;
         }
         
-        float _playingTime = Time.time - GameGlobals.InitialTrainingTime;
+        float playingTime = Time.time - GameGlobals.InitialTrainingTime;
         if (!GameGlobals.HasPlayedTraining && GameGlobals.CurrGameMode == GameMode.TRAINING &&
-            _playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
+            playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
         {
             GameGlobals.HasPlayedTraining = true;
             trainingButton.interactable = false;
