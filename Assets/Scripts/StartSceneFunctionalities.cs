@@ -1,4 +1,6 @@
 
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using MongoDB.Bson;
@@ -6,6 +8,7 @@ using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -48,10 +51,9 @@ public class GameConfigurations
 
 public enum GameMode{
     NONE = 0,
-    DEMO = 1,
-    TUTORIAL = 2,
-    TRAINING = 3,
-    SURVIVAL = 4
+    TUTORIAL = 1,
+    TRAINING = 2,
+    SURVIVAL = 3
 }
 
 
@@ -78,12 +80,8 @@ public static class GameGlobals
     public static GameConfigurations GameConfigs;
     public static GameManager GameManager;
     
-    
-    public static bool HasPlayedDemo = true;
     public static bool HasPlayedTutorial = false;
     public static bool HasPlayedTraining = false;
-    
-    
     
     public static float InitialTrainingTime = -1.0f;
 }
@@ -115,14 +113,55 @@ public class StartSceneFunctionalities: MonoBehaviour
     
     public Button exitButton;
 
+    private string _configsJson;
+    
     public void Start()
     {
-        string path = Application.streamingAssetsPath + "/configs.cfg";
-        StreamReader reader = new StreamReader(path);
-        string json = reader.ReadToEnd();
+        StartCoroutine(DelayedStart());
+    }
+
+    //from: https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequest.Get.html
+    IEnumerator GetRequest(string uri)
+    {
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            // Request and wait for the desired page.
+            yield return webRequest.SendWebRequest();
+
+            string[] pages = uri.Split('/');
+            int page = pages.Length - 1;
+
+            switch (webRequest.result)
+            {
+                case UnityWebRequest.Result.ConnectionError:
+                case UnityWebRequest.Result.DataProcessingError:
+                    Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.ProtocolError:
+                    Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.Success:
+                    _configsJson = webRequest.downloadHandler.text;
+                    break;
+            }
+        }
+    }
+    
+    private IEnumerator DelayedStart()
+    {
+        #if UNITY_STANDALONE_WIN
+            string path = Application.streamingAssetsPath + "/configs.cfg";
+            StreamReader reader = new StreamReader(path);
+            _configsJson = reader.ReadToEnd();
+            reader.Close();
+        #else
+            string uri = new Uri(Application.streamingAssetsPath + "/configs.cfg").AbsoluteUri;
+            yield return GetRequest(uri);
+        #endif
+        
         GameGlobals.GameConfigs =
-            JsonConvert.DeserializeObject<GameConfigurations>(json);
-        reader.Close();
+            JsonConvert.DeserializeObject<GameConfigurations>(_configsJson);
+
 
         waitBoard.AddComponent<WaitBoardEvents>();
         bool isWaiting = GameGlobals.CurrGameMode != GameMode.TRAINING ||
@@ -161,8 +200,6 @@ public class StartSceneFunctionalities: MonoBehaviour
             Application.Quit();
         });
         
-        
-        demoButton.interactable = !GameGlobals.HasPlayedDemo;
         demoButton.interactable = GameGlobals.GameConfigs.IsDemo || demoButton.interactable;
         demoButton.onClick.AddListener(() =>
         {
@@ -172,7 +209,6 @@ public class StartSceneFunctionalities: MonoBehaviour
                 GameGlobals.ExperimentId = experimentIdInput.text;
                 GameGlobals.AttemptId = 0;
 
-                GameGlobals.CurrGameMode = GameMode.DEMO;
                 SceneManager.LoadScene("MainScene");
             }else
             {
@@ -185,7 +221,7 @@ public class StartSceneFunctionalities: MonoBehaviour
         
         
         
-        tutorialButton.interactable = GameGlobals.HasPlayedDemo && !GameGlobals.HasPlayedTutorial;
+        tutorialButton.interactable = !GameGlobals.HasPlayedTutorial;
         tutorialButton.interactable = GameGlobals.GameConfigs.IsDemo || tutorialButton.interactable;
         tutorialButton.onClick.AddListener(() =>
         {
@@ -256,25 +292,30 @@ public class StartSceneFunctionalities: MonoBehaviour
                     GetChild(0).gameObject.SetActive(playerIdInput.text == "");
             }
         });
-        
-        
     }
     public void Update()
     {
-        if (GameGlobals.GameConfigs.IsDemo || GameGlobals.InitialTrainingTime < 0)
+        if (GameGlobals.InitialTrainingTime < 0)
         {
             return;
         }
         
+        //trigger survival after max training time
         float playingTime = Time.time - GameGlobals.InitialTrainingTime;
-        if (!GameGlobals.HasPlayedTraining && GameGlobals.CurrGameMode == GameMode.TRAINING &&
+        if (GameGlobals.CurrGameMode == GameMode.TRAINING &&
             playingTime >= GameGlobals.GameConfigs.MAXTrainingTimeMinutes * 60.0f)
         {
-            GameGlobals.HasPlayedTraining = true;
-            trainingButton.interactable = false;
-            survivalButton.interactable = true;
-            
-            waitBoard.SetActive(true);
+            if (!GameGlobals.GameConfigs.IsDemo && !GameGlobals.HasPlayedTraining)
+            {
+                GameGlobals.HasPlayedTraining = true;
+                trainingButton.interactable = false;
+                survivalButton.interactable = true;
+                waitBoard.SetActive(true);
+            }
+            else
+            {
+                GameGlobals.InitialTrainingTime = -1.0f;
+            }
         }
     }
 }
