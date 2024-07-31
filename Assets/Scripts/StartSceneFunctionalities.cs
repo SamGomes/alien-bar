@@ -1,9 +1,7 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using MongoDB.Bson;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -48,6 +46,7 @@ public class GameConfigurations
     public List<IngredientConfigurations> IngredientConfigs;
     public List<List<Recipe>> OrderRecipesByLevel;
 }
+
 
 public enum GameMode{
     NONE = 0,
@@ -101,6 +100,7 @@ public class StartSceneFunctionalities: MonoBehaviour
 {
     public GameObject waitBoard;
     public GameObject demoBoard;
+    public GameObject loadingBoard;
     
     public Slider trainingLevelInput;
     
@@ -114,6 +114,11 @@ public class StartSceneFunctionalities: MonoBehaviour
     public Button exitButton;
 
     private string _configsJson;
+
+    public void Awake()
+    {
+        loadingBoard.SetActive(true);
+    }
     
     public void Start()
     {
@@ -146,6 +151,7 @@ public class StartSceneFunctionalities: MonoBehaviour
             }
         }
     }
+ 
     
     private IEnumerator DelayedStart()
     {
@@ -154,15 +160,17 @@ public class StartSceneFunctionalities: MonoBehaviour
             StreamReader reader = new StreamReader(path);
             _configsJson = reader.ReadToEnd();
             reader.Close();
+            GameGlobals.GameConfigs = JsonConvert.DeserializeObject<GameConfigurations>(_configsJson);
+            yield return null;
         #else
             string uri = new Uri(Application.streamingAssetsPath + "/configs.cfg").AbsoluteUri;
             yield return GetRequest(uri);
+            GameGlobals.GameConfigs = GameConfigsPreset.GameConfigs;
         #endif
+
         
-        GameGlobals.GameConfigs =
-            JsonConvert.DeserializeObject<GameConfigurations>(_configsJson);
 
-
+        loadingBoard.SetActive(false);
         waitBoard.AddComponent<WaitBoardEvents>();
         bool isWaiting = GameGlobals.CurrGameMode != GameMode.TRAINING ||
                          GameGlobals.HasPlayedTraining;

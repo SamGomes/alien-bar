@@ -74,7 +74,6 @@ public class IngredientObjectEvents :
     }
 }
 
-
 [JsonConverter(typeof(StringEnumConverter))]
 public enum IngredientAttr
 {
