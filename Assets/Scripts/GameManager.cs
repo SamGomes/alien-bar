@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -584,13 +583,7 @@ public class GameManager : MonoBehaviour
     
     public void MockedStartScene()
     {
-        string path =  Application.streamingAssetsPath + "/configs.cfg";
-        StreamReader reader = new StreamReader(path);
-        string json = reader.ReadToEnd();
-        GameGlobals.GameConfigs = 
-            JsonConvert.DeserializeObject<GameConfigurations>(json);
-        reader.Close();
-        
+        GameGlobals.GameConfigs = GameConfigsPreset.GameConfigs;
         GameGlobals.CurrGameMode = GameMode.TRAINING;
     }
     

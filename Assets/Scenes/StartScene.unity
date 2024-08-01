@@ -4614,7 +4614,7 @@ MonoBehaviour:
     all game modes are unlocked.
 
 
-    (Click anywhere to close.)'
+    (Click anywhere to close)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8bb4fd16187c12e30bd1ad17e8e7af43, type: 2}
   m_sharedMaterial: {fileID: -1082963778906140674, guid: 8bb4fd16187c12e30bd1ad17e8e7af43, type: 2}

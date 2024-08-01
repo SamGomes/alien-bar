@@ -13,7 +13,7 @@ public class GameConfigsPreset
 
                 TutorialTimeMinutes= 3,
                 MAXTrainingTimeMinutes= 10,
-                MAXSurvivalTimeMinutes= 5,
+                MAXSurvivalTimeMinutes= 0.05f,
       
                 SurvivalIncreaseDifficultyDelay= 60,
                 SurvivalTimeChangeRate= 1.10f,

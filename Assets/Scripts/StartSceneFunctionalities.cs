@@ -202,7 +202,9 @@ public class StartSceneFunctionalities: MonoBehaviour
         }
 
         exitButton.interactable = false;
-        exitButton.interactable = GameGlobals.GameConfigs.IsDemo || exitButton.interactable;
+        #if UNITY_STANDALONE_WIN
+            exitButton.interactable = GameGlobals.GameConfigs.IsDemo || exitButton.interactable;
+        #endif
         exitButton.onClick.AddListener(() =>
         {
             Application.Quit();

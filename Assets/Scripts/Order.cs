@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using TMPro;
@@ -29,7 +30,29 @@ public class RecipeObjectEvents :
 
     public void Start()
     {
-        gameObject.GetComponentInChildren<TextMeshPro>().text = JsonConvert.SerializeObject(logic.IngredientAttrs);
+        string ingAtts = "[";
+        List<List<IngredientAttr>> attrsLst = logic.IngredientAttrs;
+        int attrsLstSize = attrsLst.Count();
+        for (int i=0; i<attrsLstSize; i++)
+        {
+            List<IngredientAttr> attrs = attrsLst[i];
+            ingAtts += "[";
+            int attrsSize = attrs.Count();
+            for (int j=0; j<attrsSize; j++)
+            {
+                IngredientAttr attr = attrs[j];
+                ingAtts += "\"";
+                ingAtts += attr.ToString();
+                ingAtts += "\"";
+                if (j < attrsSize - 1)
+                    ingAtts += ",";
+            }
+            ingAtts += "]";
+            if (i < attrsLstSize - 1)
+                ingAtts += ",";
+        }
+        ingAtts += "]";
+        gameObject.GetComponentInChildren<TextMeshPro>().text = ingAtts;
     }
     
     public void OnPointerDown(PointerEventData pointerEventData)
