@@ -1,32 +1,38 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
+using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class EndSceneSurvivalFunctionalities: MonoBehaviour
 {
     public TextMeshProUGUI resultsDisplay;
     
-    public GameObject thankYouObj;
     public GameObject engQuestionnaire;
     public Button endButton;
-    public Button submitButton;
-    private Slider[] engQuestionsSliders;
-    private GameObject[] engQuestions;
     
+    private string SerializeOrderList(List<int> orders)
+    {
+        string ret = "[";
+        for (int i = 0; i < orders.Count(); i++)
+        {
+            ret += orders[i];
+            if (i < orders.Count - 1)
+                ret += ",";
+        }
+        ret += "]";
+        return ret;
+    }
     public void Start()
     {
-//        resultsDisplay.text = "Score: " +
-//                              GameGlobals.Score;
         
         resultsDisplay.text = "\nDelivered Orders: " +
-                               JsonConvert.SerializeObject(GameGlobals.NumDeliveredOrdersByLevel) +
+                              SerializeOrderList(GameGlobals.NumDeliveredOrdersByLevel) +
                                "\n";
         resultsDisplay.text += "Failed Orders: " +
-                               JsonConvert.SerializeObject(GameGlobals.NumFailedOrdersByLevel) +
+                               SerializeOrderList(GameGlobals.NumFailedOrdersByLevel) +
                                "\n"; 
         
         resultsDisplay.text += "Time Spent(s): "+ Math.Round(GameGlobals.SessionTimeSpent, 3);
@@ -67,39 +73,16 @@ public class EndSceneSurvivalFunctionalities: MonoBehaviour
         StartCoroutine(GameGlobals.LogManager.WriteToLog("AlienBarExperiment/SURVIVAL/Results/",
             GameGlobals.ExperimentId + "_" + GameGlobals.ParticipantId, logEntry, false));
         
-        
-        
-        engQuestionsSliders = engQuestionnaire.GetComponentsInChildren<Slider>();
-        engQuestions = GameObject.FindGameObjectsWithTag("Question");
-        
+        if (GameGlobals.GameConfigs.IsDemo)
+        {
+            endButton.GetComponentInChildren<TextMeshProUGUI>().text = "Main Menu";
+        }
         endButton.onClick.AddListener(() =>
         {
-            Application.Quit();
-        });
-        submitButton.onClick.AddListener(() => {
-            
-            float engValue = 0.0f;
-            Dictionary<string,float> engQuestionnaireValues = new Dictionary<string,float>();
-            for (int i = 0; i < engQuestionsSliders.Length; i++)
-            {
-                var currSlider = engQuestionsSliders[i];
-                engValue += (currSlider.value/ 6.0f) / engQuestions.Length;
-                engQuestionnaireValues.Add(engQuestions[i].GetComponent<TextMeshProUGUI>().text, currSlider.value);
-            }
-        
-            string path = "Assets/StreamingAssets/Results/GroupResults/"+GameGlobals.ParticipantId+".txt";
-            string json = "{ \"engAnswers\":" + JsonConvert.SerializeObject(engQuestionnaireValues)+
-                          "\"abilityInc\": "+ GameGlobals.Score/ 10000.0f+
-                          ",\"engagementInc\": "+engValue+"," +
-                          "\"gradeInc\": "+0.5+"}";
-            
-
-            
-            File.WriteAllText(path,json);
-            submitButton.GetComponent<Image>().color = Color.green;
-            engQuestionnaire.gameObject.SetActive(false);
-            thankYouObj.SetActive(true);
-            endButton.gameObject.SetActive(true);
+            if (GameGlobals.GameConfigs.IsDemo)
+                SceneManager.LoadScene("StartScene");
+            else
+                Application.Quit();
         });
     }
 }
