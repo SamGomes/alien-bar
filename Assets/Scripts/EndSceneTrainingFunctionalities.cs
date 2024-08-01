@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,20 +11,27 @@ public class EndSceneTrainingFunctionalities: MonoBehaviour
     public TextMeshProUGUI titleDisplay;
     public TextMeshProUGUI resultsDisplay;
     public Button restartButton;
+
+    private string SerializeOrderList(List<int> orders)
+    {
+        string ret = "[";
+        for (int i = 0; i < orders.Count(); i++)
+        {
+            ret += orders[i];
+            if (i < orders.Count - 1)
+                ret += ",";
+        }
+        ret += "]";
+        return ret;
+    }
     public void Start()
     {
         titleDisplay.text = GameGlobals.CurrGameMode + " Game Over!";
         
-        
-//        resultsDisplay.text = "Score: " +
-//                            GameGlobals.Score;
-        
         resultsDisplay.text = "\nDelivered Orders: " +
-                             JsonConvert.SerializeObject(GameGlobals.NumDeliveredOrdersByLevel) +
-                             "\n";
+                              SerializeOrderList(GameGlobals.NumDeliveredOrdersByLevel) + "\n";
         resultsDisplay.text += "Failed Orders: " +
-                             JsonConvert.SerializeObject(GameGlobals.NumFailedOrdersByLevel) +
-                            "\n"; 
+                               SerializeOrderList(GameGlobals.NumFailedOrdersByLevel) + "\n"; 
         
         resultsDisplay.text += "Time Spent (s): "+ Math.Round(GameGlobals.SessionTimeSpent, 3);
 
